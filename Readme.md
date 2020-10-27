@@ -38,24 +38,24 @@ func main() {
     ms := mailersend.NewMailersend(APIKey)
 
     fromName  = "MailerSend"
-	fromEmail = "mailersend@example.com"
-	subject = "Test Email"
-	text    = "This is the message content"
-	html    = "<p>This is the html content</p>"
+    fromEmail = "mailersend@example.com"
+    subject = "Test Email"
+    text    = "This is the message content"
+    html    = "<p>This is the html content</p>"
 
-	from := mailersend.From{
-		Name:  fromName,
-		Email: fromEmail,
-	}
+    from := mailersend.From{
+	    Name:  fromName,
+	    Email: fromEmail,
+    }
 
-	recipients := []mailersend.Recipient{
-		{
-			Name:  "User",
-			Email: "user@example.com",
-		}
-	}
+    recipients := []mailersend.Recipient{
+	    {
+		    Name:  "User",
+		    Email: "user@example.com",
+	    }
+    }
 
-	message := ms.NewMessage(from, subject, text, html)
+    message := ms.NewMessage(from, subject, text, html)
 
     message.SetRecipients(recipients)
 
