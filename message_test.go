@@ -9,16 +9,16 @@ import (
 
 const (
 	fromName  = "MailerSend"
-	fromEmail = "example@mailersend.com"
+	fromEmail = "user@example.com"
 
 	toName  = "Bob Gordon"
-	toEmail = "robert@mailerlite.com"
+	toEmail = "user@example.com"
 
 	subject = "Test Email"
 	text    = "This is the message content"
 	html    = "<p>This is the html content</p>"
 
-	templateID = "testtemplateid12"
+	templateID = "testtemplateid"
 )
 
 func TestMessage(t *testing.T) {
