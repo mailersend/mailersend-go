@@ -47,23 +47,23 @@ func main() {
 
 	from := mailersend.From{
 		Name:  "MailerSend",
-		Email: "test@ycode.com",
+		Email: "test@example.com",
 	}
 
 	recipients := []mailersend.Recipient{
 		{
-			Name:  "Bob Gordon",
-			Email: "robert@mailerlite.com",
+			Name:  "Test User",
+			Email: "user@example.com",
 		},
 	}
 
 	variables := []mailersend.Variables{
 		{
-			Email: "robert@mailerlite.com",
+			Email: "user@example.com",
 			Substitutions: []mailersend.Substitution{
 				{
-					Var:   "test",
-					Value: "Test",
+					Var:   "foo",
+					Value: "Bar",
 				},
 			},
 		},
