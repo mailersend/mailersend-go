@@ -69,6 +69,8 @@ func main() {
 		},
 	}
 
+	tags := []string{"golang", "test"}
+
 	message := ms.NewMessage()
 
 	message.SetFrom(from)
@@ -78,6 +80,8 @@ func main() {
 	//message.SetText(text)
 	message.SetTemplateID("7z3m5jgrvd4dpyo6")
 	message.SetSubstitutions(variables)
+
+	message.SetTags(tags)
 
 	ms.Send(ctx, message)
 

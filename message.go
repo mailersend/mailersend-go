@@ -4,10 +4,11 @@ package mailersend
 type Message struct {
 	Recipients []Recipient `json:"to"`
 	From       `json:"from"`
-	Subject    string `json:"subject,omitempty"`
-	Text       string `json:"text,omitempty"`
-	HTML       string `json:"html,omitempty"`
-	TemplateID string `json:"template_id,omitempty"`
+	Subject    string   `json:"subject,omitempty"`
+	Text       string   `json:"text,omitempty"`
+	HTML       string   `json:"html,omitempty"`
+	TemplateID string   `json:"template_id,omitempty"`
+	Tags       []string `json:"tags,omitempty"`
 
 	TemplateVariables []Variables `json:"variables"`
 }
@@ -41,7 +42,7 @@ func (ms *Mailersend) NewMessage() *Message {
 	return &Message{}
 }
 
-// SetFrom - Set all teh recipients.
+// SetFrom - Set from.
 func (m *Message) SetFrom(from From) {
 	m.From = from
 }
@@ -66,12 +67,17 @@ func (m *Message) SetText(text string) {
 	m.Text = text
 }
 
-// SetTemplateID - Set all teh recipients.
+// SetTemplateID - Set the template ID.
 func (m *Message) SetTemplateID(templateid string) {
 	m.TemplateID = templateid
 }
 
-// SetSubstitutions - Set all teh recipients.
+// SetSubstitutions - Set the template substitutions(.
 func (m *Message) SetSubstitutions(variables []Variables) {
 	m.TemplateVariables = variables
+}
+
+// SetTags - Set all the tags.
+func (m *Message) SetTags(tags []string) {
+	m.Tags = tags
 }

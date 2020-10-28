@@ -52,6 +52,8 @@ func TestMessage(t *testing.T) {
 		},
 	}
 
+	tags := []string{"test", "app", "go"}
+
 	message := ms.NewMessage()
 
 	message.SetFrom(from)
@@ -61,6 +63,7 @@ func TestMessage(t *testing.T) {
 	message.SetText(text)
 	message.SetTemplateID(templateID)
 	message.SetSubstitutions(variables)
+	message.SetTags(tags)
 
 	assert.Equal(t, from, message.From)
 	assert.Equal(t, recipients[0], message.Recipients[0])
@@ -72,5 +75,7 @@ func TestMessage(t *testing.T) {
 	assert.Equal(t, subject, message.Subject)
 	assert.Equal(t, html, message.HTML)
 	assert.Equal(t, text, message.Text)
+
+	assert.Equal(t, tags, message.Tags)
 
 }
