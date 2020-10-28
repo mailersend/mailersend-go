@@ -17,6 +17,8 @@ const (
 	subject = "Test Email"
 	text    = "This is the message content"
 	html    = "<p>This is the html content</p>"
+
+	templateID = "testtemplateid12"
 )
 
 func TestMessage(t *testing.T) {
@@ -38,12 +40,37 @@ func TestMessage(t *testing.T) {
 		},
 	}
 
-	message := ms.NewMessage(from, subject, text, html)
+	variables := []mailersend.Variables{
+		{
+			Email: toEmail,
+			Substitutions: []mailersend.Substitution{
+				{
+					Var:   "test",
+					Value: "Dave",
+				},
+			},
+		},
+	}
 
+	message := ms.NewMessage()
+
+	message.SetFrom(from)
 	message.SetRecipients(recipients)
+	message.SetSubject(subject)
+	message.SetHTML(html)
+	message.SetText(text)
+	message.SetTemplateID(templateID)
+	message.SetSubstitutions(variables)
 
-	assert.Equal(t, from, message.Sender)
+	assert.Equal(t, from, message.From)
 	assert.Equal(t, recipients[0], message.Recipients[0])
 	assert.Equal(t, recipients[1], message.Recipients[1])
+
+	assert.Equal(t, variables, message.TemplateVariables)
+	assert.Equal(t, templateID, message.TemplateID)
+
+	assert.Equal(t, subject, message.Subject)
+	assert.Equal(t, html, message.HTML)
+	assert.Equal(t, text, message.Text)
 
 }

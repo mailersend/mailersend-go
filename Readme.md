@@ -34,32 +34,52 @@ import (
 var APIKey string = "Api Key Here"
 
 func main() {
-    // Create an instance of the mailersend client
-    ms := mailersend.NewMailersend(APIKey)
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
 
-    fromName  = "MailerSend"
-    fromEmail = "mailersend@example.com"
-    subject = "Test Email"
-    text    = "This is the message content"
-    html    = "<p>This is the html content</p>"
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
 
-    from := mailersend.From{
-	    Name:  fromName,
-	    Email: fromEmail,
-    }
+	subject := "Test Email"
+	//text := "This is the message content"
+	//html := "<p>This is the html content 3</p>"
 
-    recipients := []mailersend.Recipient{
-	    {
-		    Name:  "User",
-		    Email: "user@example.com",
-	    }
-    }
+	from := mailersend.From{
+		Name:  "MailerSend",
+		Email: "test@ycode.com",
+	}
 
-    message := ms.NewMessage(from, subject, text, html)
+	recipients := []mailersend.Recipient{
+		{
+			Name:  "Bob Gordon",
+			Email: "robert@mailerlite.com",
+		},
+	}
 
-    message.SetRecipients(recipients)
+	variables := []mailersend.Variables{
+		{
+			Email: "robert@mailerlite.com",
+			Substitutions: []mailersend.Substitution{
+				{
+					Var:   "test",
+					Value: "Test",
+				},
+			},
+		},
+	}
 
-    message.Send()
+	message := ms.NewMessage()
+
+	message.SetFrom(from)
+	message.SetRecipients(recipients)
+	message.SetSubject(subject)
+	//message.SetHTML(html)
+	//message.SetText(text)
+	message.SetTemplateID("7z3m5jgrvd4dpyo6")
+	message.SetSubstitutions(variables)
+
+	ms.Send(ctx, message)
 
 }
 
