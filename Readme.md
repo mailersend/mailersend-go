@@ -98,3 +98,29 @@ func main() {
 ```
 $ go test
 ```
+
+<a name="endpoints"></a>
+# Available endpoints
+
+| Feature group | Endpoint    | Available |
+| ------------- | ----------- | --------- |
+| Email         | `POST send` | ✅         |
+
+*If, at the moment, some endpoint is not available, please use other available tools to access it. [Refer to official API docs for more info](https://developers.mailersend.com/).*
+
+
+<a name="support-and-feedback"></a>
+# Support and Feedback
+
+In case you find any bugs, submit an issue directly here in GitHub.
+
+You are welcome to create SDK for any other programming language.
+
+If you have any troubles using our API or SDK free to contact our support by email [info@mailersend.com](mailto:info@mailersend.com)
+
+The official documentation is at [https://developers.mailersend.com](https://developers.mailersend.com)
+
+<a name="license"></a>
+# License
+
+[The MIT License (MIT)](LICENSE)
