@@ -41,35 +41,35 @@ func main() {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	subject := "Test Email"
-	//text := "This is the message content"
-	//html := "<p>This is the html content 3</p>"
+	subject := "Subject"
+	//text := "This is the text content"
+	//html := "<p>This is the HTML content</p>"
 
 	from := mailersend.From{
-		Name:  "MailerSend",
-		Email: "test@example.com",
+		Name:  "Your Name",
+		Email: "your@domain.com",
 	}
 
 	recipients := []mailersend.Recipient{
 		{
-			Name:  "Test User",
-			Email: "user@example.com",
+			Name:  "Your Client",
+			Email: "your@client.com",
 		},
 	}
 
 	variables := []mailersend.Variables{
 		{
-			Email: "user@example.com",
+			Email: "your@client.com",
 			Substitutions: []mailersend.Substitution{
 				{
 					Var:   "foo",
-					Value: "Bar",
+					Value: "bar",
 				},
 			},
 		},
 	}
 
-	tags := []string{"golang", "test"}
+	tags := []string{"foo", "bar"}
 
 	message := ms.NewMessage()
 
@@ -78,7 +78,7 @@ func main() {
 	message.SetSubject(subject)
 	//message.SetHTML(html)
 	//message.SetText(text)
-	message.SetTemplateID("7z3m5jgrvd4dpyo6")
+	message.SetTemplateID("testtemplateid")
 	message.SetSubstitutions(variables)
 
 	message.SetTags(tags)

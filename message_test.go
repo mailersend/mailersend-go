@@ -8,15 +8,15 @@ import (
 )
 
 const (
-	fromName  = "MailerSend"
-	fromEmail = "user@example.com"
+	fromName  = "Your Name"
+	fromEmail = "your@domain.com"
 
-	toName  = "Bob Gordon"
-	toEmail = "user@example.com"
+	toName  = "Your Client"
+	toEmail = "your@client.com"
 
-	subject = "Test Email"
-	text    = "This is the message content"
-	html    = "<p>This is the html content</p>"
+	subject = "Subject"
+	text    = "This is the text content"
+	html    = "<p>This is the HTML content</p>"
 
 	templateID = "testtemplateid"
 )
@@ -45,14 +45,14 @@ func TestMessage(t *testing.T) {
 			Email: toEmail,
 			Substitutions: []mailersend.Substitution{
 				{
-					Var:   "test",
-					Value: "Dave",
+					Var:   "foo",
+					Value: "bar",
 				},
 			},
 		},
 	}
 
-	tags := []string{"test", "app", "go"}
+	tags := []string{"foo", "bar"}
 
 	message := ms.NewMessage()
 
