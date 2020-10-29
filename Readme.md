@@ -83,7 +83,9 @@ func main() {
 
 	message.SetTags(tags)
 
-	ms.Send(ctx, message)
+	res, _ := ms.Send(ctx, message)
+
+	fmt.Printf(res.Header.Get("X-Message-Id"))
 
 }
 

@@ -48,14 +48,13 @@ func (ms *Mailersend) SetClient(c *http.Client) {
 }
 
 // Send - send the message
-func (ms *Mailersend) Send(ctx context.Context, message *Message) (id string, err error) {
+func (ms *Mailersend) Send(ctx context.Context, message *Message) (res *http.Response, err error) {
 	req, err := ms.newRequest("POST", "/email", message)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	var response http.Response
-	_, err = ms.do(ctx, req, &response)
-	return "", err
+	res, err = ms.do(ctx, req)
+	return res, err
 }
 
 func (ms *Mailersend) newRequest(method, path string, message *Message) (*http.Request, error) {
@@ -81,7 +80,7 @@ func (ms *Mailersend) newRequest(method, path string, message *Message) (*http.R
 	return req, nil
 }
 
-func (ms *Mailersend) do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
+func (ms *Mailersend) do(ctx context.Context, req *http.Request) (*http.Response, error) {
 	req = req.WithContext(ctx)
 	resp, err := ms.client.Do(req)
 	if err != nil {
@@ -93,7 +92,5 @@ func (ms *Mailersend) do(ctx context.Context, req *http.Request, v interface{}) 
 		return nil, err
 	}
 	defer resp.Body.Close()
-	err = json.NewDecoder(resp.Body).Decode(v)
-
 	return resp, err
 }
