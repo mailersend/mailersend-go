@@ -28,6 +28,10 @@ Sending a basic email.
 package main
 
 import (
+	"context"
+	"fmt"
+	"time"
+
     "github.com/mailersend/mailersend-go"
 )
 
@@ -42,8 +46,8 @@ func main() {
 	defer cancel()
 
 	subject := "Subject"
-	//text := "This is the text content"
-	//html := "<p>This is the HTML content</p>"
+	text := "This is the text content"
+	html := "<p>This is the HTML content</p>"
 
 	from := mailersend.From{
 		Name:  "Your Name",
@@ -76,9 +80,9 @@ func main() {
 	message.SetFrom(from)
 	message.SetRecipients(recipients)
 	message.SetSubject(subject)
-	//message.SetHTML(html)
-	//message.SetText(text)
-	message.SetTemplateID("testtemplateid")
+	message.SetHTML(html)
+	message.SetText(text)
+	//message.SetTemplateID("testtemplateid")
 	message.SetSubstitutions(variables)
 
 	message.SetTags(tags)
