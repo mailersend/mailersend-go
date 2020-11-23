@@ -28,9 +28,9 @@ Sending a basic email.
 package main
 
 import (
-	"context"
-	"fmt"
-	"time"
+    "context"
+    "fmt"
+    "time"
 
     "github.com/mailersend/mailersend-go"
 )
