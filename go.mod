@@ -1,4 +1,4 @@
-module github.com/mailersend/mailersend-go/v1
+module github.com/mailersend/mailersend-go
 
 go 1.14
 

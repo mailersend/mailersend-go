@@ -16,7 +16,7 @@ MailerSend Golang SDK
 We recomend using this package with golang [modules](https://github.com/golang/go/wiki/Modules)
 
 ```
-$ go get github.com/mailersend/mailersend-go/v1
+$ go get github.com/mailersend/mailersend-go
 ```
 
 <a name="usage"></a>
@@ -28,7 +28,7 @@ Sending a basic email.
 package main
 
 import (
-    "github.com/mailersend/mailersend-go/v1"
+    "github.com/mailersend/mailersend-go"
 )
 
 var APIKey string = "Api Key Here"
