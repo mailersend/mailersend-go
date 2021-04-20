@@ -3,7 +3,7 @@ package mailersend_test
 import (
 	"testing"
 
-	"github.com/mailersend/mailersend-go/v1"
+	"github.com/mailersend/mailersend-go"
 	"github.com/stretchr/testify/assert"
 )
 
