@@ -3,7 +3,7 @@
 MailerSend Golang SDK
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)
-
+[![Test](https://github.com/mailersend/mailersend-go/actions/workflows/test.yaml/badge.svg)](https://github.com/mailersend/mailersend-go/actions/workflows/test.yaml)
 # Table of Contents
 * [Installation](#installation)
 * [Usage](#usage)
