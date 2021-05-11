@@ -5,15 +5,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 )
 
-// Debug http client
-var Debug = false
-
 const (
-	// APIBase - base mailersend url
-	APIBase = "https://api.mailersend.com/v1"
+	APIBase string = "https://api.mailersend.com/v1"
 )
 
 // Mailersend - base mailersend api client
@@ -61,10 +58,12 @@ func (ms *Mailersend) newRequest(method, path string, message *Message) (*http.R
 	u := fmt.Sprintf("%s%s", ms.apiBase, path)
 
 	reqBodyBytes := new(bytes.Buffer)
-	json.NewEncoder(reqBodyBytes).Encode(message)
+	err := json.NewEncoder(reqBodyBytes).Encode(message)
+	if err != nil {
+		return nil, err
+	}
 
 	req, err := http.NewRequest(method, u, reqBodyBytes)
-
 	if err != nil {
 		return nil, err
 	}
@@ -91,6 +90,11 @@ func (ms *Mailersend) do(ctx context.Context, req *http.Request) (*http.Response
 		}
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			return
+		}
+	}(resp.Body)
 	return resp, err
 }
