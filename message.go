@@ -4,8 +4,8 @@ package mailersend
 type Message struct {
 	Recipients []Recipient `json:"to"`
 	From       From        `json:"from"`
-	CC         []Recipient `json:"cc"`
-	Bcc        []Recipient `json:"bcc"`
+	CC         []Recipient `json:"cc,omitempty"`
+	Bcc        []Recipient `json:"bcc,omitempty"`
 	Subject    string      `json:"subject,omitempty"`
 	Text       string      `json:"text,omitempty"`
 	HTML       string      `json:"html,omitempty"`
@@ -13,7 +13,7 @@ type Message struct {
 	Tags       []string    `json:"tags,omitempty"`
 
 	TemplateVariables []Variables        `json:"variables"`
-	Personalizations  []Personalizations `json:"personalizations"`
+	Personalization  []Personalization `json:"personalization"`
 }
 
 // From - simple struct to declare from name/ email
@@ -40,8 +40,8 @@ type Substitution struct {
 	Value string `json:"value"`
 }
 
-// Personalizations - you can set multiple Personalization for each Recipient
-type Personalizations struct {
+// Personalization - you can set multiple Personalization for each Recipient
+type Personalization struct {
 	Email string                 `json:"email"`
 	Data  map[string]interface{} `json:"data"`
 }
@@ -96,9 +96,9 @@ func (m *Message) SetSubstitutions(variables []Variables) {
 	m.TemplateVariables = variables
 }
 
-// SetPersonalizations - Set the template personalizations.
-func (m *Message) SetPersonalizations(personalizations []Personalizations) {
-	m.Personalizations = personalizations
+// SetPersonalization - Set the template personalization.
+func (m *Message) SetPersonalization(personalization []Personalization) {
+	m.Personalization = personalization
 }
 
 // SetTags - Set all the tags.

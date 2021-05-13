@@ -104,7 +104,7 @@ func TestTemplateMessage(t *testing.T) {
 		},
 	}
 
-	personalizations := []mailersend.Personalizations{
+	personalization := []mailersend.Personalization{
 		{
 			Email: toEmail,
 			Data: map[string]interface{}{
@@ -118,12 +118,12 @@ func TestTemplateMessage(t *testing.T) {
 
 	message.SetTemplateID(templateID)
 	message.SetSubstitutions(variables)
-	message.SetPersonalizations(personalizations)
+	message.SetPersonalization(personalization)
 	message.SetTags(tags)
 
 	assert.Equal(t, variables, message.TemplateVariables)
 	assert.Equal(t, templateID, message.TemplateID)
-	assert.Equal(t, personalizations, message.Personalizations)
+	assert.Equal(t, personalization, message.Personalization)
 	assert.Equal(t, tags, message.Tags)
 }
 
@@ -145,7 +145,7 @@ func TestFullMessage(t *testing.T) {
 		},
 	}
 
-	personalizations := []mailersend.Personalizations{
+	personalization := []mailersend.Personalization{
 		{
 			Email: toEmail,
 			Data: map[string]interface{}{
@@ -159,7 +159,7 @@ func TestFullMessage(t *testing.T) {
 
 	message.SetTemplateID(templateID)
 	message.SetSubstitutions(variables)
-	message.SetPersonalizations(personalizations)
+	message.SetPersonalization(personalization)
 	message.SetTags(tags)
 
 	assert.Equal(t, cc, message.CC)
@@ -171,6 +171,6 @@ func TestFullMessage(t *testing.T) {
 	assert.Equal(t, text, message.Text)
 	assert.Equal(t, variables, message.TemplateVariables)
 	assert.Equal(t, templateID, message.TemplateID)
-	assert.Equal(t, personalizations, message.Personalizations)
+	assert.Equal(t, personalization, message.Personalization)
 	assert.Equal(t, tags, message.Tags)
 }
