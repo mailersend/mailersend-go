@@ -22,9 +22,9 @@ $ go get github.com/mailersend/mailersend-go
 <a name="usage"></a>
 # Usage
 
-Sending a basic email.
+###Sending a basic email.
 
-``` go
+```go
 package main
 
 import (
@@ -61,6 +61,63 @@ func main() {
 		},
 	}
 
+
+	tags := []string{"foo", "bar"}
+
+	message := ms.NewMessage()
+
+	message.SetFrom(from)
+	message.SetRecipients(recipients)
+	message.SetSubject(subject)
+	message.SetHTML(html)
+	message.SetText(text)
+	message.SetTags(tags)
+
+	res, _ := ms.Send(ctx, message)
+
+	fmt.Printf(res.Header.Get("X-Message-Id"))
+
+}
+
+```
+
+###Sending a simple personalization email.
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "time"
+
+    "github.com/mailersend/mailersend-go"
+)
+
+var APIKey string = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	subject := "Subject"
+
+	from := mailersend.From{
+		Name:  "Your Name",
+		Email: "your@domain.com",
+	}
+
+	recipients := []mailersend.Recipient{
+		{
+			Name:  "Your Client",
+			Email: "your@client.com",
+		},
+	}
+
 	variables := []mailersend.Variables{
 		{
 			Email: "your@client.com",
@@ -72,27 +129,83 @@ func main() {
 			},
 		},
 	}
-
-	tags := []string{"foo", "bar"}
-
+	
 	message := ms.NewMessage()
 
 	message.SetFrom(from)
 	message.SetRecipients(recipients)
 	message.SetSubject(subject)
-	message.SetHTML(html)
-	message.SetText(text)
-	//message.SetTemplateID("testtemplateid")
+	message.SetTemplateID("testtemplateid")
 	message.SetSubstitutions(variables)
-
-	message.SetTags(tags)
-
+	
 	res, _ := ms.Send(ctx, message)
 
 	fmt.Printf(res.Header.Get("X-Message-Id"))
 
 }
+```
 
+
+###Sending a advanced personalization email.
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "time"
+
+    "github.com/mailersend/mailersend-go"
+)
+
+var APIKey string = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	subject := "Subject"
+
+	from := mailersend.From{
+		Name:  "Your Name",
+		Email: "your@domain.com",
+	}
+
+	recipients := []mailersend.Recipient{
+		{
+			Name:  "Your Client",
+			Email: "your@client.com",
+		},
+	}
+
+	personalization := []mailersend.Personalization{
+		{
+			Email: toEmail,
+			Data: map[string]interface{}{
+				"Var":   "foo",
+				"Value": "bar",
+			},
+		},
+	}
+	
+	message := ms.NewMessage()
+
+	message.SetFrom(from)
+	message.SetRecipients(recipients)
+	message.SetSubject(subject)
+	message.SetTemplateID("testtemplateid")
+	message.SetPersonalization(personalization)
+	
+	res, _ := ms.Send(ctx, message)
+
+	fmt.Printf(res.Header.Get("X-Message-Id"))
+
+}
 ```
 
 <a name="testing"></a>

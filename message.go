@@ -12,8 +12,8 @@ type Message struct {
 	TemplateID string      `json:"template_id,omitempty"`
 	Tags       []string    `json:"tags,omitempty"`
 
-	TemplateVariables []Variables        `json:"variables"`
-	Personalization  []Personalization `json:"personalization"`
+	TemplateVariables []Variables       `json:"variables"`
+	Personalization   []Personalization `json:"personalization"`
 }
 
 // From - simple struct to declare from name/ email
