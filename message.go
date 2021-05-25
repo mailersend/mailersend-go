@@ -3,14 +3,17 @@ package mailersend
 // Message structures contain both the message text and the envelop for an e-mail message.
 type Message struct {
 	Recipients []Recipient `json:"to"`
-	From       `json:"from"`
-	Subject    string   `json:"subject,omitempty"`
-	Text       string   `json:"text,omitempty"`
-	HTML       string   `json:"html,omitempty"`
-	TemplateID string   `json:"template_id,omitempty"`
-	Tags       []string `json:"tags,omitempty"`
+	From       From        `json:"from"`
+	CC         []Recipient `json:"cc,omitempty"`
+	Bcc        []Recipient `json:"bcc,omitempty"`
+	Subject    string      `json:"subject,omitempty"`
+	Text       string      `json:"text,omitempty"`
+	HTML       string      `json:"html,omitempty"`
+	TemplateID string      `json:"template_id,omitempty"`
+	Tags       []string    `json:"tags,omitempty"`
 
-	TemplateVariables []Variables `json:"variables"`
+	TemplateVariables []Variables       `json:"variables"`
+	Personalization   []Personalization `json:"personalization"`
 }
 
 // From - simple struct to declare from name/ email
@@ -37,6 +40,12 @@ type Substitution struct {
 	Value string `json:"value"`
 }
 
+// Personalization - you can set multiple Personalization for each Recipient
+type Personalization struct {
+	Email string                 `json:"email"`
+	Data  map[string]interface{} `json:"data"`
+}
+
 // NewMessage - Setup a new message ready to be sent.
 func (ms *Mailersend) NewMessage() *Message {
 	return &Message{}
@@ -50,6 +59,16 @@ func (m *Message) SetFrom(from From) {
 // SetRecipients - Set all the recipients.
 func (m *Message) SetRecipients(recipients []Recipient) {
 	m.Recipients = recipients
+}
+
+// SetCc - Set CC.
+func (m *Message) SetCc(cc []Recipient) {
+	m.CC = cc
+}
+
+// SetBcc - Set BCC.
+func (m *Message) SetBcc(bcc []Recipient) {
+	m.Bcc = bcc
 }
 
 // SetSubject - Set the subject of the email, required if not using a template.
@@ -75,6 +94,11 @@ func (m *Message) SetTemplateID(templateid string) {
 // SetSubstitutions - Set the template substitutions(.
 func (m *Message) SetSubstitutions(variables []Variables) {
 	m.TemplateVariables = variables
+}
+
+// SetPersonalization - Set the template personalization.
+func (m *Message) SetPersonalization(personalization []Personalization) {
+	m.Personalization = personalization
 }
 
 // SetTags - Set all the tags.
