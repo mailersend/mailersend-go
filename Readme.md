@@ -22,7 +22,7 @@ $ go get github.com/mailersend/mailersend-go
 <a name="usage"></a>
 # Usage
 
-###Sending a basic email.
+### Sending a basic email
 
 ```go
 package main
