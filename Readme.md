@@ -81,7 +81,7 @@ func main() {
 
 ```
 
-###Sending a simple personalization email.
+### Sending a simple personalization email
 
 ```go
 package main
@@ -146,7 +146,7 @@ func main() {
 ```
 
 
-###Sending a advanced personalization email.
+### Sending a advanced personalization email
 
 ```go
 package main
