@@ -99,7 +99,7 @@ func (m *Message) SetTemplateID(templateid string) {
 	m.TemplateID = templateid
 }
 
-// SetSubstitutions - Set the template substitutions(.
+// SetSubstitutions - Set the template substitutions.
 func (m *Message) SetSubstitutions(variables []Variables) {
 	m.TemplateVariables = variables
 }
@@ -114,7 +114,7 @@ func (m *Message) SetTags(tags []string) {
 	m.Tags = tags
 }
 
-// AddAttachment arranges to send a file from the filesystem along with the e-mail message.
+// AddAttachment - Add an attachment base64 encoded content.
 func (m *Message) AddAttachment(attachment Attachment) {
 	m.Attachments = append(m.Attachments, attachment)
 }
