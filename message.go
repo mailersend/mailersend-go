@@ -11,6 +11,7 @@ type Message struct {
 	HTML       string      `json:"html,omitempty"`
 	TemplateID string      `json:"template_id,omitempty"`
 	Tags       []string    `json:"tags,omitempty"`
+	Attachments       []Attachment `json:"attachments,omitempty"`
 
 	TemplateVariables []Variables       `json:"variables"`
 	Personalization   []Personalization `json:"personalization"`
@@ -44,6 +45,13 @@ type Substitution struct {
 type Personalization struct {
 	Email string                 `json:"email"`
 	Data  map[string]interface{} `json:"data"`
+}
+
+// Attachment - you can set multiple Attachments
+type Attachment struct {
+	Content   string `json:"content"`
+	Filename string `json:"filename"`
+	ID string `json:"id,omitempty"`
 }
 
 // NewMessage - Setup a new message ready to be sent.
@@ -104,4 +112,9 @@ func (m *Message) SetPersonalization(personalization []Personalization) {
 // SetTags - Set all the tags.
 func (m *Message) SetTags(tags []string) {
 	m.Tags = tags
+}
+
+// AddAttachment arranges to send a file from the filesystem along with the e-mail message.
+func (m *Message) AddAttachment(attachment Attachment) {
+	m.Attachments = append(m.Attachments, attachment)
 }
