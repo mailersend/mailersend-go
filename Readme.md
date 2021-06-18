@@ -5,22 +5,31 @@ MailerSend Golang SDK
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)
 [![Test](https://github.com/mailersend/mailersend-go/actions/workflows/test.yaml/badge.svg)](https://github.com/mailersend/mailersend-go/actions/workflows/test.yaml)
 # Table of Contents
-* [Installation](#installation)
-* [Usage](#usage)
-* [Testing](#testing)
-* [Support and Feedback](#support-and-feedback)
-* [License](#license)
+- [Installation](#installation)
+- [Usage](#usage)
+    - [Email](#email)
+        - [Sending a basic email](#send-a-basic-email)
+        - [Sending an email with CC and BCC](#sending-an-email-with-cc-and-bcc)
+        - [Sending an email with variables (simple personalisation)](#sending-an-email-with-variables-simple-personalization)
+        - [Sending an email with personalization (advanced personalisation)](#sending-an-email-with-personalization-advanced-personalization)
+        - [Sending a template-based email](#send-a-template-based-email)
+        - [Sending an email with attachment](#sending-an-email-with-attachment)
+- [Testing](#testing)
+- [Support and Feedback](#support-and-feedback)
+- [License](#license)
 
 <a name="installation"></a>
+
 # Installation
-We recomend using this package with golang [modules](https://github.com/golang/go/wiki/Modules)
+We recommend using this package with golang [modules](https://github.com/golang/go/wiki/Modules)
 
 ```
 $ go get github.com/mailersend/mailersend-go
 ```
 
-<a name="usage"></a>
 # Usage
+
+## Email 
 
 ### Sending a basic email
 
@@ -81,7 +90,212 @@ func main() {
 
 ```
 
-### Sending a simple personalization email
+### Sending an email with CC and BCC
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey string = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	subject := "Subject"
+	text := "This is the text content"
+	html := "<p>This is the HTML content</p>"
+
+	from := mailersend.From{
+		Name:  "Your Name",
+		Email: "your@domain.com",
+	}
+
+	recipients := []mailersend.Recipient{
+		{
+			Name:  "Your Client",
+			Email: "your@client.com",
+		},
+	}
+
+	cc := []mailersend.Recipient{
+		{
+			Name:  "CC",
+			Email: "cc@client.com",
+		},
+	}
+
+	bcc := []mailersend.Recipient{
+		{
+			Name:  "BCC",
+			Email: "bcc@client.com",
+		},
+	}
+	
+	tags := []string{"foo", "bar"}
+
+	message := ms.NewMessage()
+
+	message.SetFrom(from)
+	message.SetRecipients(recipients)
+	message.SetSubject(subject)
+	message.SetHTML(html)
+	message.SetText(text)
+	message.SetTags(tags)
+	message.SetCc(cc)
+	message.SetBcc(bcc)
+
+	res, _ := ms.Send(ctx, message)
+
+	fmt.Printf(res.Header.Get("X-Message-Id"))
+
+}
+```
+
+### Sending an email with variables (simple personalization)
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "time"
+
+    "github.com/mailersend/mailersend-go"
+)
+
+var APIKey string = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	subject := "Subject {$var}"
+	text := "This is the text version with a {$var}."
+	html := "<p>This is the HTML version with a {$var}.</p>"
+
+	from := mailersend.From{
+		Name:  "Your Name",
+		Email: "your@domain.com",
+	}
+	
+	recipients := []mailersend.Recipient{
+		{
+			Name:  "Your Client",
+			Email: "your@client.com",
+		},
+	}
+	
+	variables := []mailersend.Variables{
+		{
+			Email: "your@client.com",
+			Substitutions: []mailersend.Substitution{
+				{
+					Var: "value",
+				},
+			},
+		},
+	}
+	
+	message := ms.NewMessage()
+
+	message.SetFrom(from)
+	message.SetRecipients(recipients)
+	message.SetSubject(subject)
+	message.SetText(text)
+	message.SetHTML(html)
+	
+	message.SetSubstitutions(variables)
+	
+	res, _ := ms.Send(ctx, message)
+
+	fmt.Printf(res.Header.Get("X-Message-Id"))
+
+}
+```
+
+### Sending an email with personalization (advanced personalization)
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey string = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	subject := "Subject {{ var }}"
+	text := "This is the text version with a {{ var }}."
+	html := "<p>This is the HTML version with a {{ var }}.</p>"
+
+	from := mailersend.From{
+		Name:  "Your Name",
+		Email: "your@domain.com",
+	}
+
+	recipients := []mailersend.Recipient{
+		{
+			Name:  "Your Client",
+			Email: "your@client.com",
+		},
+	}
+
+	personalization := []mailersend.Personalization{
+		{
+			Email: "your@client.com",
+			Data: map[string]interface{}{
+				"Var":   "value",
+			},
+		},
+	}
+
+	message := ms.NewMessage()
+
+	message.SetFrom(from)
+	message.SetRecipients(recipients)
+	message.SetSubject(subject)
+	message.SetText(text)
+	message.SetHTML(html)
+	
+	message.SetPersonalization(personalization)
+
+	res, _ := ms.Send(ctx, message)
+
+	fmt.Printf(res.Header.Get("X-Message-Id"))
+
+}
+```
+
+### Send a template-based email
 
 ```go
 package main
@@ -145,16 +359,19 @@ func main() {
 }
 ```
 
-
-### Sending a advanced personalization email
+### Sending an email with attachment
 
 ```go
 package main
 
 import (
-    "context"
-    "fmt"
-    "time"
+	"bufio"
+	"context"
+	"encoding/base64"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"time"
 
     "github.com/mailersend/mailersend-go"
 )
@@ -170,6 +387,8 @@ func main() {
 	defer cancel()
 
 	subject := "Subject"
+	text := "This is the text content"
+	html := "<p>This is the HTML content</p>"
 
 	from := mailersend.From{
 		Name:  "Your Name",
@@ -183,24 +402,31 @@ func main() {
 		},
 	}
 
-	personalization := []mailersend.Personalization{
-		{
-			Email: toEmail,
-			Data: map[string]interface{}{
-				"Var":   "foo",
-				"Value": "bar",
-			},
-		},
-	}
-	
+
+	tags := []string{"foo", "bar"}
+
 	message := ms.NewMessage()
 
 	message.SetFrom(from)
 	message.SetRecipients(recipients)
 	message.SetSubject(subject)
-	message.SetTemplateID("testtemplateid")
-	message.SetPersonalization(personalization)
-	
+	message.SetHTML(html)
+	message.SetText(text)
+	message.SetTags(tags)
+
+	// Open file on disk.
+	f, _ := os.Open("./file.jpg")
+
+	reader := bufio.NewReader(f)
+	content, _ := ioutil.ReadAll(reader)
+
+	// Encode as base64.
+	encoded := base64.StdEncoding.EncodeToString(content)
+
+	attachment := mailersend.Attachment{Filename: "file.jpg", Content: encoded}
+
+	message.AddAttachment(attachment)
+
 	res, _ := ms.Send(ctx, message)
 
 	fmt.Printf(res.Header.Get("X-Message-Id"))

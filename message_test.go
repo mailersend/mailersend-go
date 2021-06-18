@@ -1,6 +1,10 @@
 package mailersend_test
 
 import (
+	"bufio"
+	"encoding/base64"
+	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/mailersend/mailersend-go"
@@ -173,4 +177,27 @@ func TestFullMessage(t *testing.T) {
 	assert.Equal(t, templateID, message.TemplateID)
 	assert.Equal(t, personalization, message.Personalization)
 	assert.Equal(t, tags, message.Tags)
+	assert.Len(t, message.Personalization, 1)
+
+}
+
+func TestCanAddAttachments(t *testing.T) {
+	message := basicMessage()
+
+	// Open file on disk.
+	f, _ := os.Open("./LICENCE")
+
+	// Read entire JPG into byte slice.
+	reader := bufio.NewReader(f)
+	content, _ := ioutil.ReadAll(reader)
+
+	// Encode as base64.
+	encoded := base64.StdEncoding.EncodeToString(content)
+
+	attachment :=mailersend.Attachment{Filename: "test", Content: encoded}
+
+	message.AddAttachment(attachment)
+
+	assert.NotNil(t, message, message.Attachments)
+	assert.Len(t, message.Attachments, 1)
 }
