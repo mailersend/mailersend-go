@@ -1,27 +1,33 @@
 package mailersend
 
+import (
+	"context"
+	"net/http"
+)
+
+const emailBasePath = "/email"
+
+type EmailService service
+
 // Message structures contain both the message text and the envelop for an e-mail message.
 type Message struct {
-	Recipients []Recipient `json:"to"`
-	From       From        `json:"from"`
-	CC         []Recipient `json:"cc,omitempty"`
-	Bcc        []Recipient `json:"bcc,omitempty"`
-	Subject    string      `json:"subject,omitempty"`
-	Text       string      `json:"text,omitempty"`
-	HTML       string      `json:"html,omitempty"`
-	TemplateID string      `json:"template_id,omitempty"`
-	Tags       []string    `json:"tags,omitempty"`
-	Attachments       []Attachment `json:"attachments,omitempty"`
+	Recipients  []Recipient  `json:"to"`
+	From        From         `json:"from"`
+	CC          []Recipient  `json:"cc,omitempty"`
+	Bcc         []Recipient  `json:"bcc,omitempty"`
+	Subject     string       `json:"subject,omitempty"`
+	Text        string       `json:"text,omitempty"`
+	HTML        string       `json:"html,omitempty"`
+	TemplateID  string       `json:"template_id,omitempty"`
+	Tags        []string     `json:"tags,omitempty"`
+	Attachments []Attachment `json:"attachments,omitempty"`
 
 	TemplateVariables []Variables       `json:"variables"`
 	Personalization   []Personalization `json:"personalization"`
 }
 
 // From - simple struct to declare from name/ email
-type From struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
-}
+type From = Recipient
 
 // Recipient - you can set multiple recipients
 type Recipient struct {
@@ -49,13 +55,18 @@ type Personalization struct {
 
 // Attachment - you can set multiple Attachments
 type Attachment struct {
-	Content   string `json:"content"`
+	Content  string `json:"content"`
 	Filename string `json:"filename"`
-	ID string `json:"id,omitempty"`
+	ID       string `json:"id,omitempty"`
 }
 
-// NewMessage - Setup a new message ready to be sent.
+// Deprecated: NewMessage - Setup a new message ready to be sent
 func (ms *Mailersend) NewMessage() *Message {
+	return &Message{}
+}
+
+// NewMessage - Setup a new email message ready to be sent.
+func (s *EmailService) NewMessage() *Message {
 	return &Message{}
 }
 
@@ -74,7 +85,7 @@ func (m *Message) SetCc(cc []Recipient) {
 	m.CC = cc
 }
 
-// SetBcc - Set BCC.
+// SetBcc - Set Bcc.
 func (m *Message) SetBcc(bcc []Recipient) {
 	m.Bcc = bcc
 }
@@ -117,4 +128,24 @@ func (m *Message) SetTags(tags []string) {
 // AddAttachment - Add an attachment base64 encoded content.
 func (m *Message) AddAttachment(attachment Attachment) {
 	m.Attachments = append(m.Attachments, attachment)
+}
+
+// Send - send the message (Deprecated)
+func (ms *Mailersend) Send(ctx context.Context, message *Message) (*Response, error) {
+	req, err := ms.newRequest(http.MethodPost, emailBasePath, message)
+	if err != nil {
+		return nil, err
+	}
+
+	return ms.do(ctx, req, nil)
+}
+
+// Send - send the message
+func (s *EmailService) Send(ctx context.Context, message *Message) (*Response, error) {
+	req, err := s.client.newRequest(http.MethodPost, emailBasePath, message)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.client.do(ctx, req, nil)
 }

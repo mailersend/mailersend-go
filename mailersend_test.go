@@ -3,13 +3,11 @@ package mailersend_test
 import (
 	"bytes"
 	"context"
+	"github.com/mailersend/mailersend-go"
+	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"testing"
-	"time"
-
-	"github.com/mailersend/mailersend-go"
-	"github.com/stretchr/testify/assert"
 )
 
 const (
@@ -57,9 +55,7 @@ func TestCanMakeMockApiCall(t *testing.T) {
 		}
 	})
 
-	ctx := context.Background()
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	defer cancel()
+	ctx := context.TODO()
 
 	ms.SetClient(client)
 
@@ -80,13 +76,11 @@ func TestWillHandleError(t *testing.T) {
 		return nil
 	})
 
-	ctx := context.Background()
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	defer cancel()
+	ctx := context.TODO()
 
 	ms.SetClient(client)
 
-	message := ms.NewMessage()
+	message := ms.Email.NewMessage()
 
 	_, err := ms.Send(ctx, message)
 
@@ -108,15 +102,40 @@ func TestCanSetApiKey(t *testing.T) {
 		}
 	})
 
-	ctx := context.Background()
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	defer cancel()
+	ctx := context.TODO()
 
 	ms.SetClient(client)
 
 	message := ms.NewMessage()
 
 	_, err := ms.Send(ctx, message)
+	if err != nil {
+		return
+	}
+
+}
+
+func TestCanSetApiKeyNew(t *testing.T) {
+
+	ms := mailersend.NewMailersend("api-key")
+
+	client := NewTestClient(func(req *http.Request) *http.Response {
+		// Test request parameters
+		assert.Equal(t, req.Header.Get("Authorization"), "Bearer api-key")
+		return &http.Response{
+			StatusCode: 200,
+			Body:       ioutil.NopCloser(bytes.NewBufferString(`OK`)),
+			Header:     make(http.Header),
+		}
+	})
+
+	ctx := context.TODO()
+
+	ms.SetClient(client)
+
+	message := ms.Email.NewMessage()
+
+	_, err := ms.Email.Send(ctx, message)
 	if err != nil {
 		return
 	}
