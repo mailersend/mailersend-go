@@ -106,8 +106,8 @@ func (m *Message) SetText(text string) {
 }
 
 // SetTemplateID - Set the template ID.
-func (m *Message) SetTemplateID(templateid string) {
-	m.TemplateID = templateid
+func (m *Message) SetTemplateID(templateID string) {
+	m.TemplateID = templateID
 }
 
 // SetSubstitutions - Set the template substitutions.
@@ -130,7 +130,7 @@ func (m *Message) AddAttachment(attachment Attachment) {
 	m.Attachments = append(m.Attachments, attachment)
 }
 
-// Send - send the message (Deprecated)
+// Deprecated: Send - send the message
 func (ms *Mailersend) Send(ctx context.Context, message *Message) (*Response, error) {
 	req, err := ms.newRequest(http.MethodPost, emailBasePath, message)
 	if err != nil {

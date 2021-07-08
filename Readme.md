@@ -116,7 +116,7 @@ func main() {
 	message.SetText(text)
 	message.SetTags(tags)
 
-	res, _ := ms.Send(ctx, message)
+	res, _ := ms.Email.Send(ctx, message)
 
 	fmt.Printf(res.Header.Get("X-Message-Id"))
 
@@ -460,7 +460,7 @@ func main() {
 
 	message.AddAttachment(attachment)
 
-	res, _ := ms.Send(ctx, message)
+	res, _ := ms.Email.Send(ctx, message)
 
 	fmt.Printf(res.Header.Get("X-Message-Id"))
 
