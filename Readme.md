@@ -26,7 +26,7 @@ MailerSend Golang SDK
         - [Get a list of domains](#get-a-list-of-domains)
         - [Get a single domain](#get-a-single-domain)
         - [Delete a domain](#delete-a-domain)
-        - [Get recipients for a domain](#get-recipients-for-a-domain)
+        - [Get a list of recipients per domain](#get-a-list-of-recipients-per-domain)
         - [Update domain settings](#update-domain-settings)
     - [Messages](#messages)
         - [Get a list of messages](#get-a-list-of-messages)
@@ -775,7 +775,7 @@ func main() {
 }
 ```
 
-### Get recipients for a domain
+### Get a list of recipients per domain
 
 ```go
 package main
