@@ -5,28 +5,99 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
+	"github.com/google/go-querystring/query"
+	"io/ioutil"
 	"net/http"
+	"net/url"
+	"reflect"
 )
 
-const (
-	APIBase string = "https://api.mailersend.com/v1"
-)
+const APIBase string = "https://api.mailersend.com/v1"
 
 // Mailersend - base mailersend api client
 type Mailersend struct {
 	apiBase string
 	apiKey  string
 	client  *http.Client
+
+	common service // Reuse a single struct.
+
+	// Services
+	Activity  *ActivityService
+	Analytics *AnalyticsService
+	Domain    *DomainService
+	Email     *EmailService
+	Message   *MessageService
+	Recipient *RecipientService
+	Template  *TemplateService
+	Token     *TokenService
+	Webhook   *WebhookService
 }
 
-// NewMailersend creates a new client instance.
+type service struct {
+	client *Mailersend
+}
+
+// Response is a Mailersend API response. This wraps the standard http.Response
+// returned from Mailersend and provides convenient access to things like
+// pagination links.
+type Response struct {
+	*http.Response
+}
+
+type ErrorResponse struct {
+	Response *http.Response // HTTP response that caused this error
+	Message  string         `json:"message"` // error message
+}
+
+func (r *ErrorResponse) Error() string {
+	return fmt.Sprintf("%v %v: %d %v",
+		r.Response.Request.Method, r.Response.Request.URL,
+		r.Response.StatusCode, r.Message)
+}
+
+// AuthError occurs when using HTTP Authentication fails
+type AuthError ErrorResponse
+
+func (r *AuthError) Error() string { return (*ErrorResponse)(r).Error() }
+
+// Meta - used for api responses
+type Meta struct {
+	CurrentPage json.Number `json:"current_page"`
+	From        json.Number `json:"from"`
+	Path        string      `json:"path"`
+	PerPage     json.Number `json:"per_page"`
+	To          json.Number `json:"to"`
+}
+
+// Links - used for api responses
+type Links struct {
+	First string `json:"first"`
+	Last  string `json:"last"`
+	Prev  string `json:"prev"`
+	Next  string `json:"next"`
+}
+
+// NewMailersend - creates a new client instance.
 func NewMailersend(apiKey string) *Mailersend {
-	return &Mailersend{
+	ms := &Mailersend{
 		apiBase: APIBase,
 		apiKey:  apiKey,
 		client:  http.DefaultClient,
 	}
+
+	ms.common.client = ms
+	ms.Activity = (*ActivityService)(&ms.common)
+	ms.Analytics = (*AnalyticsService)(&ms.common)
+	ms.Domain = (*DomainService)(&ms.common)
+	ms.Email = (*EmailService)(&ms.common)
+	ms.Message = (*MessageService)(&ms.common)
+	ms.Recipient = (*RecipientService)(&ms.common)
+	ms.Template = (*TemplateService)(&ms.common)
+	ms.Token = (*TokenService)(&ms.common)
+	ms.Webhook = (*WebhookService)(&ms.common)
+
+	return ms
 }
 
 // APIKey - Get api key after it has been created
@@ -44,34 +115,25 @@ func (ms *Mailersend) SetClient(c *http.Client) {
 	ms.client = c
 }
 
-// Send - send the message
-func (ms *Mailersend) Send(ctx context.Context, message *Message) (res *http.Response, err error) {
-	req, err := ms.newRequest("POST", "/email", message)
-	if err != nil {
-		return nil, err
-	}
-	res, err = ms.do(ctx, req)
-	return res, err
-}
-
-func (ms *Mailersend) newRequest(method, path string, message *Message) (*http.Request, error) {
-	u := fmt.Sprintf("%s%s", ms.apiBase, path)
-
+func (ms *Mailersend) newRequest(method, path string, body interface{}) (*http.Request, error) {
+	reqURL := fmt.Sprintf("%s%s", ms.apiBase, path)
 	reqBodyBytes := new(bytes.Buffer)
-	err := json.NewEncoder(reqBodyBytes).Encode(message)
+
+	if method == http.MethodPost || method == http.MethodPut {
+		err := json.NewEncoder(reqBodyBytes).Encode(body)
+		if err != nil {
+			return nil, err
+		}
+	} else if method == http.MethodGet {
+		reqURL, _ = addOptions(reqURL, body)
+	}
+
+	req, err := http.NewRequest(method, reqURL, reqBodyBytes)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest(method, u, reqBodyBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	if message != nil {
-		req.Header.Set("Content-Type", "application/json")
-	}
-
+	req.Header.Set("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Bearer "+ms.apiKey)
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", "Mailersend-Client-Golang-v1")
@@ -79,7 +141,7 @@ func (ms *Mailersend) newRequest(method, path string, message *Message) (*http.R
 	return req, nil
 }
 
-func (ms *Mailersend) do(ctx context.Context, req *http.Request) (*http.Response, error) {
+func (ms *Mailersend) do(ctx context.Context, req *http.Request, v interface{}) (*Response, error) {
 	req = req.WithContext(ctx)
 	resp, err := ms.client.Do(req)
 	if err != nil {
@@ -90,11 +152,99 @@ func (ms *Mailersend) do(ctx context.Context, req *http.Request) (*http.Response
 		}
 		return nil, err
 	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
+
+	if v != nil {
+		err = json.NewDecoder(resp.Body).Decode(v)
 		if err != nil {
-			return
+			return nil, err
 		}
-	}(resp.Body)
-	return resp, err
+	}
+
+	response := newResponse(resp)
+
+	err = CheckResponse(resp)
+	if err != nil {
+		defer resp.Body.Close()
+		_, readErr := ioutil.ReadAll(resp.Body)
+		if readErr != nil {
+			return response, readErr
+		}
+	}
+
+	return response, err
 }
+
+// newResponse creates a new Response for the provided http.Response.
+// r must not be nil.
+func newResponse(r *http.Response) *Response {
+	response := &Response{Response: r}
+	return response
+}
+
+// CheckResponse checks the API response for errors, and returns them if
+// present. A response is considered an error if it has a status code outside
+// the 200 range or equal to 202 Accepted.
+func CheckResponse(r *http.Response) error {
+	if r.StatusCode == http.StatusAccepted {
+		return nil
+	}
+	if c := r.StatusCode; 200 <= c && c <= 299 {
+		return nil
+	}
+
+	errorResponse := &ErrorResponse{Response: r}
+	data, err := ioutil.ReadAll(r.Body)
+	if err == nil && data != nil {
+		json.Unmarshal(data, errorResponse)
+	}
+
+	switch {
+	case r.StatusCode == http.StatusUnauthorized:
+		return (*AuthError)(errorResponse)
+	default:
+		return errorResponse
+	}
+}
+
+func addOptions(s string, opt interface{}) (string, error) {
+	v := reflect.ValueOf(opt)
+
+	if v.Kind() == reflect.Ptr && v.IsNil() {
+		return s, nil
+	}
+
+	origURL, err := url.Parse(s)
+	if err != nil {
+		return s, err
+	}
+
+	origValues := origURL.Query()
+
+	newValues, err := query.Values(opt)
+	if err != nil {
+		return s, err
+	}
+
+	for k, v := range newValues {
+		origValues[k] = v
+	}
+
+	origURL.RawQuery = origValues.Encode()
+	return origURL.String(), nil
+}
+
+// Bool is a helper routine that allocates a new bool value
+// to store v and returns a pointer to it.
+func Bool(v bool) *bool { return &v }
+
+// Int is a helper routine that allocates a new int value
+// to store v and returns a pointer to it.
+func Int(v int) *int { return &v }
+
+// Int64 is a helper routine that allocates a new int64 value
+// to store v and returns a pointer to it.
+func Int64(v int64) *int64 { return &v }
+
+// String is a helper routine that allocates a new string value
+// to store v and returns a pointer to it.
+func String(v string) *string { return &v }

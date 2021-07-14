@@ -55,7 +55,7 @@ var bcc = []mailersend.Recipient{
 	},
 }
 
-func basicMessage() *mailersend.Message {
+func basicEmail() *mailersend.Message {
 	ms := mailersend.NewMailersend(testKey)
 
 	message := ms.NewMessage()
@@ -69,8 +69,32 @@ func basicMessage() *mailersend.Message {
 	return message
 }
 
+func basicEmailNew() *mailersend.Message {
+	ms := mailersend.NewMailersend(testKey)
+
+	message := ms.Email.NewMessage()
+
+	message.SetFrom(from)
+	message.SetRecipients(recipients)
+	message.SetSubject(subject)
+	message.SetHTML(html)
+	message.SetText(text)
+
+	return message
+}
+
 func TestSimpleMessage(t *testing.T) {
-	message := basicMessage()
+	message := basicEmail()
+
+	assert.Equal(t, from, message.From)
+	assert.Equal(t, recipients[0], message.Recipients[0])
+	assert.Equal(t, subject, message.Subject)
+	assert.Equal(t, html, message.HTML)
+	assert.Equal(t, text, message.Text)
+}
+
+func TestSimpleMessageNew(t *testing.T) {
+	message := basicEmailNew()
 
 	assert.Equal(t, from, message.From)
 	assert.Equal(t, recipients[0], message.Recipients[0])
@@ -80,21 +104,30 @@ func TestSimpleMessage(t *testing.T) {
 }
 
 func TestCanCCMessage(t *testing.T) {
-	message := basicMessage()
+	message := basicEmail()
 	message.SetCc(cc)
 
 	assert.Equal(t, cc, message.CC)
 }
 
 func TestCanBCCMessage(t *testing.T) {
-	message := basicMessage()
+	message := basicEmail()
 	message.SetBcc(bcc)
 
 	assert.Equal(t, bcc, message.Bcc)
 }
 
+func TestCanCCBCCMessage(t *testing.T) {
+	message := basicEmailNew()
+	message.SetCc(cc)
+	message.SetBcc(bcc)
+
+	assert.Equal(t, cc, message.CC)
+	assert.Equal(t, bcc, message.Bcc)
+}
+
 func TestTemplateMessage(t *testing.T) {
-	message := basicMessage()
+	message := basicEmail()
 
 	variables := []mailersend.Variables{
 		{
@@ -132,7 +165,57 @@ func TestTemplateMessage(t *testing.T) {
 }
 
 func TestFullMessage(t *testing.T) {
-	message := basicMessage()
+	message := basicEmail()
+
+	message.SetCc(cc)
+	message.SetBcc(bcc)
+
+	variables := []mailersend.Variables{
+		{
+			Email: toEmail,
+			Substitutions: []mailersend.Substitution{
+				{
+					Var:   "foo",
+					Value: "bar",
+				},
+			},
+		},
+	}
+
+	personalization := []mailersend.Personalization{
+		{
+			Email: toEmail,
+			Data: map[string]interface{}{
+				"Var":   "foo",
+				"Value": "bar",
+			},
+		},
+	}
+
+	tags := []string{"foo", "bar"}
+
+	message.SetTemplateID(templateID)
+	message.SetSubstitutions(variables)
+	message.SetPersonalization(personalization)
+	message.SetTags(tags)
+
+	assert.Equal(t, cc, message.CC)
+	assert.Equal(t, bcc, message.Bcc)
+	assert.Equal(t, from, message.From)
+	assert.Equal(t, recipients[0], message.Recipients[0])
+	assert.Equal(t, subject, message.Subject)
+	assert.Equal(t, html, message.HTML)
+	assert.Equal(t, text, message.Text)
+	assert.Equal(t, variables, message.TemplateVariables)
+	assert.Equal(t, templateID, message.TemplateID)
+	assert.Equal(t, personalization, message.Personalization)
+	assert.Equal(t, tags, message.Tags)
+	assert.Len(t, message.Personalization, 1)
+
+}
+
+func TestFullMessageNew(t *testing.T) {
+	message := basicEmailNew()
 
 	message.SetCc(cc)
 	message.SetBcc(bcc)
@@ -182,19 +265,16 @@ func TestFullMessage(t *testing.T) {
 }
 
 func TestCanAddAttachments(t *testing.T) {
-	message := basicMessage()
+	message := basicEmail()
 
-	// Open file on disk.
 	f, _ := os.Open("./LICENCE")
 
-	// Read entire JPG into byte slice.
 	reader := bufio.NewReader(f)
 	content, _ := ioutil.ReadAll(reader)
 
-	// Encode as base64.
 	encoded := base64.StdEncoding.EncodeToString(content)
 
-	attachment :=mailersend.Attachment{Filename: "test", Content: encoded}
+	attachment := mailersend.Attachment{Filename: "test", Content: encoded}
 
 	message.AddAttachment(attachment)
 
