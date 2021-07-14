@@ -23,17 +23,16 @@ MailerSend Golang SDK
         - [Opens by user-agent name](#opens-by-user-agent-name)
         - [Opens by reading environment](#opens-by-reading-environment)
     - [Domains](#domains)
-        - [Get all domains](#get-all-domains)
+        - [Get a list of domains](#get-a-list-of-domains)
         - [Get a single domain](#get-a-single-domain)
         - [Delete a domain](#delete-a-domain)
         - [Get recipients for a domain](#get-recipients-for-a-domain)
         - [Update domain settings](#update-domain-settings)
     - [Messages](#messages)
-        - [Get all messages](#get-all-messages)
+        - [Get a list of messages](#get-a-list-of-messages)
         - [Get a single message](#get-a-single-message)
     - [Recipients](#recipients)
-      - [Get all recipients](#get-all-recipients)
-      - [Get all recipients for a specific domain](#get-all-recipients-for-a-specific-domain)
+      - [Get a list of recipients](#get-a-list-of-recipients)
       - [Get a single recipients](#get-a-single-recipient)
       - [Delete a recipients](#delete-a-recipient)
     - [Tokens](#tokens)
@@ -41,7 +40,7 @@ MailerSend Golang SDK
       - [Pause / Unpause Token](#pause--unpause-token)
       - [Delete a token](#delete-a-token)
     - [Webhooks](#webhooks)
-      - [Get all webhooks](#get-all-webhooks)
+      - [Get a list of webhooks](#get-a-list-of-webhooks)
       - [Get a single webhook](#get-a-single-webhook)
       - [Create a webhook](#create-a-webhook)
       - [Update a Webhook](#update-a-webhook)
@@ -677,7 +676,7 @@ func main() {
 
 ## Domains
 
-### Get all domains
+### Get a list of domains
 
 ```go
 package main
@@ -854,7 +853,7 @@ func main() {
 
 ## Messages
 
-### Get all messages
+### Get a list of messages
 
 ```go
 package main
@@ -923,7 +922,7 @@ func main() {
 
 ## Recipients
 
-### Get all recipients
+### Get a list of recipients
 
 ```go
 package main
@@ -947,48 +946,11 @@ func main() {
 	defer cancel()
 
 	options := &mailersend.ListRecipientOptions{
+		//DomainID: domainID,
 		Page:  1,
 		Limit: 25,
 	}
 	
-	_, _, err := ms.Recipient.List(ctx, options)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-```
-
-### Get all recipients for a specific domain
-
-```go
-package main
-
-import (
-	"context"
-	"log"
-	"time"
-	
-	"github.com/mailersend/mailersend-go"
-)
-
-var APIKey = "Api Key Here"
-
-func main() {
-	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
-
-	ctx := context.Background()
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	defer cancel()
-	
-	domainID := "domain-id"
-
-	options := &mailersend.ListRecipientOptions{
-		DomainID: domainID,
-		Page:     1,
-		Limit:    25,
-	}
-
 	_, _, err := ms.Recipient.List(ctx, options)
 	if err != nil {
 		log.Fatal(err)
@@ -1184,7 +1146,7 @@ func main() {
 
 ## Webhooks
 
-### Get all webhooks
+### Get a list of webhooks
 
 ```go
 package main
