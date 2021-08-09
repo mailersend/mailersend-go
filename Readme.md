@@ -35,8 +35,8 @@ MailerSend Golang SDK
       - [Get a list of recipients](#get-a-list-of-recipients)
       - [Get a single recipients](#get-a-single-recipient)
       - [Delete a recipients](#delete-a-recipient)
-      - [Get recipients from a suppression list](#delete-a-recipient)
-      - [Add recipients to a suppression list](#delete-a-recipient)
+      - [Get recipients from a suppression list](#get-recipients-from-a-suppression-list)
+      - [Add recipients to a suppression list](#add-recipients-to-a-suppression-list)
       - [Delete recipients from a suppression list](#delete-a-recipient)
     - [Tokens](#tokens)
       - [Create a token](#create-a-token)
@@ -1022,6 +1022,113 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+```
+
+
+### Get recipients from a suppression list
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	listOptions := &mailersend.SuppressionOptions{
+		DomainID: "domain-id",
+		Page:     1,
+		Limit:    25,
+	}
+
+	// List Block List Recipients 
+	_, _, err := ms.Suppression.ListBlockList(ctx, listOptions)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// List Hard Bounces 
+	_, _, _ = ms.Suppression.ListHardBounces(ctx, listOptions)
+
+	// List Spam Complaints 
+	_, _, _ = ms.Suppression.ListSpamComplaints(ctx, listOptions)
+	
+	// List Unsubscribes
+	_, _, _ = ms.Suppression.ListUnsubscribes(ctx, listOptions)
+
+
+}
+```
+
+### Add recipients to a suppression list
+
+```go
+package main
+
+import (
+	"context"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	// Add Recipient to Block List
+	createSuppressionBlockOptions := &mailersend.CreateSuppressionBlockOptions{
+		DomainID:   "domain-id",
+		Recipients: []string{"test@example.com"},
+		Patterns: []string{".*@example.com"},
+	}
+	
+	_, _, _ = ms.Suppression.CreateBlock(ctx, createSuppressionBlockOptions)
+
+	// Add Recipient to Hard Bounces
+	createSuppressionHardBounceOptions := &mailersend.CreateSuppressionOptions{
+		DomainID:   "domain-id",
+		Recipients: []string{"test@example.com"},
+	}
+
+	_, _, _ = ms.Suppression.CreateHardBounce(ctx, createSuppressionHardBounceOptions)
+
+	// Add Recipient to Spam Complaints
+	createSuppressionSpamComplaintsOptions := &mailersend.CreateSuppressionOptions{
+		DomainID:   "domain-id",
+		Recipients: []string{"test@example.com"},
+	}
+
+	_, _, _ = ms.Suppression.CreateHardBounce(ctx, createSuppressionSpamComplaintsOptions)
+
+	// Add Recipient to Unsubscribes
+	createSuppressionUnsubscribesOptions := &mailersend.CreateSuppressionOptions{
+		DomainID:   "domain-id",
+		Recipients: []string{"test@example.com"},
+	}
+	
+	_, _, _ = ms.Suppression.CreateHardBounce(ctx, createSuppressionUnsubscribesOptions)
+
 }
 ```
 

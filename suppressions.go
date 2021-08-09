@@ -81,6 +81,7 @@ type suppressionRecipient struct {
 type suppressionBlockResponse struct {
 	Data []suppressionBlockData `json:"data"`
 }
+
 type suppressionBlockData struct {
 	ID        string    `json:"id"`
 	Type      string    `json:"type"`
