@@ -121,7 +121,9 @@ func (ms *Mailersend) newRequest(method, path string, body interface{}) (*http.R
 	reqURL := fmt.Sprintf("%s%s", ms.apiBase, path)
 	reqBodyBytes := new(bytes.Buffer)
 
-	if method == http.MethodPost || method == http.MethodPut {
+	if method == http.MethodPost ||
+		method == http.MethodPut ||
+		method == http.MethodDelete {
 		err := json.NewEncoder(reqBodyBytes).Encode(body)
 		if err != nil {
 			return nil, err

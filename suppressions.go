@@ -7,7 +7,15 @@ import (
 	"time"
 )
 
-const suppressionBasePath = "/suppressions"
+const
+(
+	suppressionBasePath = "/suppressions"
+
+	BlockList string = "blocklist"
+	HardBounces string = "hard-bounces"
+	SpamComplaints string = "spam-complaints"
+	Unsubscribes string = "unsubscribes"
+)
 
 type SuppressionService service
 
@@ -108,8 +116,18 @@ type SuppressionOptions struct {
 	Limit    int    `url:"limit,omitempty"`
 }
 
+type DeleteSuppressionOptions struct {
+	Ids []string `json:"ids"`
+}
+
+type deleteAll struct {
+	All bool `json:"all"`
+}
+
+
+
 func (s *SuppressionService) ListBlockList(ctx context.Context, options *SuppressionOptions) (*suppressionBlockListRoot, *Response, error) {
-	path := fmt.Sprintf("%s/%s", suppressionBasePath, "blocklist")
+	path := fmt.Sprintf("%s/%s", suppressionBasePath, BlockList)
 
 	req, err := s.client.newRequest(http.MethodGet, path, options)
 	if err != nil {
@@ -127,7 +145,7 @@ func (s *SuppressionService) ListBlockList(ctx context.Context, options *Suppres
 }
 
 func (s *SuppressionService) ListHardBounces(ctx context.Context, options *SuppressionOptions) (*suppressionHardBouncesRoot, *Response, error) {
-	path := fmt.Sprintf("%s/%s", suppressionBasePath, "hard-bounces")
+	path := fmt.Sprintf("%s/%s", suppressionBasePath, HardBounces)
 
 	req, err := s.client.newRequest(http.MethodGet, path, options)
 	if err != nil {
@@ -145,7 +163,7 @@ func (s *SuppressionService) ListHardBounces(ctx context.Context, options *Suppr
 }
 
 func (s *SuppressionService) ListSpamComplaints(ctx context.Context, options *SuppressionOptions) (*suppressionSpamComplaintsRoot, *Response, error) {
-	path := fmt.Sprintf("%s/%s", suppressionBasePath, "spam-complaints")
+	path := fmt.Sprintf("%s/%s", suppressionBasePath, SpamComplaints)
 
 	req, err := s.client.newRequest(http.MethodGet, path, options)
 	if err != nil {
@@ -163,7 +181,7 @@ func (s *SuppressionService) ListSpamComplaints(ctx context.Context, options *Su
 }
 
 func (s *SuppressionService) ListUnsubscribes(ctx context.Context, options *SuppressionOptions) (*suppressionUnsubscribesRoot, *Response, error) {
-	path := fmt.Sprintf("%s/%s", suppressionBasePath, "unsubscribes")
+	path := fmt.Sprintf("%s/%s", suppressionBasePath, Unsubscribes)
 
 	req, err := s.client.newRequest(http.MethodGet, path, options)
 	if err != nil {
@@ -181,7 +199,7 @@ func (s *SuppressionService) ListUnsubscribes(ctx context.Context, options *Supp
 }
 
 func (s *SuppressionService) CreateBlock(ctx context.Context, options *CreateSuppressionBlockOptions) (*suppressionBlockResponse, *Response, error) {
-	path := fmt.Sprintf("%s/%s", suppressionBasePath, "blocklist")
+	path := fmt.Sprintf("%s/%s", suppressionBasePath, BlockList)
 	req, err := s.client.newRequest(http.MethodPost, path, options)
 	if err != nil {
 		return nil, nil, err
@@ -197,7 +215,7 @@ func (s *SuppressionService) CreateBlock(ctx context.Context, options *CreateSup
 }
 
 func (s *SuppressionService) CreateHardBounce(ctx context.Context, options *CreateSuppressionOptions) (*suppressionHardBouncesRoot, *Response, error) {
-	path := fmt.Sprintf("%s/%s", suppressionBasePath, "hard-bounces")
+	path := fmt.Sprintf("%s/%s", suppressionBasePath, HardBounces)
 	req, err := s.client.newRequest(http.MethodPost, path, options)
 	if err != nil {
 		return nil, nil, err
@@ -213,7 +231,7 @@ func (s *SuppressionService) CreateHardBounce(ctx context.Context, options *Crea
 }
 
 func (s *SuppressionService) CreateSpamComplaint(ctx context.Context, options *CreateSuppressionOptions) (*suppressionSpamComplaintsRoot, *Response, error) {
-	path := fmt.Sprintf("%s/%s", suppressionBasePath, "spam-complaints")
+	path := fmt.Sprintf("%s/%s", suppressionBasePath, SpamComplaints)
 	req, err := s.client.newRequest(http.MethodPost, path, options)
 	if err != nil {
 		return nil, nil, err
@@ -229,7 +247,7 @@ func (s *SuppressionService) CreateSpamComplaint(ctx context.Context, options *C
 }
 
 func (s *SuppressionService) CreateUnsubscribe(ctx context.Context, options *CreateSuppressionOptions) (*suppressionUnsubscribesRoot, *Response, error) {
-	path := fmt.Sprintf("%s/%s", suppressionBasePath, "unsubscribes")
+	path := fmt.Sprintf("%s/%s", suppressionBasePath, Unsubscribes)
 	req, err := s.client.newRequest(http.MethodPost, path, options)
 	if err != nil {
 		return nil, nil, err
@@ -244,14 +262,27 @@ func (s *SuppressionService) CreateUnsubscribe(ctx context.Context, options *Cre
 	return root, res, nil
 }
 
-func (s *SuppressionService) Delete(ctx context.Context, recipientID string) (*Response, error) {
-	path := fmt.Sprintf("%s/%s", suppressionBasePath, recipientID)
+func (s *SuppressionService) Delete(ctx context.Context, options *DeleteSuppressionOptions, suppressionType string) (*Response, error) {
+	path := fmt.Sprintf("%s/%s", suppressionBasePath, suppressionType)
 
-	req, err := s.client.newRequest(http.MethodDelete, path, nil)
+	req, err := s.client.newRequest(http.MethodDelete, path, options)
 	if err != nil {
 		return nil, err
 	}
 
 	return s.client.do(ctx, req, nil)
 
+}
+
+func (s *SuppressionService) DeleteAll(ctx context.Context, suppressionType string) (*Response, error) {
+	path := fmt.Sprintf("%s/%s", suppressionBasePath, suppressionType)
+
+	options := deleteAll{All: true}
+
+	req, err := s.client.newRequest(http.MethodDelete, path, options)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.client.do(ctx, req, nil)
 }
