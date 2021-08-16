@@ -7,14 +7,13 @@ import (
 	"time"
 )
 
-const
-(
+const (
 	suppressionBasePath = "/suppressions"
 
-	BlockList string = "blocklist"
-	HardBounces string = "hard-bounces"
+	BlockList      string = "blocklist"
+	HardBounces    string = "hard-bounces"
 	SpamComplaints string = "spam-complaints"
-	Unsubscribes string = "unsubscribes"
+	Unsubscribes   string = "unsubscribes"
 )
 
 type SuppressionService service
@@ -123,8 +122,6 @@ type DeleteSuppressionOptions struct {
 type deleteAll struct {
 	All bool `json:"all"`
 }
-
-
 
 func (s *SuppressionService) ListBlockList(ctx context.Context, options *SuppressionOptions) (*suppressionBlockListRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", suppressionBasePath, BlockList)

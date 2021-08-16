@@ -1132,6 +1132,49 @@ func main() {
 }
 ```
 
+### Delete recipients from a suppression list
+
+```go
+package main
+
+import (
+	"context"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	// Delete All {type}
+	
+	// mailersend.BlockList 
+	// mailersend.HardBounces 
+	// mailersend.SpamComplaints 
+	// mailersend.Unsubscribes
+	
+	_, _ = ms.Suppression.DeleteAll(ctx, mailersend.Unsubscribe)
+	
+	// Delete 
+
+	deleteSuppressionOption := &mailersend.DeleteSuppressionOptions{
+		Ids: []string{"suppression-id"},
+	}
+
+	_, _ = ms.Suppression.Delete(ctx, deleteSuppressionOption, mailersend.Unsubscribes)
+
+
+}
+```
+
 ## Tokens
 
 ### Create a token
