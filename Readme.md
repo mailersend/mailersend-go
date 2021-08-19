@@ -45,6 +45,10 @@ MailerSend Golang SDK
       - [Create a webhook](#create-a-webhook)
       - [Update a Webhook](#update-a-webhook)
       - [Delete a Webhook](#delete-a-webhook)
+    - [Templates](#templates)
+      - [Get a list of templates](#get-a-list-of-template)
+      - [Get a single template](#get-a-single-template)
+      - [Delete a template](#delete-a-template)
 - [Types](#types)
 - [Helpers](#helpers)   
 - [Testing](#testing)
@@ -1321,6 +1325,107 @@ func main() {
 	webhookID := "webhook-id"
 	
 	_, err := ms.Webhook.Delete(ctx, webhookID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+## Templates
+
+### Get a list of templates
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	
+	options := &mailersend.ListTemplateOptions{
+		Page:  1,
+		Limit: 25,
+	}
+	
+	_, _, err := ms.Template.List(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get a single template
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	
+	templateID := "template-id"
+	
+	_, _, err := ms.Template.Get(ctx, templateID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Delete a template
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	templateID := "template-id"
+	
+	_, err := ms.Template.Delete(ctx, templateID)
 	if err != nil {
 		log.Fatal(err)
 	}
