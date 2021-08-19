@@ -23,15 +23,16 @@ type Mailersend struct {
 	common service // Reuse a single struct.
 
 	// Services
-	Activity  *ActivityService
-	Analytics *AnalyticsService
-	Domain    *DomainService
-	Email     *EmailService
-	Message   *MessageService
-	Recipient *RecipientService
-	Template  *TemplateService
-	Token     *TokenService
-	Webhook   *WebhookService
+	Activity    *ActivityService
+	Analytics   *AnalyticsService
+	Domain      *DomainService
+	Email       *EmailService
+	Message     *MessageService
+	Recipient   *RecipientService
+	Template    *TemplateService
+	Token       *TokenService
+	Webhook     *WebhookService
+	Suppression *SuppressionService
 }
 
 type service struct {
@@ -96,6 +97,7 @@ func NewMailersend(apiKey string) *Mailersend {
 	ms.Template = (*TemplateService)(&ms.common)
 	ms.Token = (*TokenService)(&ms.common)
 	ms.Webhook = (*WebhookService)(&ms.common)
+	ms.Suppression = (*SuppressionService)(&ms.common)
 
 	return ms
 }
@@ -119,7 +121,9 @@ func (ms *Mailersend) newRequest(method, path string, body interface{}) (*http.R
 	reqURL := fmt.Sprintf("%s%s", ms.apiBase, path)
 	reqBodyBytes := new(bytes.Buffer)
 
-	if method == http.MethodPost || method == http.MethodPut {
+	if method == http.MethodPost ||
+		method == http.MethodPut ||
+		method == http.MethodDelete {
 		err := json.NewEncoder(reqBodyBytes).Encode(body)
 		if err != nil {
 			return nil, err
