@@ -46,7 +46,7 @@ MailerSend Golang SDK
       - [Update a Webhook](#update-a-webhook)
       - [Delete a Webhook](#delete-a-webhook)
     - [Templates](#templates)
-      - [Get a list of templates](#get-a-list-of-template)
+      - [Get a list of templates](#get-a-list-of-templates)
       - [Get a single template](#get-a-single-template)
       - [Delete a template](#delete-a-template)
 - [Types](#types)
