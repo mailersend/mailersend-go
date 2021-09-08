@@ -26,6 +26,9 @@ MailerSend Golang SDK
         - [Get a list of domains](#get-a-list-of-domains)
         - [Get a single domain](#get-a-single-domain)
         - [Delete a domain](#delete-a-domain)
+        - [Add a Domain](#add-a-domain)
+        - [Get DNS Records](#get-dns-records)
+        - [Verify a Domain](#verify-a-domain)
         - [Get a list of recipients per domain](#get-a-list-of-recipients-per-domain)
         - [Update domain settings](#update-domain-settings)
     - [Messages](#messages)
@@ -775,6 +778,111 @@ func main() {
 	domainID := "domain-id"
 
 	_, err := ms.Domain.Delete(ctx, domainID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Add a domain
+
+> The API key used here must not be scoped to any other domain!
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.CreateDomainOptions{
+		Name: "domain.test",
+	}
+
+	_, _, err := ms.Domain.Create(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+
+### Get DNS Records
+
+> The API key used here must not be scoped to any other domain!
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	domainID := "domain-id"
+
+	_, _, err := ms.Domain.GetDNS(ctx, domainID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Verify a Domain
+
+> The API key used here must not be scoped to any other domain!
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	domainID := "domain-id"
+
+	_, _, err := ms.Domain.Verify(ctx, domainID)
 	if err != nil {
 		log.Fatal(err)
 	}
