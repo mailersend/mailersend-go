@@ -117,6 +117,11 @@ func (ms *Mailersend) SetClient(c *http.Client) {
 	ms.client = c
 }
 
+// SetAPIKey - Set the client api key
+func (ms *Mailersend) SetAPIKey(apikey string) {
+	ms.apiKey = apikey
+}
+
 func (ms *Mailersend) newRequest(method, path string, body interface{}) (*http.Request, error) {
 	reqURL := fmt.Sprintf("%s%s", ms.apiBase, path)
 	reqBodyBytes := new(bytes.Buffer)

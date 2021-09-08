@@ -110,7 +110,6 @@ func main() {
 		},
 	}
 
-
 	tags := []string{"foo", "bar"}
 
 	message := ms.Email.NewMessage()

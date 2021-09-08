@@ -14,20 +14,6 @@ const (
 	testKey = "valid-mailersend-api-key"
 )
 
-//RoundTripFunc
-type RoundTripFunc func(req *http.Request) *http.Response
-
-//RoundTrip
-func (f RoundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
-	return f(req), nil
-}
-
-//NewTestClient returns *http.Client with Transport replaced to avoid making real calls
-func NewTestClient(fn RoundTripFunc) *http.Client {
-	return &http.Client{
-		Transport: fn,
-	}
-}
 
 func TestNewMailersend(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
@@ -49,9 +35,8 @@ func TestCanMakeMockApiCall(t *testing.T) {
 		// Test request parameters
 		assert.Equal(t, req.URL.String(), "https://api.mailersend.com/v1/email")
 		return &http.Response{
-			StatusCode: 200,
-			Body:       ioutil.NopCloser(bytes.NewBufferString(`OK`)),
-			Header:     make(http.Header),
+			StatusCode: http.StatusAccepted,
+			Body: ioutil.NopCloser(bytes.NewBufferString(`OK`)),
 		}
 	})
 
@@ -59,12 +44,14 @@ func TestCanMakeMockApiCall(t *testing.T) {
 
 	ms.SetClient(client)
 
-	message := ms.NewMessage()
+	message := ms.Email.NewMessage()
 
-	_, err := ms.Send(ctx, message)
+	res, err := ms.Email.Send(ctx, message)
 	if err != nil {
 		return
 	}
+
+	assert.Equal(t, res.StatusCode, http.StatusAccepted)
 
 }
 
@@ -82,7 +69,7 @@ func TestWillHandleError(t *testing.T) {
 
 	message := ms.Email.NewMessage()
 
-	_, err := ms.Send(ctx, message)
+	_, err := ms.Email.Send(ctx, message)
 
 	assert.Error(t, err)
 
@@ -90,43 +77,23 @@ func TestWillHandleError(t *testing.T) {
 
 func TestCanSetApiKey(t *testing.T) {
 
-	ms := mailersend.NewMailersend("api-key")
+	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		// Test request parameters
-		assert.Equal(t, req.Header.Get("Authorization"), "Bearer api-key")
-		return &http.Response{
-			StatusCode: 200,
-			Body:       ioutil.NopCloser(bytes.NewBufferString(`OK`)),
-			Header:     make(http.Header),
+		switch req.Header.Get("Authorization") {
+		case "Bearer valid-mailersend-api-key":
+			return &http.Response{
+				StatusCode: 200,
+				Body:       ioutil.NopCloser(bytes.NewBufferString(`OK`)),
+			}
+		case "Bearer new-api-key":
+			return &http.Response{
+				StatusCode: 401,
+				Body:       ioutil.NopCloser(bytes.NewBufferString(`ERROR`)),
+			}
 		}
-	})
 
-	ctx := context.TODO()
-
-	ms.SetClient(client)
-
-	message := ms.NewMessage()
-
-	_, err := ms.Send(ctx, message)
-	if err != nil {
-		return
-	}
-
-}
-
-func TestCanSetApiKeyNew(t *testing.T) {
-
-	ms := mailersend.NewMailersend("api-key")
-
-	client := NewTestClient(func(req *http.Request) *http.Response {
-		// Test request parameters
-		assert.Equal(t, req.Header.Get("Authorization"), "Bearer api-key")
-		return &http.Response{
-			StatusCode: 200,
-			Body:       ioutil.NopCloser(bytes.NewBufferString(`OK`)),
-			Header:     make(http.Header),
-		}
+		return nil
 	})
 
 	ctx := context.TODO()
@@ -135,9 +102,15 @@ func TestCanSetApiKeyNew(t *testing.T) {
 
 	message := ms.Email.NewMessage()
 
-	_, err := ms.Email.Send(ctx, message)
-	if err != nil {
-		return
-	}
+	res, _ := ms.Email.Send(ctx, message)
+
+	assert.Equal(t, res.StatusCode, http.StatusOK)
+
+	ms.SetAPIKey("new-api-key")
+
+	resError, _ := ms.Email.Send(ctx, message)
+
+	assert.NotEqual(t, resError.StatusCode, http.StatusAccepted)
+	assert.Equal(t, resError.StatusCode, http.StatusUnauthorized)
 
 }
