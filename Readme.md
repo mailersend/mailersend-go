@@ -820,7 +820,6 @@ func main() {
 }
 ```
 
-
 ### Get DNS Records
 
 > The API key used here must not be scoped to any other domain!

@@ -14,7 +14,6 @@ const (
 	testKey = "valid-mailersend-api-key"
 )
 
-
 func TestNewMailersend(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
@@ -36,7 +35,7 @@ func TestCanMakeMockApiCall(t *testing.T) {
 		assert.Equal(t, req.URL.String(), "https://api.mailersend.com/v1/email")
 		return &http.Response{
 			StatusCode: http.StatusAccepted,
-			Body: ioutil.NopCloser(bytes.NewBufferString(`OK`)),
+			Body:       ioutil.NopCloser(bytes.NewBufferString(`OK`)),
 		}
 	})
 

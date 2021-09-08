@@ -98,7 +98,7 @@ type dns struct {
 
 type verifyRoot struct {
 	Message string `json:"message"`
-	Data    verify   `json:"data"`
+	Data    verify `json:"data"`
 }
 type verify struct {
 	Dkim     bool `json:"dkim"`
@@ -147,8 +147,8 @@ type DomainSettingOptions struct {
 }
 
 type CreateDomainOptions struct {
-	Name   string   `json:"name"`
-	ReturnPathSubdomain string `json:"return_path_subdomain,omitempty"`
+	Name                    string `json:"name"`
+	ReturnPathSubdomain     string `json:"return_path_subdomain,omitempty"`
 	CustomTrackingSubdomain string `json:"custom_tracking_subdomain,omitempty"`
 	InboundRoutingSubdomain string `json:"inbound_routing_subdomain,omitempty"`
 }
@@ -268,7 +268,6 @@ func (s *DomainService) Verify(ctx context.Context, domainID string) (*verifyRoo
 
 	return root, res, nil
 }
-
 
 func (s *DomainService) GetRecipients(ctx context.Context, options *GetRecipientsOptions) (*domainRecipientRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s/recipients", domainBasePath, options.DomainID)
