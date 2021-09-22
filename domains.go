@@ -52,6 +52,63 @@ type DomainSettings struct {
 	CustomTrackingSubdomain string `json:"custom_tracking_subdomain,omitempty"`
 }
 
+type dnsRoot struct {
+	Data dns `json:"data"`
+}
+
+type Spf struct {
+	Hostname string `json:"hostname"`
+	Type     string `json:"type"`
+	Value    string `json:"value"`
+}
+
+type Dkim struct {
+	Hostname string `json:"hostname"`
+	Type     string `json:"type"`
+	Value    string `json:"value"`
+}
+
+type ReturnPath struct {
+	Hostname string `json:"hostname"`
+	Type     string `json:"type"`
+	Value    string `json:"value"`
+}
+
+type CustomTracking struct {
+	Hostname string `json:"hostname"`
+	Type     string `json:"type"`
+	Value    string `json:"value"`
+}
+
+type InboundRouting struct {
+	Hostname string `json:"hostname"`
+	Type     string `json:"type"`
+	Value    string `json:"value"`
+	Priority string `json:"priority"`
+}
+
+type dns struct {
+	ID             string         `json:"id"`
+	Spf            Spf            `json:"spf"`
+	Dkim           Dkim           `json:"dkim"`
+	ReturnPath     ReturnPath     `json:"return_path"`
+	CustomTracking CustomTracking `json:"custom_tracking"`
+	InboundRouting InboundRouting `json:"inbound_routing"`
+}
+
+type verifyRoot struct {
+	Message string `json:"message"`
+	Data    verify `json:"data"`
+}
+type verify struct {
+	Dkim     bool `json:"dkim"`
+	Spf      bool `json:"spf"`
+	Mx       bool `json:"mx"`
+	Tracking bool `json:"tracking"`
+	Cname    bool `json:"cname"`
+	RpCname  bool `json:"rp_cname"`
+}
+
 // domainRecipientRoot format of domain response
 type domainRecipientRoot struct {
 	Data  []domainRecipient `json:"data"`
@@ -87,6 +144,13 @@ type DomainSettingOptions struct {
 	TrackContent            *bool  `json:"track_content,omitempty"`
 	CustomTrackingEnabled   *bool  `json:"custom_tracking_enabled,omitempty"`
 	CustomTrackingSubdomain string `json:"custom_tracking_subdomain,omitempty"`
+}
+
+type CreateDomainOptions struct {
+	Name                    string `json:"name"`
+	ReturnPathSubdomain     string `json:"return_path_subdomain,omitempty"`
+	CustomTrackingSubdomain string `json:"custom_tracking_subdomain,omitempty"`
+	InboundRoutingSubdomain string `json:"inbound_routing_subdomain,omitempty"`
 }
 
 // GetRecipientsOptions - modifies the behavior of DomainService.GetRecipients Method
@@ -154,6 +218,55 @@ func (s *DomainService) Delete(ctx context.Context, domainID string) (*Response,
 	}
 
 	return s.client.do(ctx, req, nil)
+}
+
+func (s *DomainService) Create(ctx context.Context, options *CreateDomainOptions) (*singleDomainRoot, *Response, error) {
+	req, err := s.client.newRequest(http.MethodPost, domainBasePath, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	root := new(singleDomainRoot)
+	res, err := s.client.do(ctx, req, root)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return root, res, nil
+}
+
+func (s *DomainService) GetDNS(ctx context.Context, domainID string) (*dnsRoot, *Response, error) {
+	path := fmt.Sprintf("%s/%s/dns-records", domainBasePath, domainID)
+
+	req, err := s.client.newRequest(http.MethodGet, path, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	root := new(dnsRoot)
+	res, err := s.client.do(ctx, req, root)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return root, res, nil
+}
+
+func (s *DomainService) Verify(ctx context.Context, domainID string) (*verifyRoot, *Response, error) {
+	path := fmt.Sprintf("%s/%s/verify", domainBasePath, domainID)
+
+	req, err := s.client.newRequest(http.MethodGet, path, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	root := new(verifyRoot)
+	res, err := s.client.do(ctx, req, root)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return root, res, nil
 }
 
 func (s *DomainService) GetRecipients(ctx context.Context, options *GetRecipientsOptions) (*domainRecipientRoot, *Response, error) {

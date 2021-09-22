@@ -48,7 +48,7 @@ type activityRecipient struct {
 
 // ActivityOptions - modifies the behavior of ActivityService.List method
 type ActivityOptions struct {
-	DomainID string   `url:"-,"`
+	DomainID string   `url:"-"`
 	Page     int      `url:"page,omitempty"`
 	DateFrom int64    `url:"date_from,omitempty"`
 	DateTo   int64    `url:"date_to,omitempty"`
