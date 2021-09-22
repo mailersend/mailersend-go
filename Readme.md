@@ -786,8 +786,6 @@ func main() {
 
 ### Add a domain
 
-> The API key used here must not be scoped to any other domain!
-
 ```go
 package main
 
@@ -822,8 +820,6 @@ func main() {
 
 ### Get DNS Records
 
-> The API key used here must not be scoped to any other domain!
-
 ```go
 package main
 
@@ -855,8 +851,6 @@ func main() {
 ```
 
 ### Verify a Domain
-
-> The API key used here must not be scoped to any other domain!
 
 ```go
 package main
