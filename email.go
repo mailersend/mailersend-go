@@ -9,7 +9,7 @@ const emailBasePath = "/email"
 
 type EmailService service
 
-// Message structures contain both the message text and the envelope for an e-mail message.
+// Message structures contain both the message text and the envelop for an e-mail message.
 type Message struct {
 	Recipients  []Recipient  `json:"to"`
 	From        From         `json:"from"`
