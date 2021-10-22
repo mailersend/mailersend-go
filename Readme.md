@@ -9,52 +9,55 @@ MailerSend Golang SDK
 - [Installation](#installation)
 - [Usage](#usage)
     - [Email](#email)
-        - [Send an email](#send-an-email)
-        - [Add CC, BCC recipients](#add-cc-bcc-recipients)
-        - [Send a template-based email](#send-a-template-based-email)
-        - [Advanced personalization](#advanced-personalization)
-        - [Simple personalization](#simple-personalization)
-        - [Send email with attachment](#send-email-with-attachment)
+       - [Send an email](#send-an-email)
+       - [Add CC, BCC recipients](#add-cc-bcc-recipients)
+       - [Send a template-based email](#send-a-template-based-email)
+       - [Advanced personalization](#advanced-personalization)
+       - [Simple personalization](#simple-personalization)
+       - [Send email with attachment](#send-email-with-attachment)
+    - [Bulk Email](#bulk-email)
+       - [Send bulk email](#send-bulk-email)
+       - [Get bulk email status](#get-bulk-email-status)
     - [Activity](#activity)
-        - [Get a list of activities](#get-a-list-of-activities)
+       - [Get a list of activities](#get-a-list-of-activities)
     - [Analytics](#analytics)
-        - [Activity data by date](#activity-data-by-date)
-        - [Opens by country](#opens-by-country)
-        - [Opens by user-agent name](#opens-by-user-agent-name)
-        - [Opens by reading environment](#opens-by-reading-environment)
+       - [Activity data by date](#activity-data-by-date)
+       - [Opens by country](#opens-by-country)
+       - [Opens by user-agent name](#opens-by-user-agent-name)
+       - [Opens by reading environment](#opens-by-reading-environment)
     - [Domains](#domains)
-        - [Get a list of domains](#get-a-list-of-domains)
-        - [Get a single domain](#get-a-single-domain)
-        - [Delete a domain](#delete-a-domain)
-        - [Add a Domain](#add-a-domain)
-        - [Get DNS Records](#get-dns-records)
-        - [Verify a Domain](#verify-a-domain)
-        - [Get a list of recipients per domain](#get-a-list-of-recipients-per-domain)
-        - [Update domain settings](#update-domain-settings)
+       - [Get a list of domains](#get-a-list-of-domains)
+       - [Get a single domain](#get-a-single-domain)
+       - [Delete a domain](#delete-a-domain)
+       - [Add a Domain](#add-a-domain)
+       - [Get DNS Records](#get-dns-records)
+       - [Verify a Domain](#verify-a-domain)
+       - [Get a list of recipients per domain](#get-a-list-of-recipients-per-domain)
+       - [Update domain settings](#update-domain-settings)
     - [Messages](#messages)
-        - [Get a list of messages](#get-a-list-of-messages)
-        - [Get a single message](#get-a-single-message)
+       - [Get a list of messages](#get-a-list-of-messages)
+       - [Get a single message](#get-a-single-message)
     - [Recipients](#recipients)
-      - [Get a list of recipients](#get-a-list-of-recipients)
-      - [Get a single recipients](#get-a-single-recipient)
-      - [Delete a recipients](#delete-a-recipient)
-      - [Get recipients from a suppression list](#get-recipients-from-a-suppression-list)
-      - [Add recipients to a suppression list](#add-recipients-to-a-suppression-list)
-      - [Delete recipients from a suppression list](#delete-a-recipient)
+       - [Get a list of recipients](#get-a-list-of-recipients)
+       - [Get a single recipients](#get-a-single-recipient)
+       - [Delete a recipients](#delete-a-recipient)
+       - [Get recipients from a suppression list](#get-recipients-from-a-suppression-list)
+       - [Add recipients to a suppression list](#add-recipients-to-a-suppression-list)
+       - [Delete recipients from a suppression list](#delete-a-recipient)
     - [Tokens](#tokens)
-      - [Create a token](#create-a-token)
-      - [Pause / Unpause Token](#pause--unpause-token)
-      - [Delete a token](#delete-a-token)
+       - [Create a token](#create-a-token)
+       - [Pause / Unpause Token](#pause--unpause-token)
+       - [Delete a token](#delete-a-token)
     - [Webhooks](#webhooks)
-      - [Get a list of webhooks](#get-a-list-of-webhooks)
-      - [Get a single webhook](#get-a-single-webhook)
-      - [Create a webhook](#create-a-webhook)
-      - [Update a Webhook](#update-a-webhook)
-      - [Delete a Webhook](#delete-a-webhook)
+       - [Get a list of webhooks](#get-a-list-of-webhooks)
+       - [Get a single webhook](#get-a-single-webhook)
+       - [Create a webhook](#create-a-webhook)
+       - [Update a Webhook](#update-a-webhook)
+       - [Delete a Webhook](#delete-a-webhook)
     - [Templates](#templates)
-      - [Get a list of templates](#get-a-list-of-templates)
-      - [Get a single template](#get-a-single-template)
-      - [Delete a template](#delete-a-template)
+       - [Get a list of templates](#get-a-list-of-templates)
+       - [Get a single template](#get-a-single-template)
+       - [Delete a template](#delete-a-template)
 - [Types](#types)
 - [Helpers](#helpers)   
 - [Testing](#testing)
@@ -476,6 +479,101 @@ func main() {
 ```
 
 <a name="activity"></a>
+
+## Bulk Email
+
+### Send bulk email
+
+```go
+package main
+
+import (
+    "context"
+	"time"
+	"log"
+	"fmt"
+	
+    "github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+	
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	subject := "Subject"
+	text := "This is the text content"
+	html := "<p>This is the HTML content</p>"
+
+	from := mailersend.From{
+		Name:  "Your Name",
+		Email: "your@domain.com",
+	}
+
+	recipients := []mailersend.Recipient{
+		{
+			Name:  "Your Client",
+			Email: "your@client.com",
+		},
+	}
+
+	var messages []*mailersend.Message
+	
+	for i := range [2]int{} {
+		msg := &mailersend.Message{
+			From:       from,
+			Recipients: recipients,
+			Subject:    fmt.Sprintf("%s %v", subject, i),
+			Text:       text,
+			HTML:       html,
+		}
+		messages = append(messages, msg)
+	}
+	
+	_, _, err := ms.BulkEmail.Send(ctx, messages)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+}
+
+```
+
+### Get bulk email status
+
+```go
+package main
+
+import (
+	"context"
+	"time"
+	"log"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	
+	_, _, err := ms.BulkEmail.Status(ctx, "bulk-email-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+}
+```
 
 ## Activity
 

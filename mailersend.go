@@ -27,6 +27,7 @@ type Mailersend struct {
 	Analytics   *AnalyticsService
 	Domain      *DomainService
 	Email       *EmailService
+	BulkEmail   *BulkEmailService
 	Message     *MessageService
 	Recipient   *RecipientService
 	Template    *TemplateService
@@ -92,6 +93,7 @@ func NewMailersend(apiKey string) *Mailersend {
 	ms.Analytics = (*AnalyticsService)(&ms.common)
 	ms.Domain = (*DomainService)(&ms.common)
 	ms.Email = (*EmailService)(&ms.common)
+	ms.BulkEmail = (*BulkEmailService)(&ms.common)
 	ms.Message = (*MessageService)(&ms.common)
 	ms.Recipient = (*RecipientService)(&ms.common)
 	ms.Template = (*TemplateService)(&ms.common)
