@@ -15,6 +15,7 @@ type Message struct {
 	From        From         `json:"from"`
 	CC          []Recipient  `json:"cc,omitempty"`
 	Bcc         []Recipient  `json:"bcc,omitempty"`
+	ReplyTo     ReplyTo      `json:"reply_to,omitempty"`
 	Subject     string       `json:"subject,omitempty"`
 	Text        string       `json:"text,omitempty"`
 	HTML        string       `json:"html,omitempty"`
@@ -28,6 +29,9 @@ type Message struct {
 
 // From - simple struct to declare from name/ email
 type From = Recipient
+
+// ReplyTo - simple struct to declare from name/ email
+type ReplyTo = Recipient
 
 // Recipient - you can set multiple recipients
 type Recipient struct {
@@ -88,6 +92,11 @@ func (m *Message) SetCc(cc []Recipient) {
 // SetBcc - Set Bcc.
 func (m *Message) SetBcc(bcc []Recipient) {
 	m.Bcc = bcc
+}
+
+// SetReplyTo - Set ReplyTo.
+func (m *Message) SetReplyTo(replyTo Recipient) {
+	m.ReplyTo = replyTo
 }
 
 // SetSubject - Set the subject of the email, required if not using a template.
