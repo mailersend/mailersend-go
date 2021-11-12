@@ -187,6 +187,11 @@ func main() {
 			Email: "bcc@client.com",
 		},
 	}
+
+	replyTo := mailersend.ReplyTo{
+		Name:  "Reply To",
+		Email: "reply_to@client.com",
+	}
 	
 	tags := []string{"foo", "bar"}
 
@@ -200,6 +205,7 @@ func main() {
 	message.SetTags(tags)
 	message.SetCc(cc)
 	message.SetBcc(bcc)
+	message.SetReplyTo(replyTo)
 
 	res, _ := ms.Email.Send(ctx, message)
 
