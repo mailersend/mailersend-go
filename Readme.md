@@ -25,6 +25,12 @@ MailerSend Golang SDK
        - [Opens by country](#opens-by-country)
        - [Opens by user-agent name](#opens-by-user-agent-name)
        - [Opens by reading environment](#opens-by-reading-environment)
+    - [Inbound Routes](#inbound-routes)
+       - [Get a list of inbound routes](#get-a-list-of-inbound-routes)
+       - [Get a single inbound route](#get-a-single-inbound-route)
+       - [Add an inbound route](#add-an-inbound-route)
+       - [Update an inbound route](#update-an-inbound-route)
+       - [Delete an inbound route](#delete-an-inbound-route)
     - [Domains](#domains)
        - [Get a list of domains](#get-a-list-of-domains)
        - [Get a single domain](#get-a-single-domain)
@@ -784,6 +790,182 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+```
+
+## Inbound Route
+
+### Get a list of inbound routes
+
+```go
+package main
+
+import (
+	"context"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.TODO()
+
+	domainID := "domain-id"
+
+	listOptions := &mailersend.ListInboundOptions{
+		DomainID: domainID,
+	}
+	
+	_, _, _ = ms.Inbound.List(ctx, listOptions)
+}
+```
+
+### Get a single inbound route
+
+```go
+package main
+
+import (
+	"context"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.TODO()
+
+	inboundID := "inbound-id"
+
+	_, _, _ = ms.Inbound.Get(ctx, inboundID)
+}
+```
+
+
+### Add an inbound route
+
+```go
+package main
+
+import (
+	"context"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.TODO()
+
+	domainID := "domain-id"
+
+	createOptions := &mailersend.CreateInboundOptions{
+		DomainID:      domainID,
+		Name:          "Example Route",
+		DomainEnabled: *mailersend.Bool(false),
+		MatchFilter: &mailersend.MatchFilter{
+			Type: "match_all",
+		},
+		CatchFilter: &mailersend.CatchFilter{},
+		Forwards: []mailersend.Forwards{
+			{
+				Type:  "webhook",
+				Value: "https://example.com",
+			},
+		},
+	}
+
+	_, _, _ = ms.Inbound.Create(ctx, createOptions)
+}
+```
+
+### Update an inbound route
+
+```go
+package main
+
+import (
+	"context"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.TODO()
+
+	inboundID := "inbound-id"
+
+	updateOptions := &mailersend.UpdateInboundOptions{
+		Name:          "Example Route",
+		DomainEnabled: *mailersend.Bool(true),
+		InboundDomain: "inbound.example.com",
+		MatchFilter: &mailersend.MatchFilter{
+			Type: "match_all",
+		},
+		CatchFilter: &mailersend.CatchFilter{
+			Type: "catch_recipient",
+			Filters: []mailersend.Filters{
+				{
+					Comparer: "equal",
+					Value:    "email",
+				},
+				{
+					Comparer: "equal",
+					Value:    "emails",
+				},
+			},
+		},
+		Forwards: []mailersend.Forwards{
+			{
+				Type:  "webhook",
+				Value: "https://example.com",
+			},
+		},
+	}
+
+	_, _, _ = ms.Inbound.Update(ctx, inboundID, updateOptions)
+}
+```
+
+### Delete an inbound route
+
+```go
+package main
+
+import (
+	"context"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.TODO()
+
+	inboundID := "inbound-id"
+
+	_, _ = ms.Inbound.Delete(ctx, inboundID)
 }
 ```
 

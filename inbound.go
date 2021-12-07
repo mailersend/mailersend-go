@@ -49,7 +49,7 @@ type forwards struct {
 }
 
 type mxValues struct {
-	Priority int    `json:"priority"`
+	Priority string `json:"priority"`
 	Target   string `json:"target"`
 }
 
@@ -62,29 +62,30 @@ type ListInboundOptions struct {
 
 // CreateInboundOptions - the Options to set when creating an inbound resource
 type CreateInboundOptions struct {
-	DomainID         string      `json:"domain_id"`
-	Name             string      `json:"name"`
-	DomainEnabled    bool        `json:"domain_enabled"`
-	InboundDomain    string      `json:"inbound_domain"`
-	InboundAddress   string      `json:"inbound_address"`
-	InboundSubdomain string      `json:"inbound_subdomain"`
-	MatchFilter      MatchFilter `json:"match_filter"`
-	CatchFilter      CatchFilter `json:"catch_filter"`
-	Forwards         []Forwards  `json:"forwards"`
+	DomainID         string       `json:"domain_id"`
+	Name             string       `json:"name"`
+	DomainEnabled    bool         `json:"domain_enabled"`
+	InboundDomain    string       `json:"inbound_domain,omitempty"`
+	InboundAddress   string       `json:"inbound_address,omitempty"`
+	InboundSubdomain string       `json:"inbound_subdomain,omitempty"`
+	MatchFilter      *MatchFilter `json:"match_filter,omitempty"`
+	CatchFilter      *CatchFilter `json:"catch_filter,omitempty"`
+	Forwards         []Forwards   `json:"forwards"`
 }
 
 type MatchFilter struct {
-	Type string `json:"type"`
+	Type string `json:"type,omitempty"`
 }
 
 type Filters struct {
 	Comparer string `json:"comparer"`
 	Value    string `json:"value"`
+	Key      string `json:"key,omitempty"`
 }
 
 type CatchFilter struct {
-	Type    string    `json:"type"`
-	Filters []Filters `json:"filters"`
+	Type    string    `json:"type,omitempty"`
+	Filters []Filters `json:"filters,omitempty"`
 }
 
 type Forwards struct {
@@ -127,7 +128,7 @@ func (s *InboundService) Get(ctx context.Context, inboundID string) (*singleInbo
 	return root, res, nil
 }
 
-func (s *InboundService) Create(ctx context.Context, options *CreateWebhookOptions) (*singleInboundRoot, *Response, error) {
+func (s *InboundService) Create(ctx context.Context, options *CreateInboundOptions) (*singleInboundRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodPost, inboundBasePath, options)
 	if err != nil {
 		return nil, nil, err
@@ -142,8 +143,8 @@ func (s *InboundService) Create(ctx context.Context, options *CreateWebhookOptio
 	return root, res, nil
 }
 
-func (s *InboundService) Update(ctx context.Context, options *UpdateInboundOptions) (*singleInboundRoot, *Response, error) {
-	path := fmt.Sprintf("%s/%s", inboundBasePath, options.DomainID)
+func (s *InboundService) Update(ctx context.Context, inboundID string, options *UpdateInboundOptions) (*singleInboundRoot, *Response, error) {
+	path := fmt.Sprintf("%s/%s", inboundBasePath, inboundID)
 
 	req, err := s.client.newRequest(http.MethodPut, path, options)
 	if err != nil {
