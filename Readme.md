@@ -49,7 +49,7 @@ MailerSend Golang SDK
        - [Delete a recipients](#delete-a-recipient)
        - [Get recipients from a suppression list](#get-recipients-from-a-suppression-list)
        - [Add recipients to a suppression list](#add-recipients-to-a-suppression-list)
-       - [Delete recipients from a suppression list](#delete-a-recipient)
+       - [Delete recipients from a suppression list](#delete-recipients-from-a-suppression-list)
     - [Tokens](#tokens)
        - [Create a token](#create-a-token)
        - [Pause / Unpause Token](#pause--unpause-token)
@@ -1544,6 +1544,8 @@ func main() {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
+	domainID := "domain-id"
+
 	// Delete All {type}
 	
 	// mailersend.BlockList 
@@ -1551,12 +1553,13 @@ func main() {
 	// mailersend.SpamComplaints 
 	// mailersend.Unsubscribes
 	
-	_, _ = ms.Suppression.DeleteAll(ctx, mailersend.Unsubscribe)
+	_, _ = ms.Suppression.DeleteAll(ctx, domainID, mailersend.Unsubscribes)
 	
 	// Delete 
 
 	deleteSuppressionOption := &mailersend.DeleteSuppressionOptions{
-		Ids: []string{"suppression-id"},
+		DomainID: domainID,
+		Ids:      []string{"suppression-id"},
 	}
 
 	_, _ = ms.Suppression.Delete(ctx, deleteSuppressionOption, mailersend.Unsubscribes)
