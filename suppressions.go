@@ -116,11 +116,13 @@ type SuppressionOptions struct {
 }
 
 type DeleteSuppressionOptions struct {
-	Ids []string `json:"ids"`
+	DomainID string   `json:"domain_id"`
+	Ids      []string `json:"ids"`
 }
 
 type deleteAll struct {
-	All bool `json:"all"`
+	DomainID string `json:"domain_id"`
+	All      bool   `json:"all"`
 }
 
 func (s *SuppressionService) ListBlockList(ctx context.Context, options *SuppressionOptions) (*suppressionBlockListRoot, *Response, error) {
@@ -271,10 +273,10 @@ func (s *SuppressionService) Delete(ctx context.Context, options *DeleteSuppress
 
 }
 
-func (s *SuppressionService) DeleteAll(ctx context.Context, suppressionType string) (*Response, error) {
+func (s *SuppressionService) DeleteAll(ctx context.Context, domainID string, suppressionType string) (*Response, error) {
 	path := fmt.Sprintf("%s/%s", suppressionBasePath, suppressionType)
 
-	options := deleteAll{All: true}
+	options := deleteAll{All: true, DomainID: domainID}
 
 	req, err := s.client.newRequest(http.MethodDelete, path, options)
 	if err != nil {
