@@ -37,7 +37,7 @@ MailerSend Golang SDK
        - [Delete a domain](#delete-a-domain)
        - [Add a Domain](#add-a-domain)
        - [Get DNS Records](#get-dns-records)
-       - [Verify a Domain](#verify-a-domain)
+       - [Get verification status](#get-verification-status)
        - [Get a list of recipients per domain](#get-a-list-of-recipients-per-domain)
        - [Update domain settings](#update-domain-settings)
     - [Messages](#messages)
@@ -1136,7 +1136,7 @@ func main() {
 }
 ```
 
-### Verify a Domain
+### Get verification status
 
 ```go
 package main
