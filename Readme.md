@@ -121,6 +121,9 @@ func main() {
 			Email: "your@client.com",
 		},
 	}
+	
+	// Send in 5 minute
+	sendAt := time.Now().Add(time.Minute * 5).Unix()
 
 	tags := []string{"foo", "bar"}
 
@@ -132,6 +135,7 @@ func main() {
 	message.SetHTML(html)
 	message.SetText(text)
 	message.SetTags(tags)
+	message.SetSendAt(sendAt)
 
 	res, _ := ms.Email.Send(ctx, message)
 

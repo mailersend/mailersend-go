@@ -20,6 +20,7 @@ type Message struct {
 	Text        string       `json:"text,omitempty"`
 	HTML        string       `json:"html,omitempty"`
 	TemplateID  string       `json:"template_id,omitempty"`
+	SendAt      int64        `json:"send_at,omitempty"`
 	Tags        []string     `json:"tags,omitempty"`
 	Attachments []Attachment `json:"attachments,omitempty"`
 
@@ -137,6 +138,11 @@ func (m *Message) SetTags(tags []string) {
 // AddAttachment - Add an attachment base64 encoded content.
 func (m *Message) AddAttachment(attachment Attachment) {
 	m.Attachments = append(m.Attachments, attachment)
+}
+
+// SetSendAt - Set send_at.
+func (m *Message) SetSendAt(sendAt int64) {
+	m.SendAt = sendAt
 }
 
 // Deprecated: Send - send the message
