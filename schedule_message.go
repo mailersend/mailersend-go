@@ -3,7 +3,6 @@ package mailersend
 import (
 	"context"
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
 	"net/http"
 	"time"
 )
@@ -80,8 +79,6 @@ func (s *ScheduleMessageService) List(ctx context.Context, options *ListSchedule
 
 func (s *ScheduleMessageService) Get(ctx context.Context, messageID string) (*scheduleMessageSingleRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", messageScheduleBasePath, messageID)
-
-	spew.Dump(path)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
 	if err != nil {
