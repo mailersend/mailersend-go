@@ -23,18 +23,19 @@ type Mailersend struct {
 	common service // Reuse a single struct.
 
 	// Services
-	Activity    *ActivityService
-	Analytics   *AnalyticsService
-	Domain      *DomainService
-	Email       *EmailService
-	BulkEmail   *BulkEmailService
-	Message     *MessageService
-	Recipient   *RecipientService
-	Template    *TemplateService
-	Token       *TokenService
-	Webhook     *WebhookService
-	Suppression *SuppressionService
-	Inbound     *InboundService
+	Activity        *ActivityService
+	Analytics       *AnalyticsService
+	Domain          *DomainService
+	Email           *EmailService
+	BulkEmail       *BulkEmailService
+	Message         *MessageService
+	ScheduleMessage *ScheduleMessageService
+	Recipient       *RecipientService
+	Template        *TemplateService
+	Token           *TokenService
+	Webhook         *WebhookService
+	Suppression     *SuppressionService
+	Inbound         *InboundService
 }
 
 type service struct {
@@ -96,6 +97,7 @@ func NewMailersend(apiKey string) *Mailersend {
 	ms.Email = (*EmailService)(&ms.common)
 	ms.BulkEmail = (*BulkEmailService)(&ms.common)
 	ms.Message = (*MessageService)(&ms.common)
+	ms.ScheduleMessage = (*ScheduleMessageService)(&ms.common)
 	ms.Recipient = (*RecipientService)(&ms.common)
 	ms.Template = (*TemplateService)(&ms.common)
 	ms.Token = (*TokenService)(&ms.common)
