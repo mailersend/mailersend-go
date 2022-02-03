@@ -43,6 +43,10 @@ MailerSend Golang SDK
     - [Messages](#messages)
        - [Get a list of messages](#get-a-list-of-messages)
        - [Get a single message](#get-a-single-message)
+    - [Scheduled Messages](#scheduled-messages)
+       - [Get a list of scheduled messages](#get-a-list-of-scheduled-messages)
+       - [Get a single scheduled message](#get-a-single-scheduled-message)
+       - [Delete a scheduled message](#delete-a-scheduled-message)
     - [Recipients](#recipients)
        - [Get a list of recipients](#get-a-list-of-recipients)
        - [Get a single recipients](#get-a-single-recipient)
@@ -1311,6 +1315,96 @@ func main() {
 	messageID := "message-id"
 
 	_, _, err := ms.Message.Get(ctx, messageID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+
+## Scheduled messages
+
+### Get a list of scheduled messages
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.TODO()
+
+	domainID := "domain-id"
+
+	_, _, err := ms.ScheduleMessage.List(ctx, domainID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get a single scheduled message
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.TODO()
+	
+	messageID := "message-id"
+
+	_, _, err := ms.ScheduleMessage.Get(ctx, messageID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Delete a scheduled message
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.TODO()
+
+	messageID := "message-id"
+	
+	_, err := ms.ScheduleMessage.Delete(ctx, messageID)
 	if err != nil {
 		log.Fatal(err)
 	}
