@@ -36,6 +36,7 @@ type Mailersend struct {
 	Webhook         *WebhookService
 	Suppression     *SuppressionService
 	Inbound         *InboundService
+	SMS             *SMSService
 }
 
 type service struct {
@@ -104,6 +105,7 @@ func NewMailersend(apiKey string) *Mailersend {
 	ms.Webhook = (*WebhookService)(&ms.common)
 	ms.Suppression = (*SuppressionService)(&ms.common)
 	ms.Inbound = (*InboundService)(&ms.common)
+	ms.SMS = (*SMSService)(&ms.common)
 
 	return ms
 }
