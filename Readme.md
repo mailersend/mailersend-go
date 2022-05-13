@@ -2098,12 +2098,12 @@ func main() {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	message := ms.SMS.NewMessage()
+	message := ms.Sms.NewMessage()
 	message.SetFrom("your-number")
 	message.SetTo([]string{"client-number"})
 	message.SetText("This is the message content")
 
-	res, _ := ms.SMS.Send(context.TODO(), message)
+	res, _ := ms.Sms.Send(context.TODO(), message)
 	fmt.Printf(res.Header.Get("X-SMS-Message-Id"))
 }
 ```
