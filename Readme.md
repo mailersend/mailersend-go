@@ -68,6 +68,8 @@ MailerSend Golang SDK
        - [Get a list of templates](#get-a-list-of-templates)
        - [Get a single template](#get-a-single-template)
        - [Delete a template](#delete-a-template)
+    - [SMS](#sms)
+       - [Send an SMS](#send-an-sms)
 - [Types](#types)
 - [Helpers](#helpers)   
 - [Testing](#testing)
@@ -2069,6 +2071,40 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+```
+
+## SMS 
+
+### Send an SMS
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	message := ms.SMS.NewMessage()
+	message.SetFrom("your-number")
+	message.SetTo([]string{"client-number"})
+	message.SetText("This is the message content")
+
+	res, _ := ms.SMS.Send(context.TODO(), message)
+	fmt.Printf(res.Header.Get("X-SMS-Message-Id"))
 }
 ```
 
