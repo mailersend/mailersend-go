@@ -70,6 +70,9 @@ MailerSend Golang SDK
        - [Delete a template](#delete-a-template)
     - [SMS](#sms)
        - [Send an SMS](#send-an-sms)
+    - [SMS Activity](#sms-activity)
+       - [Get a list of activities](#get-a-list-of-sms-activities)
+       - [Send an SMS](#send-an-sms)
 - [Types](#types)
 - [Helpers](#helpers)   
 - [Testing](#testing)
@@ -2084,6 +2087,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/mailersend/mailersend-go"
 )
@@ -2107,6 +2111,203 @@ func main() {
 	fmt.Printf(res.Header.Get("X-SMS-Message-Id"))
 }
 ```
+
+## SMS Activity
+
+### Get a list of SMS activities
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.SmsActivityOptions{}
+	
+	_, _, err := ms.SmsActivityService.List(context.TODO(), options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get activity of a single SMS message
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.Sms.Activity(context.TODO(), "message-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+## SMS phone numbers
+
+### Get a list of SMS phone numbers
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.SmsNumberOptions{}
+
+	_, _, err := ms.SmsNumber.List(context.TODO(), options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get an SMS phone numbers
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.SmsNumber.Get(context.TODO(), "number-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Update a single SMS phone number
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.SmsNumberSettingOptions{
+		Id:     "number-id",
+		Paused: mailersend.Bool(false),
+	}
+
+	_, _, err := ms.SmsNumber.Update(context.TODO(), options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+
+### Delete an SMS phone number
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	
+	numberID := "number-id"
+
+	_, err := ms.SmsNumber.Delete(ctx, numberID)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
 
 # Types
 

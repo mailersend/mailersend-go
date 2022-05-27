@@ -37,6 +37,8 @@ type Mailersend struct {
 	Suppression     *SuppressionService
 	Inbound         *InboundService
 	Sms             *SmsService
+	SmsActivity     *SmsActivityService
+	SmsNumber       *SmsNumberService
 }
 
 type service struct {
@@ -106,6 +108,8 @@ func NewMailersend(apiKey string) *Mailersend {
 	ms.Suppression = (*SuppressionService)(&ms.common)
 	ms.Inbound = (*InboundService)(&ms.common)
 	ms.Sms = (*SmsService)(&ms.common)
+	ms.SmsActivity = (*SmsActivityService)(&ms.common)
+	ms.SmsNumber = (*SmsNumberService)(&ms.common)
 
 	return ms
 }
