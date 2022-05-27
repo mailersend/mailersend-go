@@ -39,6 +39,7 @@ type Mailersend struct {
 	Sms             *SmsService
 	SmsActivity     *SmsActivityService
 	SmsNumber       *SmsNumberService
+	SmsRecipient    *SmsRecipientService
 }
 
 type service struct {
@@ -110,6 +111,7 @@ func NewMailersend(apiKey string) *Mailersend {
 	ms.Sms = (*SmsService)(&ms.common)
 	ms.SmsActivity = (*SmsActivityService)(&ms.common)
 	ms.SmsNumber = (*SmsNumberService)(&ms.common)
+	ms.SmsRecipient = (*SmsRecipientService)(&ms.common)
 
 	return ms
 }

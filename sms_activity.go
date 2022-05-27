@@ -38,7 +38,7 @@ type SmsActivityOptions struct {
 	Limit       int      `url:"limit,omitempty"`
 }
 
-func (s *SmsService) ListActivity(ctx context.Context, options *SmsActivityOptions) (*smsListActivityRoot, *Response, error) {
+func (s *SmsActivityService) List(ctx context.Context, options *SmsActivityOptions) (*smsListActivityRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, smsActivityPath, options)
 	if err != nil {
 		return nil, nil, err
@@ -53,7 +53,7 @@ func (s *SmsService) ListActivity(ctx context.Context, options *SmsActivityOptio
 	return root, res, nil
 }
 
-func (s *SmsService) Activity(ctx context.Context, smsMessageID string) (*SmsMessageRoot, *Response, error) {
+func (s *SmsActivityService) Get(ctx context.Context, smsMessageID string) (*SmsMessageRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", smsMessagesPath, smsMessageID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)

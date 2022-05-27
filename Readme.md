@@ -72,7 +72,16 @@ MailerSend Golang SDK
        - [Send an SMS](#send-an-sms)
     - [SMS Activity](#sms-activity)
        - [Get a list of activities](#get-a-list-of-sms-activities)
-       - [Send an SMS](#send-an-sms)
+       - [Get activity of a single SMS message](#get-activity-of-a-single-sms-message)
+    - [SMS Phone Numbers](#sms-phone-numbers)
+        - [Get a list of SMS phone numbers](#get-a-list-of-sms-phone-numbers)
+        - [Get an SMS phone number](#get-an-sms-phone-number)
+        - [Update a single SMS phone number](#update-a-single-sms-phone-number)
+        - [Delete an SMS phone number](#delete-an-sms-phone-number)
+    - [SMS Recipients](#sms-recipients)
+        - [Get a list of SMS recipients](#get-a-list-of-sms-recipients)
+        - [Get an SMS recipient](#get-an-sms-recipient)
+        - [Update a single SMS recipient](#update-a-single-sms-recipient)
 - [Types](#types)
 - [Helpers](#helpers)   
 - [Testing](#testing)
@@ -2169,7 +2178,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	_, _, err := ms.Sms.Activity(context.TODO(), "message-id")
+	_, _, err := ms.SmsActivityService.Get(context.TODO(), "message-id")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -2210,7 +2219,7 @@ func main() {
 }
 ```
 
-### Get an SMS phone numbers
+### Get an SMS phone number
 
 ```go
 package main
@@ -2308,6 +2317,104 @@ func main() {
 }
 ```
 
+## SMS recipients
+
+### Get a list of SMS recipients
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.SmsRecipientOptions{SmsNumberId: "sms-number-id"}
+	
+	_, _, err := ms.SmsRecipient.List(context.TODO(), options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get an SMS recipient
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.SmsRecipient.Get(context.TODO(), "sms-recipient-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Update a single SMS recipient
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.SmsRecipientSettingOptions{
+		Id:     "sms-recipient-id",
+		Status: "opt_out",
+	}
+
+	_, _, err := ms.SmsRecipient.Update(context.TODO(), options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
 
 # Types
 
