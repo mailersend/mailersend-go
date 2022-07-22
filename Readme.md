@@ -958,7 +958,7 @@ func main() {
 		},
 		CatchFilter: &mailersend.CatchFilter{
 			Type: "catch_recipient",
-			Filters: []mailersend.Filters{
+			Filters: []mailersend.Filter{
 				{
 					Comparer: "equal",
 					Value:    "email",
