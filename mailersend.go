@@ -42,6 +42,7 @@ type Mailersend struct {
 	SmsRecipient    *SmsRecipientService
 	SmsWebhook      *SmsWebhookService
 	SmsMessage      *SmsMessageService
+	SmsInbound      *SmsInboundService
 }
 
 type service struct {
@@ -88,6 +89,13 @@ type Links struct {
 	Next  string `json:"next"`
 }
 
+// Filter - used to filter resources
+type Filter struct {
+	Comparer string `json:"comparer"`
+	Value    string `json:"value"`
+	Key      string `json:"key,omitempty"`
+}
+
 // NewMailersend - creates a new client instance.
 func NewMailersend(apiKey string) *Mailersend {
 	ms := &Mailersend{
@@ -116,6 +124,7 @@ func NewMailersend(apiKey string) *Mailersend {
 	ms.SmsRecipient = (*SmsRecipientService)(&ms.common)
 	ms.SmsWebhook = (*SmsWebhookService)(&ms.common)
 	ms.SmsMessage = (*SmsMessageService)(&ms.common)
+	ms.SmsInbound = (*SmsInboundService)(&ms.common)
 
 	return ms
 }
