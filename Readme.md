@@ -85,6 +85,12 @@ MailerSend Golang SDK
         - [Get a list of SMS recipients](#get-a-list-of-sms-recipients)
         - [Get an SMS recipient](#get-an-sms-recipient)
         - [Update a single SMS recipient](#update-a-single-sms-recipient)
+    - [SMS Inbounds](#sms-inbounds)
+        - [Get a list of SMS inbound routes](#get-a-list-of-sms-inbound-routes)
+        - [Get a single SMS inbound route](#get-a-single-inbound-route)
+        - [Create an SMS inbound route](#create-an-sms-inbound-route)
+        - [Update an SMS inbound route](#update-an-sms-inbound-route)
+        - [Delete an SMS inbound route](#delete-an-sms-inbound-route)
     - [SMS Webhooks](#sms-webhook)
         - [Get a list of SMS webhooks](#get-a-list-of-sms-webhooks)
         - [Get an SMS webhook](#get-an-sms-webhook)
@@ -824,7 +830,7 @@ func main() {
 }
 ```
 
-## Inbound Route
+## Inbound Routes
 
 ### Get a list of inbound routes
 
@@ -952,7 +958,7 @@ func main() {
 		},
 		CatchFilter: &mailersend.CatchFilter{
 			Type: "catch_recipient",
-			Filters: []mailersend.Filters{
+			Filters: []mailersend.Filter{
 				{
 					Comparer: "equal",
 					Value:    "email",
@@ -2486,6 +2492,188 @@ func main() {
 	}
 
 	_, _, err := ms.SmsRecipient.Update(context.TODO(), options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+
+## SMS inbounds
+
+### Get a list of SMS inbound routes
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	listOptions := &mailersend.ListSmsInboundOptions{
+		SmsNumberId: "sms-number-id",
+	}
+	
+	_, _, err := ms.SmsInbound.List(ctx, listOptions)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get a single SMS inbound route
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.SmsInbound.Get(ctx, "sms-inbound-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+}
+```
+
+
+### Create an SMS inbound route
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.CreateSmsInboundOptions{
+		SmsNumberId: "sms-number-id",
+		Name:        "Example Route",
+		ForwardUrl:  "https://example.com",
+		Filter: mailersend.Filter{
+			Comparer: "equal",
+			Value:    "START",
+		},
+		Enabled: mailersend.Bool(true),
+	}
+	
+	_, _, err := ms.SmsInbound.Create(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Update an SMS inbound route
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	
+	options := &mailersend.UpdateSmsInboundOptions{
+		Id:          "sms-inbound-id",
+		SmsNumberId: "sms-number-id",
+		Name:        "Example Route",
+		ForwardUrl:  "https://example.com",
+		Filter: mailersend.Filter{
+			Comparer: "equal",
+			Value:    "START",
+		},
+		Enabled: mailersend.Bool(false),
+	}
+
+	_, _, err := ms.SmsInbound.Update(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Delete an SMS inbound route
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, err := ms.SmsInbound.Delete(ctx, "sms-inbound-id")
 	if err != nil {
 		log.Fatal(err)
 	}

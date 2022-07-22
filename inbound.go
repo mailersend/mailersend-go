@@ -77,15 +77,9 @@ type MatchFilter struct {
 	Type string `json:"type,omitempty"`
 }
 
-type Filters struct {
-	Comparer string `json:"comparer"`
-	Value    string `json:"value"`
-	Key      string `json:"key,omitempty"`
-}
-
 type CatchFilter struct {
-	Type    string    `json:"type,omitempty"`
-	Filters []Filters `json:"filters,omitempty"`
+	Type    string   `json:"type,omitempty"`
+	Filters []Filter `json:"filters,omitempty"`
 }
 
 type Forwards struct {
