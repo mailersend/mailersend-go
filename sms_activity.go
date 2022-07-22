@@ -8,7 +8,6 @@ import (
 )
 
 const smsActivityPath = "/sms-activity"
-const smsMessagesPath = "/sms-messages"
 
 type SmsActivityService service
 

@@ -70,6 +70,9 @@ MailerSend Golang SDK
        - [Delete a template](#delete-a-template)
     - [SMS](#sms)
        - [Send an SMS](#send-an-sms)
+    - [SMS Messages](#sms-messages)
+       - [Get a list of SMS messages](#get-a-list-of-sms-messages)
+       - [Get info on an SMS message](#get-info-on-an-sms-message)
     - [SMS Activity](#sms-activity)
        - [Get a list of activities](#get-a-list-of-sms-activities)
        - [Get activity of a single SMS message](#get-activity-of-a-single-sms-message)
@@ -2124,6 +2127,73 @@ func main() {
 
 	res, _ := ms.Sms.Send(context.TODO(), message)
 	fmt.Printf(res.Header.Get("X-SMS-Message-Id"))
+}
+```
+
+
+## SMS Messages
+
+### Get a list of SMS messages
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.ListSmsMessageOptions{
+		Limit: 10,
+	}
+
+	_, _, err := ms.SmsMessage.List(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get info on an SMS message
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.SmsMessage.Get(ctx, "sms-message-id")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 ```
 
