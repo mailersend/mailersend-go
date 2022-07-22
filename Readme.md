@@ -82,6 +82,12 @@ MailerSend Golang SDK
         - [Get a list of SMS recipients](#get-a-list-of-sms-recipients)
         - [Get an SMS recipient](#get-an-sms-recipient)
         - [Update a single SMS recipient](#update-a-single-sms-recipient)
+    - [SMS Webhooks](#sms-webhook)
+        - [Get a list of SMS webhooks](#get-a-list-of-sms-webhooks)
+        - [Get an SMS webhook](#get-an-sms-webhook)
+        - [Create an SMS webhook](#create-an-sms-webhook)
+        - [Update an SMS webhook](#update-an-sms-webhook)
+        - [Delete an SMS webhook](#delete-an-sms-webhook)
 - [Types](#types)
 - [Helpers](#helpers)   
 - [Testing](#testing)
@@ -2410,6 +2416,184 @@ func main() {
 	}
 
 	_, _, err := ms.SmsRecipient.Update(context.TODO(), options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+## SMS webhooks
+
+### Get a list of SMS webhooks
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.ListSmsWebhookOptions{
+		SmsNumberId: "sms-number-id",
+	}
+
+	_, _, err := ms.SmsWebhook.List(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get an SMS webhook
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.SmsWebhook.Get(ctx, "sms-webhook-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+	
+}
+```
+
+
+### Create an SMS webhook
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	events := []string{"sms.sent"}
+	
+	options := &mailersend.CreateSmsWebhookOptions{
+		SmsNumberId: "sms-number-id",
+		Name:        "Webhook",
+		Events:      events,
+		URL:         "https://test.com",
+		Enabled:  mailersend.Bool(false),
+	}
+	
+	_, _, err := ms.SmsWebhook.Create(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Update an SMS webhook
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	events := []string{"sms.sent"}
+
+	options := &mailersend.UpdateSmsWebhookOptions{
+		Id:   "sms-webhook-id",
+		Name: "Webhook",
+		Events: events,
+		Enabled: mailersend.Bool(true),
+		URL:    "https://test.com",
+	}
+	
+	_, _, err := ms.SmsWebhook.Update(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Delete an SMS webhook
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	
+	_, err := ms.SmsWebhook.Delete(ctx, "sms-webhook-id")
 	if err != nil {
 		log.Fatal(err)
 	}
