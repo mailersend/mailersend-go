@@ -2129,7 +2129,18 @@ func main() {
 	message := ms.Sms.NewMessage()
 	message.SetFrom("your-number")
 	message.SetTo([]string{"client-number"})
-	message.SetText("This is the message content")
+	message.SetText("This is the message content {{ var }}")
+
+	personalization := []mailersend.SmsPersonalization{
+		{
+			PhoneNumber: "client-number",
+			Data: map[string]interface{}{
+				"var": "foo",
+			},
+		},
+	}
+
+	message.SetPersonalization(personalization)
 
 	res, _ := ms.Sms.Send(context.TODO(), message)
 	fmt.Printf(res.Header.Get("X-SMS-Message-Id"))

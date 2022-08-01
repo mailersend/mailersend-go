@@ -11,9 +11,16 @@ const smsBasePath = "/sms"
 type SmsService service
 
 type Sms struct {
-	From string   `json:"from"`
-	To   []string `json:"to"`
-	Text string   `json:"text"`
+	From            string               `json:"from"`
+	To              []string             `json:"to"`
+	Text            string               `json:"text"`
+	Personalization []SmsPersonalization `json:"personalization,omitempty"`
+}
+
+// SmsPersonalization - you can set multiple SmsPersonalization for each Recipient
+type SmsPersonalization struct {
+	PhoneNumber string                 `json:"phone_number"`
+	Data        map[string]interface{} `json:"data"`
 }
 
 type SmsMessageRoot struct {
@@ -60,6 +67,11 @@ func (m *Sms) SetTo(to []string) {
 // SetText - Set the text content of the email, required if not using a template.
 func (m *Sms) SetText(text string) {
 	m.Text = text
+}
+
+// SetPersonalization - Set the template personalization.
+func (m *Sms) SetPersonalization(personalization []SmsPersonalization) {
+	m.Personalization = personalization
 }
 
 // Send - send the message
