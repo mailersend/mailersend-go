@@ -14,7 +14,7 @@ type Sms struct {
 	From            string               `json:"from"`
 	To              []string             `json:"to"`
 	Text            string               `json:"text"`
-	Personalization []SmsPersonalization `json:"personalization"`
+	Personalization []SmsPersonalization `json:"personalization,omitempty"`
 }
 
 // SmsPersonalization - you can set multiple SmsPersonalization for each Recipient
