@@ -68,6 +68,12 @@ MailerSend Golang SDK
        - [Get a list of templates](#get-a-list-of-templates)
        - [Get a single template](#get-a-single-template)
        - [Delete a template](#delete-a-template)
+    - [Email Verification](#email-verification)
+       - [Get all email verification lists](#get-all-email-verification-lists)
+       - [Get an email verification list](#get-an-email-verification-list)
+       - [Create an email verification list](#create-an-email-verification-list)
+       - [Verify an email list](#verify-an-email-list)
+       - [Get email verification list results](#get-email-verification-list-results)
     - [SMS](#sms)
        - [Send an SMS](#send-an-sms)
     - [SMS Messages](#sms-messages)
@@ -2101,6 +2107,174 @@ func main() {
 }
 ```
 
+## Email Verification
+
+### Get all email verification lists
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.ListEmailVerificationOptions{
+		Page:  1,
+		Limit: 25,
+	}
+
+	_, _, err := ms.EmailVerification.List(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get an email verification list
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.EmailVerification.Get(ctx, "email-verification-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Create an email verification list
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.CreateEmailVerificationOptions{
+		Name:   "Email Verification List ",
+		Emails: []string{"your@client.com", "your@client.eu"},
+	}
+	
+	_, _, err := ms.EmailVerification.Create(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Verify an email list
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	
+	_, _, err := ms.EmailVerification.Verify(ctx, "email-verification-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get email verification list results
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.GetEmailVerificationOptions{
+		EmailVerificationId: "email-verification-id",
+		Page:                1,
+		Limit:               25,
+	}
+
+	_, _, err := ms.EmailVerification.GetResults(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
 ## SMS 
 
 ### Send an SMS
@@ -2146,7 +2320,6 @@ func main() {
 	fmt.Printf(res.Header.Get("X-SMS-Message-Id"))
 }
 ```
-
 
 ## SMS Messages
 
