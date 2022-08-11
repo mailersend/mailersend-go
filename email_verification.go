@@ -11,14 +11,14 @@ const emailVerificationBasePath = "/email-verification"
 
 type EmailVerificationService service
 
-// emailVerificationRoot format of domain response
+// emailVerificationRoot format of verification response
 type emailVerificationRoot struct {
 	Data  []emailVerification `json:"data"`
 	Links Links               `json:"links"`
 	Meta  Meta                `json:"meta"`
 }
 
-// singleDomainRoot format of domain response
+// singleDomainRoot format of single verification response
 type singleEmailVerificationRoot struct {
 	Data emailVerification `json:"data"`
 }

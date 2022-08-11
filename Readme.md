@@ -2199,7 +2199,7 @@ func main() {
 
 	options := &mailersend.CreateEmailVerificationOptions{
 		Name:   "Email Verification List ",
-		Emails: []string{"client@example.com", "client@example.eu"},
+		Emails: []string{"your@client.com", "your@client.eu"},
 	}
 	
 	_, _, err := ms.EmailVerification.Create(ctx, options)
@@ -2240,7 +2240,6 @@ func main() {
 ```
 
 ### Get email verification list results
-
 
 ```go
 package main
