@@ -16,6 +16,7 @@ type Message struct {
 	CC          []Recipient  `json:"cc,omitempty"`
 	Bcc         []Recipient  `json:"bcc,omitempty"`
 	ReplyTo     ReplyTo      `json:"reply_to,omitempty"`
+	InReplyTo   string       `json:"in_reply_to,omitempty"`
 	Subject     string       `json:"subject,omitempty"`
 	Text        string       `json:"text,omitempty"`
 	HTML        string       `json:"html,omitempty"`
@@ -98,6 +99,11 @@ func (m *Message) SetBcc(bcc []Recipient) {
 // SetReplyTo - Set ReplyTo.
 func (m *Message) SetReplyTo(replyTo Recipient) {
 	m.ReplyTo = replyTo
+}
+
+// SetInReplyTo - Set InReplyTo.
+func (m *Message) SetInReplyTo(inReplyTo string) {
+	m.InReplyTo = inReplyTo
 }
 
 // SetSubject - Set the subject of the email, required if not using a template.
