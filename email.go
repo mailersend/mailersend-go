@@ -9,6 +9,11 @@ const emailBasePath = "/email"
 
 type EmailService service
 
+const (
+	DispositionInline     = "inline"
+	DispositionAttachment = "attachment"
+)
+
 // Message structures contain both the message text and the envelop for an e-mail message.
 type Message struct {
 	Recipients  []Recipient  `json:"to"`
@@ -61,9 +66,10 @@ type Personalization struct {
 
 // Attachment - you can set multiple Attachments
 type Attachment struct {
-	Content  string `json:"content"`
-	Filename string `json:"filename"`
-	ID       string `json:"id,omitempty"`
+	Content     string `json:"content"`
+	Filename    string `json:"filename"`
+	Disposition string `json:"disposition,omitempty"`
+	ID          string `json:"id,omitempty"`
 }
 
 // Deprecated: NewMessage - Setup a new message ready to be sent

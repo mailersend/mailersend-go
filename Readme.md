@@ -15,6 +15,7 @@ MailerSend Golang SDK
        - [Advanced personalization](#advanced-personalization)
        - [Simple personalization](#simple-personalization)
        - [Send email with attachment](#send-email-with-attachment)
+       - [Send email with inline attachment](#send-email-with-inline-attachment)
     - [Bulk Email](#bulk-email)
        - [Send bulk email](#send-bulk-email)
        - [Get bulk email status](#get-bulk-email-status)
@@ -83,26 +84,26 @@ MailerSend Golang SDK
        - [Get a list of activities](#get-a-list-of-sms-activities)
        - [Get activity of a single SMS message](#get-activity-of-a-single-sms-message)
     - [SMS Phone Numbers](#sms-phone-numbers)
-        - [Get a list of SMS phone numbers](#get-a-list-of-sms-phone-numbers)
-        - [Get an SMS phone number](#get-an-sms-phone-number)
-        - [Update a single SMS phone number](#update-a-single-sms-phone-number)
-        - [Delete an SMS phone number](#delete-an-sms-phone-number)
+       - [Get a list of SMS phone numbers](#get-a-list-of-sms-phone-numbers)
+       - [Get an SMS phone number](#get-an-sms-phone-number)
+       - [Update a single SMS phone number](#update-a-single-sms-phone-number)
+       - [Delete an SMS phone number](#delete-an-sms-phone-number)
     - [SMS Recipients](#sms-recipients)
-        - [Get a list of SMS recipients](#get-a-list-of-sms-recipients)
-        - [Get an SMS recipient](#get-an-sms-recipient)
-        - [Update a single SMS recipient](#update-a-single-sms-recipient)
+       - [Get a list of SMS recipients](#get-a-list-of-sms-recipients)
+       - [Get an SMS recipient](#get-an-sms-recipient)
+       - [Update a single SMS recipient](#update-a-single-sms-recipient)
     - [SMS Inbounds](#sms-inbounds)
-        - [Get a list of SMS inbound routes](#get-a-list-of-sms-inbound-routes)
-        - [Get a single SMS inbound route](#get-a-single-inbound-route)
-        - [Create an SMS inbound route](#create-an-sms-inbound-route)
-        - [Update an SMS inbound route](#update-an-sms-inbound-route)
-        - [Delete an SMS inbound route](#delete-an-sms-inbound-route)
+       - [Get a list of SMS inbound routes](#get-a-list-of-sms-inbound-routes)
+       - [Get a single SMS inbound route](#get-a-single-inbound-route)
+       - [Create an SMS inbound route](#create-an-sms-inbound-route)
+       - [Update an SMS inbound route](#update-an-sms-inbound-route)
+       - [Delete an SMS inbound route](#delete-an-sms-inbound-route)
     - [SMS Webhooks](#sms-webhook)
-        - [Get a list of SMS webhooks](#get-a-list-of-sms-webhooks)
-        - [Get an SMS webhook](#get-an-sms-webhook)
-        - [Create an SMS webhook](#create-an-sms-webhook)
-        - [Update an SMS webhook](#update-an-sms-webhook)
-        - [Delete an SMS webhook](#delete-an-sms-webhook)
+       - [Get a list of SMS webhooks](#get-a-list-of-sms-webhooks)
+       - [Get an SMS webhook](#get-an-sms-webhook)
+       - [Create an SMS webhook](#create-an-sms-webhook)
+       - [Update an SMS webhook](#update-an-sms-webhook)
+       - [Delete an SMS webhook](#delete-an-sms-webhook)
 - [Types](#types)
 - [Helpers](#helpers)   
 - [Testing](#testing)
@@ -524,6 +525,82 @@ func main() {
 	encoded := base64.StdEncoding.EncodeToString(content)
 
 	attachment := mailersend.Attachment{Filename: "file.jpg", Content: encoded}
+
+	message.AddAttachment(attachment)
+
+	res, _ := ms.Email.Send(ctx, message)
+
+	fmt.Printf(res.Header.Get("X-Message-Id"))
+
+}
+```
+
+
+### Send email with inline attachment
+
+```go
+package main
+
+import (
+	"bufio"
+	"context"
+	"encoding/base64"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"time"
+
+    "github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	subject := "Subject"
+	text := "This is the text content"
+	html := "<p>This is the HTML content</p> <p><img src=\"cid:image.jpeg\"/></p>"
+
+	from := mailersend.From{
+		Name:  "Your Name",
+		Email: "your@domain.com",
+	}
+
+	recipients := []mailersend.Recipient{
+		{
+			Name:  "Your Client",
+			Email: "your@client.com",
+		},
+	}
+
+	tags := []string{"foo", "bar"}
+
+	message := ms.Email.NewMessage()
+
+	message.SetFrom(from)
+	message.SetRecipients(recipients)
+	message.SetSubject(subject)
+	message.SetHTML(html)
+	message.SetText(text)
+	message.SetTags(tags)
+
+	// Open file on disk.
+	f, _ := os.Open("./image.jpeg")
+
+	reader := bufio.NewReader(f)
+	content, _ := ioutil.ReadAll(reader)
+
+	// Encode as base64.
+	encoded := base64.StdEncoding.EncodeToString(content)
+
+	// Inside template add <img src="cid:image.jpg"/> should match ID 
+	attachment := mailersend.Attachment{Filename: "image.jpeg", ID: "image.jpeg", Content: encoded, Disposition: mailersend.DispositionInline}
 
 	message.AddAttachment(attachment)
 
