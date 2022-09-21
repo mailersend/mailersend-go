@@ -565,7 +565,7 @@ func main() {
 
 	subject := "Subject"
 	text := "This is the text content"
-	html := "<p>This is the HTML content</p> <p><img src="cid:image.jpeg"/></p>"
+	html := "<p>This is the HTML content</p> <p><img src=\"cid:image.jpeg\"/></p>"
 
 	from := mailersend.From{
 		Name:  "Your Name",
