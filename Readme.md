@@ -175,6 +175,7 @@ func main() {
 	message.SetText(text)
 	message.SetTags(tags)
 	message.SetSendAt(sendAt)
+	message.SetInReplyTo("client-id")
 
 	res, _ := ms.Email.Send(ctx, message)
 
