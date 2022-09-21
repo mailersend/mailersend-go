@@ -565,7 +565,7 @@ func main() {
 
 	subject := "Subject"
 	text := "This is the text content"
-	html := "<p>This is the HTML content</p>"
+	html := "<p>This is the HTML content</p> <p><img src="cid:image.jpeg"/></p>"
 
 	from := mailersend.From{
 		Name:  "Your Name",
@@ -591,7 +591,7 @@ func main() {
 	message.SetTags(tags)
 
 	// Open file on disk.
-	f, _ := os.Open("./image.jpg")
+	f, _ := os.Open("./image.jpeg")
 
 	reader := bufio.NewReader(f)
 	content, _ := ioutil.ReadAll(reader)
@@ -600,7 +600,7 @@ func main() {
 	encoded := base64.StdEncoding.EncodeToString(content)
 
 	// Inside template add <img src="cid:image.jpg"/> should match ID 
-	attachment := mailersend.Attachment{Filename: "image.jpg", ID: "image.jpg", Content: encoded, Disposition: mailersend.DispositionInline}
+	attachment := mailersend.Attachment{Filename: "image.jpeg", ID: "image.jpeg", Content: encoded, Disposition: mailersend.DispositionInline}
 
 	message.AddAttachment(attachment)
 
