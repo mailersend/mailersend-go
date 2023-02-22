@@ -104,6 +104,12 @@ MailerSend Golang SDK
        - [Create an SMS webhook](#create-an-sms-webhook)
        - [Update an SMS webhook](#update-an-sms-webhook)
        - [Delete an SMS webhook](#delete-an-sms-webhook)
+    - [Sender Identities](#sender-identities)
+      - [Get a list of Sender Identities](#get-a-list-of-sender-identities)
+      - [Get a single Sender Identity](#get-a-single-sender-identity)
+      - [Add a Sender_Identity](#create-a-sender-identity)
+      - [Update a Sender Identity](#update-a-sender-identity)
+      - [Delete a Sender Identity](#delete-a-sender-identity)
 - [Types](#types)
 - [Helpers](#helpers)   
 - [Testing](#testing)
@@ -3119,6 +3125,174 @@ func main() {
 	}
 }
 ```
+
+## Sender identities
+
+### Get a list of Sender Identities
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.ListIdentityOptions{
+		DomainID: "domain-id",
+	}
+
+	_, _, err := ms.Identity.List(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get a single Sender Identity
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.Identity.Get(ctx, "identity-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Create a Sender Identity
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	
+	options := &mailersend.CreateIdentityOptions{
+		DomainID: "domain-id",
+		Name:     "Sender Name",
+		Email:    "Sender Email",
+	}
+	
+	_, _, err := ms.Identity.Create(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Update a Sender Identity
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.UpdateIdentityOptions{
+		Name:            "Sender Name",
+		ReplyToEmail:    "Reply To Email",
+	}
+
+	_, _, err := ms.Identity.Update(ctx, "identity-id", options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Delete a Sender Identity
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+var APIKey = "Api Key Here"
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(APIKey)
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, err := ms.Identity.Delete(ctx, "identity-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
 
 # Types
 
