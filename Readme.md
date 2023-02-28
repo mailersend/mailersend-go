@@ -143,8 +143,6 @@ import (
     "github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -206,8 +204,6 @@ import (
 
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -287,8 +283,6 @@ import (
     "github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -351,8 +345,6 @@ import (
 
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -417,8 +409,6 @@ import (
 
     "github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -489,8 +479,6 @@ import (
 
     "github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -565,8 +553,6 @@ import (
 
     "github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -643,8 +629,6 @@ import (
     "github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -705,8 +689,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -738,8 +720,6 @@ import (
 
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -782,8 +762,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -825,8 +803,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -865,8 +841,6 @@ import (
 
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -907,8 +881,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -948,8 +920,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -978,8 +948,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -1004,8 +972,6 @@ import (
 
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -1046,8 +1012,6 @@ import (
 
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -1101,8 +1065,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -1130,8 +1092,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -1167,8 +1127,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -1200,8 +1158,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -1232,8 +1188,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -1268,8 +1222,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -1301,8 +1253,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -1333,8 +1283,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -1372,8 +1320,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -1414,8 +1360,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -1450,8 +1394,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -1485,8 +1427,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -1515,8 +1455,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -1544,8 +1482,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -1577,8 +1513,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -1615,8 +1549,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -1647,8 +1579,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -1681,8 +1611,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -1729,8 +1657,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -1789,8 +1715,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -1838,8 +1762,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -1891,8 +1813,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -1929,8 +1849,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -1963,8 +1881,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -2002,8 +1918,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -2034,8 +1948,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -2077,8 +1989,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -2117,8 +2027,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -2151,8 +2059,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -2188,8 +2094,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -2220,8 +2124,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -2255,8 +2157,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -2292,8 +2192,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -2322,8 +2220,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -2359,8 +2255,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -2389,8 +2283,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -2428,8 +2320,6 @@ import (
 
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -2476,8 +2366,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -2511,8 +2399,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -2543,8 +2429,6 @@ import (
 
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -2577,8 +2461,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -2609,8 +2491,6 @@ import (
 
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -2643,8 +2523,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -2673,8 +2551,6 @@ import (
 
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -2711,8 +2587,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -2746,8 +2620,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -2779,8 +2651,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -2809,8 +2679,6 @@ import (
 
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -2849,8 +2717,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -2884,8 +2750,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -2916,8 +2780,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -2958,8 +2820,6 @@ import (
 
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -3002,8 +2862,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -3034,8 +2892,6 @@ import (
 
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -3070,8 +2926,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -3102,8 +2956,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -3144,8 +2996,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -3185,8 +3035,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -3217,8 +3065,6 @@ import (
 
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -3253,8 +3099,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -3283,8 +3127,6 @@ import (
 	
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
@@ -3321,8 +3163,6 @@ import (
 	"github.com/mailersend/mailersend-go"
 )
 
-var APIKey = "Api Key Here"
-
 func main() {
 	// Create an instance of the mailersend client
 	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
@@ -3356,8 +3196,6 @@ import (
 
 	"github.com/mailersend/mailersend-go"
 )
-
-var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
