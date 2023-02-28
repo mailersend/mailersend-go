@@ -146,7 +146,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -199,6 +199,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"fmt"
 	"time"
 
@@ -209,7 +210,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -288,7 +289,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -342,6 +343,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"fmt"
 	"time"
 
@@ -352,7 +354,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -417,7 +419,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -475,6 +477,7 @@ package main
 import (
 	"bufio"
 	"context"
+	"os"
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
@@ -488,7 +491,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -550,6 +553,7 @@ package main
 import (
 	"bufio"
 	"context"
+	"os"
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
@@ -563,7 +567,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -639,7 +643,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 	
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -690,6 +694,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"time"
 	"log"
 	
@@ -700,7 +705,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -723,6 +728,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -733,7 +739,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -765,6 +771,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -775,7 +782,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -807,6 +814,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -817,7 +825,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -847,6 +855,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -857,7 +866,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -887,6 +896,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -897,7 +907,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -929,6 +939,7 @@ package main
 
 import (
 	"context"
+	"os"
 
 	"github.com/mailersend/mailersend-go"
 )
@@ -937,7 +948,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.TODO()
 
@@ -958,6 +969,7 @@ package main
 
 import (
 	"context"
+	"os"
 
 	"github.com/mailersend/mailersend-go"
 )
@@ -966,7 +978,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.TODO()
 
@@ -984,6 +996,7 @@ package main
 
 import (
 	"context"
+	"os"
 
 	"github.com/mailersend/mailersend-go"
 )
@@ -992,7 +1005,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.TODO()
 
@@ -1025,6 +1038,7 @@ package main
 
 import (
 	"context"
+	"os"
 
 	"github.com/mailersend/mailersend-go"
 )
@@ -1033,7 +1047,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.TODO()
 
@@ -1078,6 +1092,7 @@ package main
 
 import (
 	"context"
+	"os"
 
 	"github.com/mailersend/mailersend-go"
 )
@@ -1086,7 +1101,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.TODO()
 
@@ -1105,6 +1120,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1115,7 +1131,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1140,6 +1156,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1150,7 +1167,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1172,6 +1189,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1182,7 +1200,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1204,6 +1222,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1214,7 +1233,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1238,6 +1257,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1248,7 +1268,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1270,6 +1290,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1280,7 +1301,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1302,6 +1323,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1312,7 +1334,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1340,6 +1362,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1350,7 +1373,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1380,6 +1403,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1390,7 +1414,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1415,6 +1439,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1425,7 +1450,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1450,6 +1475,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	
 	"github.com/mailersend/mailersend-go"
@@ -1459,7 +1485,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.TODO()
 
@@ -1479,6 +1505,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	
 	"github.com/mailersend/mailersend-go"
@@ -1488,7 +1515,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.TODO()
 	
@@ -1508,6 +1535,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	
 	"github.com/mailersend/mailersend-go"
@@ -1517,7 +1545,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.TODO()
 
@@ -1539,6 +1567,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1549,7 +1578,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1575,6 +1604,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1585,7 +1615,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1607,6 +1637,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1617,7 +1648,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1640,6 +1671,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1650,7 +1682,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1688,6 +1720,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"time"
 	
 	"github.com/mailersend/mailersend-go"
@@ -1697,7 +1730,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1746,6 +1779,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"time"
 	
 	"github.com/mailersend/mailersend-go"
@@ -1755,7 +1789,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1794,6 +1828,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1804,7 +1839,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1845,6 +1880,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1855,7 +1891,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1882,6 +1918,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1892,7 +1929,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1916,6 +1953,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1926,7 +1964,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1953,6 +1991,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1963,7 +2002,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -1985,6 +2024,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -1995,7 +2035,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2026,6 +2066,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -2036,7 +2077,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2065,6 +2106,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -2075,7 +2117,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2099,6 +2141,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -2109,7 +2152,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2134,6 +2177,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -2144,7 +2188,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2166,6 +2210,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -2176,7 +2221,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2200,6 +2245,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -2210,7 +2256,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2235,6 +2281,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -2245,7 +2292,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2265,6 +2312,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -2275,7 +2323,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2300,6 +2348,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -2310,7 +2359,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2330,6 +2379,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -2340,7 +2390,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2368,6 +2418,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"fmt"
 	"time"
 
@@ -2378,7 +2429,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2414,6 +2465,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -2424,7 +2476,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2448,6 +2500,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -2458,7 +2511,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2480,6 +2533,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -2490,7 +2544,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2512,6 +2566,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -2522,7 +2577,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2544,6 +2599,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -2554,7 +2610,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2576,6 +2632,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -2586,7 +2643,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2606,6 +2663,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -2616,7 +2674,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2642,6 +2700,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -2652,7 +2711,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2676,6 +2735,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -2686,7 +2746,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2708,6 +2768,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -2718,7 +2779,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2738,6 +2799,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -2748,7 +2810,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2776,6 +2838,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -2786,7 +2849,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2810,6 +2873,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -2820,7 +2884,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2842,6 +2906,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -2852,7 +2917,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2883,6 +2948,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -2893,7 +2959,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2925,6 +2991,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -2935,7 +3002,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2957,6 +3024,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -2967,7 +3035,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -2991,6 +3059,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -3001,7 +3070,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -3023,6 +3092,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -3033,7 +3103,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -3063,6 +3133,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -3073,7 +3144,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -3103,6 +3174,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -3113,7 +3185,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -3135,6 +3207,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -3145,7 +3218,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -3169,6 +3242,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -3179,7 +3253,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -3199,6 +3273,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 	
@@ -3209,7 +3284,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -3235,6 +3310,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -3245,7 +3321,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -3270,6 +3346,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"log"
 	"time"
 
@@ -3280,7 +3357,7 @@ var APIKey = "Api Key Here"
 
 func main() {
 	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(APIKey)
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
