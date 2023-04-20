@@ -773,7 +773,7 @@ func main() {
 	from := time.Now().Add(-24 * time.Hour).Unix()
 	to := time.Now().Unix()
 	domainID := "domain-id"
-	events := []string{"processed", "sent", "queued"}
+	events := []string{"sent", "queued"}
 
 	options := &mailersend.AnalyticsOptions{
 		DomainID:    domainID,

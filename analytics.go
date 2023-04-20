@@ -24,7 +24,6 @@ type analyticsData struct {
 
 type analyticsStats struct {
 	Date           string `json:"date"`
-	Processed      int    `json:"processed,omitempty"`
 	Queued         int    `json:"queued,omitempty"`
 	Sent           int    `json:"sent,omitempty"`
 	Delivered      int    `json:"delivered,omitempty"`

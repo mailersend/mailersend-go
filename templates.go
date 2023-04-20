@@ -43,7 +43,6 @@ type singleTemplate struct {
 
 type templateStats struct {
 	Total           int       `json:"total"`
-	Processed       int       `json:"processed"`
 	Queued          int       `json:"queued"`
 	Sent            int       `json:"sent"`
 	Rejected        int       `json:"rejected"`
