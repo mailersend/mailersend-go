@@ -110,6 +110,8 @@ MailerSend Golang SDK
       - [Add a Sender_Identity](#create-a-sender-identity)
       - [Update a Sender Identity](#update-a-sender-identity)
       - [Delete a Sender Identity](#delete-a-sender-identity)
+	- [Other Endpoints](#other-endpoints)
+	  - [Get an API Quota](#get-an-api-quota)
 - [Types](#types)
 - [Helpers](#helpers)   
 - [Testing](#testing)
@@ -3212,6 +3214,36 @@ func main() {
 }
 ```
 
+## Other Endpoints
+
+### Get an API Quota
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"time"
+	"fmt"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.ApiQuota.Get(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
 
 # Types
 
