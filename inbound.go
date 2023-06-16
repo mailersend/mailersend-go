@@ -28,6 +28,7 @@ type inbound struct {
 	Address      string      `json:"address"`
 	Domain       string      `json:"domain"`
 	DNSCheckedAt interface{} `json:"dns_checked_at"`
+	Priority     int         `json:"priority"`
 	Enabled      bool        `json:"enabled"`
 	Filters      []filters   `json:"filters"`
 	Forwards     []forwards  `json:"forwards"`
@@ -68,6 +69,7 @@ type CreateInboundOptions struct {
 	InboundDomain    string       `json:"inbound_domain,omitempty"`
 	InboundAddress   string       `json:"inbound_address,omitempty"`
 	InboundSubdomain string       `json:"inbound_subdomain,omitempty"`
+	InboundPriority  int          `json:"inbound_priority,omitempty"`
 	MatchFilter      *MatchFilter `json:"match_filter,omitempty"`
 	CatchFilter      *CatchFilter `json:"catch_filter,omitempty"`
 	Forwards         []Forwards   `json:"forwards"`
