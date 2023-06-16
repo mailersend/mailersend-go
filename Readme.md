@@ -993,6 +993,7 @@ func main() {
 		MatchFilter: &mailersend.MatchFilter{
 			Type: "match_all",
 		},
+		InboundPriority: 1,
 		CatchFilter: &mailersend.CatchFilter{},
 		Forwards: []mailersend.Forwards{
 			{
@@ -1030,6 +1031,7 @@ func main() {
 		Name:          "Example Route",
 		DomainEnabled: *mailersend.Bool(true),
 		InboundDomain: "inbound.example.com",
+		InboundPriority: 1,
 		MatchFilter: &mailersend.MatchFilter{
 			Type: "match_all",
 		},
