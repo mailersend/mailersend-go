@@ -95,6 +95,23 @@ func (s *IdentityService) Get(ctx context.Context, identityID string) (*singleId
 	return root, res, nil
 }
 
+func (s *IdentityService) GetByEmail(ctx context.Context, identityEmail string) (*singleIdentityRoot, *Response, error) {
+	path := fmt.Sprintf("%s/email/%s", identitiesBasePath, identityEmail)
+
+	req, err := s.client.newRequest(http.MethodGet, path, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	root := new(singleIdentityRoot)
+	res, err := s.client.do(ctx, req, root)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return root, res, nil
+}
+
 func (s *IdentityService) Create(ctx context.Context, options *CreateIdentityOptions) (*singleIdentityRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodPost, identitiesBasePath, options)
 	if err != nil {
@@ -127,8 +144,36 @@ func (s *IdentityService) Update(ctx context.Context, identityID string, options
 	return root, res, nil
 }
 
+func (s *IdentityService) UpdateByEmail(ctx context.Context, identityEmail string, options *UpdateIdentityOptions) (*singleIdentityRoot, *Response, error) {
+	path := fmt.Sprintf("%s/email/%s", identitiesBasePath, identityEmail)
+
+	req, err := s.client.newRequest(http.MethodPut, path, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	root := new(singleIdentityRoot)
+	res, err := s.client.do(ctx, req, root)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return root, res, nil
+}
+
 func (s *IdentityService) Delete(ctx context.Context, identityID string) (*Response, error) {
 	path := fmt.Sprintf("%s/%s", identitiesBasePath, identityID)
+
+	req, err := s.client.newRequest(http.MethodDelete, path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.client.do(ctx, req, nil)
+}
+
+func (s *IdentityService) DeleteByEmail(ctx context.Context, identityEmail string) (*Response, error) {
+	path := fmt.Sprintf("%s/email/%s", identitiesBasePath, identityEmail)
 
 	req, err := s.client.newRequest(http.MethodDelete, path, nil)
 	if err != nil {

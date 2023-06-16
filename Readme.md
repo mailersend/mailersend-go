@@ -107,9 +107,12 @@ MailerSend Golang SDK
     - [Sender Identities](#sender-identities)
       - [Get a list of Sender Identities](#get-a-list-of-sender-identities)
       - [Get a single Sender Identity](#get-a-single-sender-identity)
+      - [Get a single Sender Identity By Email](#get-a-single-sender-identity-by-email)
       - [Add a Sender_Identity](#create-a-sender-identity)
       - [Update a Sender Identity](#update-a-sender-identity)
+      - [Update a Sender Identity By Email](#update-a-sender-identity-by-email)
       - [Delete a Sender Identity](#delete-a-sender-identity)
+      - [Delete a Sender Identity By Email](#delete-a-sender-identity-by-email)
 	- [Other Endpoints](#other-endpoints)
 	  - [Get an API Quota](#get-an-api-quota)
 - [Types](#types)
@@ -3116,6 +3119,35 @@ func main() {
 }
 ```
 
+### Get a single Sender Identity By Email
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.Identity.GetByEmail(ctx, "identity-email")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
 ### Create a Sender Identity
 
 ```go
@@ -3185,6 +3217,40 @@ func main() {
 }
 ```
 
+### Update a Sender Identity By Email
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.UpdateIdentityOptions{
+		Name:            "Sender Name",
+		ReplyToEmail:    "Reply To Email",
+	}
+
+	_, _, err := ms.Identity.UpdateByEmail(ctx, "identity-email", options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
 ### Delete a Sender Identity
 
 ```go
@@ -3208,6 +3274,35 @@ func main() {
 	defer cancel()
 
 	_, err := ms.Identity.Delete(ctx, "identity-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Delete a Sender Identity By Email
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, err := ms.Identity.DeleteByEmail(ctx, "identity-email")
 	if err != nil {
 		log.Fatal(err)
 	}
