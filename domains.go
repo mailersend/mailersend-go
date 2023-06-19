@@ -41,15 +41,17 @@ type Domain struct {
 }
 
 type DomainSettings struct {
-	SendPaused              bool   `json:"send_paused,omitempty"`
-	TrackClicks             bool   `json:"track_clicks,omitempty"`
-	TrackOpens              bool   `json:"track_opens,omitempty"`
-	TrackUnsubscribe        bool   `json:"track_unsubscribe,omitempty"`
-	TrackUnsubscribeHTML    string `json:"track_unsubscribe_html,omitempty"`
-	TrackUnsubscribePlain   string `json:"track_unsubscribe_plain,omitempty"`
-	TrackContent            bool   `json:"track_content,omitempty"`
-	CustomTrackingEnabled   bool   `json:"custom_tracking_enabled,omitempty"`
-	CustomTrackingSubdomain string `json:"custom_tracking_subdomain,omitempty"`
+	SendPaused                 bool   `json:"send_paused,omitempty"`
+	TrackClicks                bool   `json:"track_clicks,omitempty"`
+	TrackOpens                 bool   `json:"track_opens,omitempty"`
+	TrackUnsubscribe           bool   `json:"track_unsubscribe,omitempty"`
+	TrackUnsubscribeHTML       string `json:"track_unsubscribe_html,omitempty"`
+	TrackUnsubscribePlain      string `json:"track_unsubscribe_plain,omitempty"`
+	TrackContent               bool   `json:"track_content,omitempty"`
+	CustomTrackingEnabled      bool   `json:"custom_tracking_enabled,omitempty"`
+	CustomTrackingSubdomain    string `json:"custom_tracking_subdomain,omitempty"`
+	IgnoreDuplicatedRecipients bool   `json:"ignore_duplicated_recipients,omitempty"`
+	PrecedenceBulk             bool   `json:"precedence_bulk,omitempty"`
 }
 
 type dnsRoot struct {
@@ -134,16 +136,18 @@ type ListDomainOptions struct {
 
 // DomainSettingOptions - modifies the behavior of DomainService.Update Method
 type DomainSettingOptions struct {
-	DomainID                string `json:"-"`
-	SendPaused              *bool  `json:"send_paused,omitempty"`
-	TrackClicks             *bool  `json:"track_clicks,omitempty"`
-	TrackOpens              *bool  `json:"track_opens,omitempty"`
-	TrackUnsubscribe        *bool  `json:"track_unsubscribe,omitempty"`
-	TrackUnsubscribeHTML    string `json:"track_unsubscribe_html,omitempty"`
-	TrackUnsubscribePlain   string `json:"track_unsubscribe_plain,omitempty"`
-	TrackContent            *bool  `json:"track_content,omitempty"`
-	CustomTrackingEnabled   *bool  `json:"custom_tracking_enabled,omitempty"`
-	CustomTrackingSubdomain string `json:"custom_tracking_subdomain,omitempty"`
+	DomainID                   string `json:"-"`
+	SendPaused                 *bool  `json:"send_paused,omitempty"`
+	TrackClicks                *bool  `json:"track_clicks,omitempty"`
+	TrackOpens                 *bool  `json:"track_opens,omitempty"`
+	TrackUnsubscribe           *bool  `json:"track_unsubscribe,omitempty"`
+	TrackUnsubscribeHTML       string `json:"track_unsubscribe_html,omitempty"`
+	TrackUnsubscribePlain      string `json:"track_unsubscribe_plain,omitempty"`
+	TrackContent               *bool  `json:"track_content,omitempty"`
+	CustomTrackingEnabled      *bool  `json:"custom_tracking_enabled,omitempty"`
+	CustomTrackingSubdomain    string `json:"custom_tracking_subdomain,omitempty"`
+	IgnoreDuplicatedRecipients *bool  `json:"ignore_duplicated_recipients,omitempty"`
+	PrecedenceBulk             *bool  `json:"precedence_bulk,omitempty"`
 }
 
 type CreateDomainOptions struct {
