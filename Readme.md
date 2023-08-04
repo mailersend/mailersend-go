@@ -1965,7 +1965,7 @@ func main() {
 	defer cancel()
 
 	domainID := "domain-id"
-	events := []string{"activity.sent", "activity.opened"}
+	events := []string{"activity.opened", "activity.clicked"}
 
 	createOptions := &mailersend.CreateWebhookOptions{
 		Name:     "Webhook",
