@@ -38,7 +38,7 @@ type singleMessage struct {
 
 type email struct {
 	ID        string    `json:"id"`
-	From      From      `json:"from"`
+	From      string    `json:"from"`
 	Subject   string    `json:"subject,omitempty"`
 	Text      string    `json:"text,omitempty"`
 	HTML      string    `json:"html,omitempty"`
