@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
 	"time"
@@ -37,7 +37,7 @@ func TestCanMockActivity(t *testing.T) {
 		assert.Equal(t, req.URL.String(), fmt.Sprintf("https://api.mailersend.com/v1/activity/domain-id?date_from=%v&date_to=%v", from, to))
 		return &http.Response{
 			StatusCode: http.StatusAccepted,
-			Body:       ioutil.NopCloser(bytes.NewBufferString(`OK`)),
+			Body:       io.NopCloser(bytes.NewBufferString(`OK`)),
 		}
 	})
 

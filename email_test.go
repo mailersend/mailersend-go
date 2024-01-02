@@ -3,7 +3,7 @@ package mailersend_test
 import (
 	"bufio"
 	"encoding/base64"
-	"io/ioutil"
+	"io"
 	"os"
 	"testing"
 
@@ -129,18 +129,6 @@ func TestCanCCBCCMessage(t *testing.T) {
 func TestTemplateMessage(t *testing.T) {
 	message := basicEmail()
 
-	variables := []mailersend.Variables{
-		{
-			Email: toEmail,
-			Substitutions: []mailersend.Substitution{
-				{
-					Var:   "foo",
-					Value: "bar",
-				},
-			},
-		},
-	}
-
 	personalization := []mailersend.Personalization{
 		{
 			Email: toEmail,
@@ -154,11 +142,9 @@ func TestTemplateMessage(t *testing.T) {
 	tags := []string{"foo", "bar"}
 
 	message.SetTemplateID(templateID)
-	message.SetSubstitutions(variables)
 	message.SetPersonalization(personalization)
 	message.SetTags(tags)
 
-	assert.Equal(t, variables, message.TemplateVariables)
 	assert.Equal(t, templateID, message.TemplateID)
 	assert.Equal(t, personalization, message.Personalization)
 	assert.Equal(t, tags, message.Tags)
@@ -170,18 +156,6 @@ func TestFullMessage(t *testing.T) {
 	message.SetCc(cc)
 	message.SetBcc(bcc)
 
-	variables := []mailersend.Variables{
-		{
-			Email: toEmail,
-			Substitutions: []mailersend.Substitution{
-				{
-					Var:   "foo",
-					Value: "bar",
-				},
-			},
-		},
-	}
-
 	personalization := []mailersend.Personalization{
 		{
 			Email: toEmail,
@@ -195,7 +169,6 @@ func TestFullMessage(t *testing.T) {
 	tags := []string{"foo", "bar"}
 
 	message.SetTemplateID(templateID)
-	message.SetSubstitutions(variables)
 	message.SetPersonalization(personalization)
 	message.SetTags(tags)
 
@@ -206,7 +179,6 @@ func TestFullMessage(t *testing.T) {
 	assert.Equal(t, subject, message.Subject)
 	assert.Equal(t, html, message.HTML)
 	assert.Equal(t, text, message.Text)
-	assert.Equal(t, variables, message.TemplateVariables)
 	assert.Equal(t, templateID, message.TemplateID)
 	assert.Equal(t, personalization, message.Personalization)
 	assert.Equal(t, tags, message.Tags)
@@ -220,18 +192,6 @@ func TestFullMessageNew(t *testing.T) {
 	message.SetCc(cc)
 	message.SetBcc(bcc)
 
-	variables := []mailersend.Variables{
-		{
-			Email: toEmail,
-			Substitutions: []mailersend.Substitution{
-				{
-					Var:   "foo",
-					Value: "bar",
-				},
-			},
-		},
-	}
-
 	personalization := []mailersend.Personalization{
 		{
 			Email: toEmail,
@@ -245,7 +205,6 @@ func TestFullMessageNew(t *testing.T) {
 	tags := []string{"foo", "bar"}
 
 	message.SetTemplateID(templateID)
-	message.SetSubstitutions(variables)
 	message.SetPersonalization(personalization)
 	message.SetTags(tags)
 
@@ -256,7 +215,6 @@ func TestFullMessageNew(t *testing.T) {
 	assert.Equal(t, subject, message.Subject)
 	assert.Equal(t, html, message.HTML)
 	assert.Equal(t, text, message.Text)
-	assert.Equal(t, variables, message.TemplateVariables)
 	assert.Equal(t, templateID, message.TemplateID)
 	assert.Equal(t, personalization, message.Personalization)
 	assert.Equal(t, tags, message.Tags)
@@ -270,7 +228,7 @@ func TestCanAddAttachments(t *testing.T) {
 	f, _ := os.Open("./LICENCE")
 
 	reader := bufio.NewReader(f)
-	content, _ := ioutil.ReadAll(reader)
+	content, _ := io.ReadAll(reader)
 
 	encoded := base64.StdEncoding.EncodeToString(content)
 

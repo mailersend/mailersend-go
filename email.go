@@ -46,13 +46,13 @@ type Recipient struct {
 	Email string `json:"email"`
 }
 
-// Variables - you can set multiple Substitutions for each Recipient
+// Deprecated: Variables - you can set multiple Substitutions for each Recipient
 type Variables struct {
 	Email         string         `json:"email"`
 	Substitutions []Substitution `json:"substitutions"`
 }
 
-// Substitution - you can set multiple Substitutions for each Recipient
+// Deprecated: Substitution - you can set multiple Substitutions for each Recipient
 type Substitution struct {
 	Var   string `json:"var"`
 	Value string `json:"value"`
@@ -132,7 +132,7 @@ func (m *Message) SetTemplateID(templateID string) {
 	m.TemplateID = templateID
 }
 
-// SetSubstitutions - Set the template substitutions.
+// Deprecated: SetSubstitutions - Set the template substitutions.
 func (m *Message) SetSubstitutions(variables []Variables) {
 	m.TemplateVariables = variables
 }
