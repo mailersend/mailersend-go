@@ -13,7 +13,6 @@ MailerSend Golang SDK
        - [Add CC, BCC recipients](#add-cc-bcc-recipients)
        - [Send a template-based email](#send-a-template-based-email)
        - [Advanced personalization](#advanced-personalization)
-       - [Simple personalization](#simple-personalization)
        - [Send email with attachment](#send-email-with-attachment)
        - [Send email with inline attachment](#send-email-with-inline-attachment)
     - [Bulk Email](#bulk-email)
@@ -401,72 +400,6 @@ func main() {
 }
 ```
 
-### Simple personalization
-
-```go
-package main
-
-import (
-    "context"
-    "os"
-    "fmt"
-    "time"
-
-    "github.com/mailersend/mailersend-go"
-)
-
-func main() {
-	// Create an instance of the mailersend client
-	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
-
-	ctx := context.Background()
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	defer cancel()
-	
-	subject := "Subject {$var}"
-	text := "This is the text version with a {$var}."
-	html := "<p>This is the HTML version with a {$var}.</p>"
-
-	from := mailersend.From{
-		Name:  "Your Name",
-		Email: "your@domain.com",
-	}
-	
-	recipients := []mailersend.Recipient{
-		{
-			Name:  "Your Client",
-			Email: "your@client.com",
-		},
-	}
-	
-	variables := []mailersend.Variables{
-		{
-			Email: "your@client.com",
-			Substitutions: []mailersend.Substitution{
-				{
-					Var: "value",
-				},
-			},
-		},
-	}
-
-	message := ms.Email.NewMessage()
-
-	message.SetFrom(from)
-	message.SetRecipients(recipients)
-	message.SetSubject(subject)
-	message.SetText(text)
-	message.SetHTML(html)
-	
-	message.SetSubstitutions(variables)
-	
-	res, _ := ms.Email.Send(ctx, message)
-
-	fmt.Printf(res.Header.Get("X-Message-Id"))
-
-}
-```
-
 ### Send email with attachment
 
 ```go
@@ -478,7 +411,7 @@ import (
 	"os"
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"time"
 
@@ -524,7 +457,7 @@ func main() {
 	f, _ := os.Open("./file.jpg")
 
 	reader := bufio.NewReader(f)
-	content, _ := ioutil.ReadAll(reader)
+	content, _ := io.ReadAll(reader)
 
 	// Encode as base64.
 	encoded := base64.StdEncoding.EncodeToString(content)
@@ -552,7 +485,7 @@ import (
 	"os"
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"time"
 
@@ -598,7 +531,7 @@ func main() {
 	f, _ := os.Open("./image.jpeg")
 
 	reader := bufio.NewReader(f)
-	content, _ := ioutil.ReadAll(reader)
+	content, _ := io.ReadAll(reader)
 
 	// Encode as base64.
 	encoded := base64.StdEncoding.EncodeToString(content)

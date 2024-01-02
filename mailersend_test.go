@@ -3,11 +3,12 @@ package mailersend_test
 import (
 	"bytes"
 	"context"
-	"github.com/mailersend/mailersend-go"
-	"github.com/stretchr/testify/assert"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"testing"
+
+	"github.com/mailersend/mailersend-go"
+	"github.com/stretchr/testify/assert"
 )
 
 const (
@@ -35,7 +36,7 @@ func TestCanMakeMockApiCall(t *testing.T) {
 		assert.Equal(t, req.URL.String(), "https://api.mailersend.com/v1/email")
 		return &http.Response{
 			StatusCode: http.StatusAccepted,
-			Body:       ioutil.NopCloser(bytes.NewBufferString(`OK`)),
+			Body:       io.NopCloser(bytes.NewBufferString(`OK`)),
 		}
 	})
 
@@ -83,12 +84,12 @@ func TestCanSetApiKey(t *testing.T) {
 		case "Bearer valid-mailersend-api-key":
 			return &http.Response{
 				StatusCode: 200,
-				Body:       ioutil.NopCloser(bytes.NewBufferString(`OK`)),
+				Body:       io.NopCloser(bytes.NewBufferString(`OK`)),
 			}
 		case "Bearer new-api-key":
 			return &http.Response{
 				StatusCode: 401,
-				Body:       ioutil.NopCloser(bytes.NewBufferString(`ERROR`)),
+				Body:       io.NopCloser(bytes.NewBufferString(`ERROR`)),
 			}
 		}
 

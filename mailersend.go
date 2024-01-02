@@ -5,11 +5,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/google/go-querystring/query"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"reflect"
+
+	"github.com/google/go-querystring/query"
 )
 
 const APIBase string = "https://api.mailersend.com/v1"
@@ -207,7 +208,7 @@ func (ms *Mailersend) do(ctx context.Context, req *http.Request, v interface{}) 
 	err = CheckResponse(resp)
 	if err != nil {
 		defer resp.Body.Close()
-		_, readErr := ioutil.ReadAll(resp.Body)
+		_, readErr := io.ReadAll(resp.Body)
 		if readErr != nil {
 			return response, readErr
 		}
@@ -235,7 +236,7 @@ func CheckResponse(r *http.Response) error {
 	}
 
 	errorResponse := &ErrorResponse{Response: r}
-	data, err := ioutil.ReadAll(r.Body)
+	data, err := io.ReadAll(r.Body)
 	if err == nil && data != nil {
 		json.Unmarshal(data, errorResponse)
 	}
