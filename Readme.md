@@ -69,7 +69,7 @@ MailerSend Golang SDK
        - [Get a single template](#get-a-single-template)
        - [Delete a template](#delete-a-template)
     - [Email Verification](#email-verification)
-       - [Verify a single email][#verify-single-email]
+       - [Verify a single email](#verify-single-email)
        - [Get all email verification lists](#get-all-email-verification-lists)
        - [Get an email verification list](#get-an-email-verification-list)
        - [Create an email verification list](#create-an-email-verification-list)
