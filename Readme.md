@@ -69,6 +69,7 @@ MailerSend Golang SDK
        - [Get a single template](#get-a-single-template)
        - [Delete a template](#delete-a-template)
     - [Email Verification](#email-verification)
+       - [Verify a single email](#verify-single-email)
        - [Get all email verification lists](#get-all-email-verification-lists)
        - [Get an email verification list](#get-an-email-verification-list)
        - [Create an email verification list](#create-an-email-verification-list)
@@ -2083,6 +2084,39 @@ func main() {
 ```
 
 ## Email Verification
+
+### Verify a single email
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.SingleEmailVerificationOptions{
+		Email: "john@doe.com"
+	}
+
+	_, _, err := ms.EmailVerification.VerifySingle(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
 
 ### Get all email verification lists
 

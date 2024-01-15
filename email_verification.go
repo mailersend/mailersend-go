@@ -29,6 +29,10 @@ type resultEmailVerificationRoot struct {
 	Meta  Meta     `json:"meta"`
 }
 
+type resultSingleEmailVerification struct {
+	Status string `json:"status"`
+}
+
 type emailVerification struct {
 	Id                  string      `json:"id"`
 	Name                string      `json:"name"`
@@ -83,6 +87,10 @@ type GetEmailVerificationOptions struct {
 	EmailVerificationId string `url:"-"`
 	Page                int    `url:"page,omitempty"`
 	Limit               int    `url:"limit,omitempty"`
+}
+
+type SingleEmailVerificationOptions struct {
+	Email string `json:"email"`
 }
 
 func (s *EmailVerificationService) List(ctx context.Context, options *ListEmailVerificationOptions) (*emailVerificationRoot, *Response, error) {
@@ -175,6 +183,23 @@ func (s *EmailVerificationService) Verify(ctx context.Context, emailVerification
 	}
 
 	return root, res, nil
+}
+
+func (s *EmailVerificationService) VerifySingle(ctx context.Context, options *SingleEmailVerificationOptions) (*resultSingleEmailVerification, *Response, error) {
+	path := fmt.Sprintf("%s/verify", emailVerificationBasePath)
+
+	req, err := s.client.newRequest(http.MethodPost, path, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	verification := new(resultSingleEmailVerification)
+	res, err := s.client.do(ctx, req, verification)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return verification, res, nil
 }
 
 func (s *EmailVerificationService) GetResults(ctx context.Context, options *GetEmailVerificationOptions) (*resultEmailVerificationRoot, *Response, error) {
