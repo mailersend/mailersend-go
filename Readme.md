@@ -12,7 +12,7 @@ MailerSend Golang SDK
        - [Send an email](#send-an-email)
        - [Add CC, BCC recipients](#add-cc-bcc-recipients)
        - [Send a template-based email](#send-a-template-based-email)
-       - [Advanced personalization](#advanced-personalization)
+       - [Personalization](#personalization)
        - [Send email with attachment](#send-email-with-attachment)
        - [Send email with inline attachment](#send-email-with-inline-attachment)
     - [Bulk Email](#bulk-email)
@@ -337,7 +337,7 @@ func main() {
 }
 ```
 
-### Advanced personalization
+### Personalization
 
 ```go
 package main
