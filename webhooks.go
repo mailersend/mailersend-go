@@ -1,8 +1,15 @@
 package mailersend
 
 import (
+	"bytes"
 	"context"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"time"
 )
@@ -132,4 +139,48 @@ func (s *WebhookService) Delete(ctx context.Context, webhookID string) (*Respons
 	}
 
 	return s.client.do(ctx, req, nil)
+}
+
+var (
+	ErrInvalidWebhookSignature = errors.New("invalid webhook signature")
+)
+
+type (
+	WebhookEvent struct {
+		Type      string          `json:"type"`
+		DomainID  string          `json:"domain_id"`
+		CreatedAt time.Time       `json:"created_at"`
+		WebhookID string          `json:"webhook_id"`
+		URL       string          `json:"url"`
+		Data      json.RawMessage `json:"data"`
+	}
+)
+
+// ConstructEvent reads the contents of the provided request body, generating an HMAC256 hash of its content. The
+// hash is then checked against the value of the Signature header. Once validated, a WebhookEvent is returned. If
+// the signature does not match, ErrInvalidWebhookSignature is returned.
+func ConstructEvent(r *http.Request, secret []byte) (WebhookEvent, error) {
+	// Webhook verification requires a hash of the request body against a signing secret.
+	hash := hmac.New(sha256.New, secret)
+	payload := bytes.NewBuffer(nil)
+
+	// Verifying the signature requires hashing the contents of the request body. This means that any subsequent use
+	// of the request body will find it exhausted. We need to use a multi writer here so that we can then decode the
+	// request body into a WebhookEvent
+	if _, err := io.Copy(io.MultiWriter(hash, payload), r.Body); err != nil {
+		return WebhookEvent{}, err
+	}
+
+	// The provided signature is the HMAC256 hash of the request content encoded
+	// as hexadecimal
+	if hex.EncodeToString(hash.Sum(nil)) != r.Header.Get("Signature") {
+		return WebhookEvent{}, ErrInvalidWebhookSignature
+	}
+
+	var event WebhookEvent
+	if err := json.NewDecoder(payload).Decode(&event); err != nil {
+		return WebhookEvent{}, err
+	}
+
+	return event, nil
 }
