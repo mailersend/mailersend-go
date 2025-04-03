@@ -9,34 +9,41 @@ import (
 
 const messageBasePath = "/messages"
 
-type MessageService service
-
-// messageRoot format of message response
-type messageRoot struct {
-	Data  []message `json:"data"`
-	Links Links     `json:"links"`
-	Meta  Meta      `json:"meta"`
+type MessageService interface {
+	List(ctx context.Context, options *ListMessageOptions) (*MessageRoot, *Response, error)
+	Get(ctx context.Context, messageID string) (*SingleMessageRoot, *Response, error)
 }
 
-type message struct {
+type messageService struct {
+	*service
+}
+
+// MessageRoot format of message response
+type MessageRoot struct {
+	Data  []MessageData `json:"data"`
+	Links Links         `json:"links"`
+	Meta  Meta          `json:"meta"`
+}
+
+type MessageData struct {
 	ID        string    `json:"id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type singleMessageRoot struct {
-	Data singleMessage `json:"data"`
+type SingleMessageRoot struct {
+	Data SingleMessage `json:"data"`
 }
 
-type singleMessage struct {
+type SingleMessage struct {
 	ID        string    `json:"id"`
-	Emails    []email   `json:"emails"`
+	Emails    []Email   `json:"emails"`
 	Domain    Domain    `json:"domain"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type email struct {
+type Email struct {
 	ID        string    `json:"id"`
 	From      string    `json:"from"`
 	Subject   string    `json:"subject,omitempty"`
@@ -54,13 +61,13 @@ type ListMessageOptions struct {
 	Limit int `url:"limit,omitempty"`
 }
 
-func (s *MessageService) List(ctx context.Context, options *ListMessageOptions) (*messageRoot, *Response, error) {
+func (s *messageService) List(ctx context.Context, options *ListMessageOptions) (*MessageRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, messageBasePath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(messageRoot)
+	root := new(MessageRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -69,7 +76,7 @@ func (s *MessageService) List(ctx context.Context, options *ListMessageOptions) 
 	return root, res, nil
 }
 
-func (s *MessageService) Get(ctx context.Context, messageID string) (*singleMessageRoot, *Response, error) {
+func (s *messageService) Get(ctx context.Context, messageID string) (*SingleMessageRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", messageBasePath, messageID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -77,7 +84,7 @@ func (s *MessageService) Get(ctx context.Context, messageID string) (*singleMess
 		return nil, nil, err
 	}
 
-	root := new(singleMessageRoot)
+	root := new(SingleMessageRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err

@@ -9,22 +9,30 @@ import (
 
 const smsRecipientPath = "/sms-recipients"
 
-type SmsRecipientService service
+type SmsRecipientService interface {
+	List(ctx context.Context, options *SmsRecipientOptions) (*SmsRecipientRoot, *Response, error)
+	Get(ctx context.Context, smsRecipientId string) (*SingleSmsRecipientRoot, *Response, error)
+	Update(ctx context.Context, options *SmsRecipientSettingOptions) (*SingleSmsRecipientUpdateRoot, *Response, error)
+}
 
-// smsRecipientRoot - format of activity response
-type smsRecipientRoot struct {
+type smsRecipientService struct {
+	*service
+}
+
+// SmsRecipientRoot - format of activity response
+type SmsRecipientRoot struct {
 	Data  []SmsRecipient `json:"data"`
 	Links Links          `json:"links"`
 	Meta  Meta           `json:"meta"`
 }
 
 // singleSmsNumberRoot - format of activity response
-type singleSmsRecipientRoot struct {
+type SingleSmsRecipientRoot struct {
 	Data SmsRecipientData `json:"data"`
 }
 
-// singleSmsRecipientUpdateRoot - format of activity response
-type singleSmsRecipientUpdateRoot struct {
+// SingleSmsRecipientUpdateRoot - format of activity response
+type SingleSmsRecipientUpdateRoot struct {
 	Data SmsRecipientDataUpdate `json:"data"`
 }
 
@@ -64,13 +72,13 @@ type SmsRecipientOptions struct {
 	Limit       int    `url:"limit,omitempty"`
 }
 
-func (s *SmsRecipientService) List(ctx context.Context, options *SmsRecipientOptions) (*smsRecipientRoot, *Response, error) {
+func (s *smsRecipientService) List(ctx context.Context, options *SmsRecipientOptions) (*SmsRecipientRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, smsRecipientPath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(smsRecipientRoot)
+	root := new(SmsRecipientRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -79,7 +87,7 @@ func (s *SmsRecipientService) List(ctx context.Context, options *SmsRecipientOpt
 	return root, res, nil
 }
 
-func (s *SmsRecipientService) Get(ctx context.Context, smsRecipientId string) (*singleSmsRecipientRoot, *Response, error) {
+func (s *smsRecipientService) Get(ctx context.Context, smsRecipientId string) (*SingleSmsRecipientRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", smsRecipientPath, smsRecipientId)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -87,7 +95,7 @@ func (s *SmsRecipientService) Get(ctx context.Context, smsRecipientId string) (*
 		return nil, nil, err
 	}
 
-	root := new(singleSmsRecipientRoot)
+	root := new(SingleSmsRecipientRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -96,7 +104,7 @@ func (s *SmsRecipientService) Get(ctx context.Context, smsRecipientId string) (*
 	return root, res, nil
 }
 
-func (s *SmsRecipientService) Update(ctx context.Context, options *SmsRecipientSettingOptions) (*singleSmsRecipientUpdateRoot, *Response, error) {
+func (s *smsRecipientService) Update(ctx context.Context, options *SmsRecipientSettingOptions) (*SingleSmsRecipientUpdateRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", smsRecipientPath, options.Id)
 
 	req, err := s.client.newRequest(http.MethodPut, path, options)
@@ -104,7 +112,7 @@ func (s *SmsRecipientService) Update(ctx context.Context, options *SmsRecipientS
 		return nil, nil, err
 	}
 
-	root := new(singleSmsRecipientUpdateRoot)
+	root := new(SingleSmsRecipientUpdateRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err

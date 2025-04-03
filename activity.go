@@ -8,24 +8,30 @@ import (
 
 const activityBasePath = "/activity"
 
-type ActivityService service
+type ActivityService interface {
+	List(ctx context.Context, options *ActivityOptions) (*ActivityRoot, *Response, error)
+}
+
+type activityService struct {
+	*service
+}
 
 // activityRoot - format of activity response
-type activityRoot struct {
-	Data  []activityData `json:"data"`
+type ActivityRoot struct {
+	Data  []ActivityData `json:"data"`
 	Links Links          `json:"links"`
 	Meta  Meta           `json:"meta"`
 }
 
-type activityData struct {
+type ActivityData struct {
 	ID        string        `json:"id"`
 	CreatedAt string        `json:"created_at"`
 	UpdatedAt string        `json:"updated_at"`
 	Type      string        `json:"type"`
-	Email     activityEmail `json:"email"`
+	Email     ActivityEmail `json:"email"`
 }
 
-type activityEmail struct {
+type ActivityEmail struct {
 	ID        string            `json:"id"`
 	From      string            `json:"from"`
 	Subject   string            `json:"subject"`
@@ -35,10 +41,10 @@ type activityEmail struct {
 	Tags      interface{}       `json:"tags"`
 	CreatedAt string            `json:"created_at"`
 	UpdatedAt string            `json:"updated_at"`
-	Recipient activityRecipient `json:"recipient"`
+	Recipient ActivityRecipient `json:"recipient"`
 }
 
-type activityRecipient struct {
+type ActivityRecipient struct {
 	ID        string `json:"id"`
 	Email     string `json:"email"`
 	CreatedAt string `json:"created_at"`
@@ -56,7 +62,7 @@ type ActivityOptions struct {
 	Event    []string `url:"event[],omitempty"`
 }
 
-func (s *ActivityService) List(ctx context.Context, options *ActivityOptions) (*activityRoot, *Response, error) {
+func (s *activityService) List(ctx context.Context, options *ActivityOptions) (*ActivityRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", activityBasePath, options.DomainID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, options)
@@ -64,7 +70,7 @@ func (s *ActivityService) List(ctx context.Context, options *ActivityOptions) (*
 		return nil, nil, err
 	}
 
-	root := new(activityRoot)
+	root := new(ActivityRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err

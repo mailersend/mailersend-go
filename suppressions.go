@@ -16,16 +16,31 @@ const (
 	Unsubscribes   string = "unsubscribes"
 )
 
-type SuppressionService service
+type SuppressionService interface {
+	ListBlockList(ctx context.Context, options *SuppressionOptions) (*SuppressionBlockListRoot, *Response, error)
+	ListHardBounces(ctx context.Context, options *SuppressionOptions) (*SuppressionHardBouncesRoot, *Response, error)
+	ListSpamComplaints(ctx context.Context, options *SuppressionOptions) (*SuppressionSpamComplaintsRoot, *Response, error)
+	ListUnsubscribes(ctx context.Context, options *SuppressionOptions) (*SuppressionUnsubscribesRoot, *Response, error)
+	CreateBlock(ctx context.Context, options *CreateSuppressionBlockOptions) (*SuppressionBlockResponse, *Response, error)
+	CreateHardBounce(ctx context.Context, options *CreateSuppressionOptions) (*SuppressionHardBouncesRoot, *Response, error)
+	CreateSpamComplaint(ctx context.Context, options *CreateSuppressionOptions) (*SuppressionSpamComplaintsRoot, *Response, error)
+	CreateUnsubscribe(ctx context.Context, options *CreateSuppressionOptions) (*SuppressionUnsubscribesRoot, *Response, error)
+	Delete(ctx context.Context, options *DeleteSuppressionOptions, suppressionType string) (*Response, error)
+	DeleteAll(ctx context.Context, domainID string, suppressionType string) (*Response, error)
+}
 
-// suppressionBlockListRoot - recipients response
-type suppressionBlockListRoot struct {
-	Data  []suppressionBlockListData `json:"data"`
+type suppressionService struct {
+	*service
+}
+
+// SuppressionBlockListRoot - recipients response
+type SuppressionBlockListRoot struct {
+	Data  []SuppressionBlockListData `json:"data"`
 	Links `json:"links"`
 	Meta  `json:"meta"`
 }
 
-type suppressionBlockListData struct {
+type SuppressionBlockListData struct {
 	ID        string    `json:"id"`
 	Type      string    `json:"type"`
 	Pattern   string    `json:"pattern"`
@@ -34,49 +49,49 @@ type suppressionBlockListData struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// suppressionHardBouncesRoot - recipients response
-type suppressionHardBouncesRoot struct {
-	Data  []suppressionHardBouncesData `json:"data"`
+// SuppressionHardBouncesRoot - recipients response
+type SuppressionHardBouncesRoot struct {
+	Data  []SuppressionHardBouncesData `json:"data"`
 	Links `json:"links"`
 	Meta  `json:"meta"`
 }
 
-type suppressionHardBouncesData struct {
+type SuppressionHardBouncesData struct {
 	ID        string               `json:"id"`
 	Reason    string               `json:"reason"`
 	CreatedAt time.Time            `json:"created_at"`
-	Recipient suppressionRecipient `json:"recipient"`
+	Recipient SuppressionRecipient `json:"recipient"`
 }
 
-// suppressionSpamComplaintsRoot - recipients response
-type suppressionSpamComplaintsRoot struct {
-	Data  []suppressionSpamComplaintsData `json:"data"`
+// SuppressionSpamComplaintsRoot - recipients response
+type SuppressionSpamComplaintsRoot struct {
+	Data  []SuppressionSpamComplaintsData `json:"data"`
 	Links `json:"links"`
 	Meta  `json:"meta"`
 }
 
-type suppressionSpamComplaintsData struct {
+type SuppressionSpamComplaintsData struct {
 	ID        string               `json:"id"`
-	Recipient suppressionRecipient `json:"recipient"`
+	Recipient SuppressionRecipient `json:"recipient"`
 	CreatedAt time.Time            `json:"created_at"`
 }
 
-// suppressionUnsubscribesRoot - recipients response
-type suppressionUnsubscribesRoot struct {
-	Data  []suppressionUnsubscribesData `json:"data"`
+// SuppressionUnsubscribesRoot - recipients response
+type SuppressionUnsubscribesRoot struct {
+	Data  []SuppressionUnsubscribesData `json:"data"`
 	Links `json:"links"`
 	Meta  `json:"meta"`
 }
 
-type suppressionUnsubscribesData struct {
+type SuppressionUnsubscribesData struct {
 	ID             string               `json:"id"`
 	Reason         string               `json:"reason"`
 	ReadableReason string               `json:"readable_reason"`
-	Recipient      suppressionRecipient `json:"recipient"`
+	Recipient      SuppressionRecipient `json:"recipient"`
 	CreatedAt      time.Time            `json:"created_at"`
 }
 
-type suppressionRecipient struct {
+type SuppressionRecipient struct {
 	ID        string    `json:"id"`
 	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"created_at"`
@@ -85,11 +100,11 @@ type suppressionRecipient struct {
 	Domain    Domain    `json:"domain"`
 }
 
-type suppressionBlockResponse struct {
-	Data []suppressionBlockData `json:"data"`
+type SuppressionBlockResponse struct {
+	Data []SuppressionBlockData `json:"data"`
 }
 
-type suppressionBlockData struct {
+type SuppressionBlockData struct {
 	ID        string    `json:"id"`
 	Type      string    `json:"type"`
 	Pattern   string    `json:"pattern"`
@@ -120,12 +135,12 @@ type DeleteSuppressionOptions struct {
 	Ids      []string `json:"ids"`
 }
 
-type deleteAll struct {
+type DeleteAll struct {
 	DomainID string `json:"domain_id"`
 	All      bool   `json:"all"`
 }
 
-func (s *SuppressionService) ListBlockList(ctx context.Context, options *SuppressionOptions) (*suppressionBlockListRoot, *Response, error) {
+func (s *suppressionService) ListBlockList(ctx context.Context, options *SuppressionOptions) (*SuppressionBlockListRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", suppressionBasePath, BlockList)
 
 	req, err := s.client.newRequest(http.MethodGet, path, options)
@@ -133,7 +148,7 @@ func (s *SuppressionService) ListBlockList(ctx context.Context, options *Suppres
 		return nil, nil, err
 	}
 
-	root := new(suppressionBlockListRoot)
+	root := new(SuppressionBlockListRoot)
 
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
@@ -143,7 +158,7 @@ func (s *SuppressionService) ListBlockList(ctx context.Context, options *Suppres
 	return root, res, nil
 }
 
-func (s *SuppressionService) ListHardBounces(ctx context.Context, options *SuppressionOptions) (*suppressionHardBouncesRoot, *Response, error) {
+func (s *suppressionService) ListHardBounces(ctx context.Context, options *SuppressionOptions) (*SuppressionHardBouncesRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", suppressionBasePath, HardBounces)
 
 	req, err := s.client.newRequest(http.MethodGet, path, options)
@@ -151,7 +166,7 @@ func (s *SuppressionService) ListHardBounces(ctx context.Context, options *Suppr
 		return nil, nil, err
 	}
 
-	root := new(suppressionHardBouncesRoot)
+	root := new(SuppressionHardBouncesRoot)
 
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
@@ -161,7 +176,7 @@ func (s *SuppressionService) ListHardBounces(ctx context.Context, options *Suppr
 	return root, res, nil
 }
 
-func (s *SuppressionService) ListSpamComplaints(ctx context.Context, options *SuppressionOptions) (*suppressionSpamComplaintsRoot, *Response, error) {
+func (s *suppressionService) ListSpamComplaints(ctx context.Context, options *SuppressionOptions) (*SuppressionSpamComplaintsRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", suppressionBasePath, SpamComplaints)
 
 	req, err := s.client.newRequest(http.MethodGet, path, options)
@@ -169,7 +184,7 @@ func (s *SuppressionService) ListSpamComplaints(ctx context.Context, options *Su
 		return nil, nil, err
 	}
 
-	root := new(suppressionSpamComplaintsRoot)
+	root := new(SuppressionSpamComplaintsRoot)
 
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
@@ -179,7 +194,7 @@ func (s *SuppressionService) ListSpamComplaints(ctx context.Context, options *Su
 	return root, res, nil
 }
 
-func (s *SuppressionService) ListUnsubscribes(ctx context.Context, options *SuppressionOptions) (*suppressionUnsubscribesRoot, *Response, error) {
+func (s *suppressionService) ListUnsubscribes(ctx context.Context, options *SuppressionOptions) (*SuppressionUnsubscribesRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", suppressionBasePath, Unsubscribes)
 
 	req, err := s.client.newRequest(http.MethodGet, path, options)
@@ -187,7 +202,7 @@ func (s *SuppressionService) ListUnsubscribes(ctx context.Context, options *Supp
 		return nil, nil, err
 	}
 
-	root := new(suppressionUnsubscribesRoot)
+	root := new(SuppressionUnsubscribesRoot)
 
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
@@ -197,14 +212,14 @@ func (s *SuppressionService) ListUnsubscribes(ctx context.Context, options *Supp
 	return root, res, nil
 }
 
-func (s *SuppressionService) CreateBlock(ctx context.Context, options *CreateSuppressionBlockOptions) (*suppressionBlockResponse, *Response, error) {
+func (s *suppressionService) CreateBlock(ctx context.Context, options *CreateSuppressionBlockOptions) (*SuppressionBlockResponse, *Response, error) {
 	path := fmt.Sprintf("%s/%s", suppressionBasePath, BlockList)
 	req, err := s.client.newRequest(http.MethodPost, path, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(suppressionBlockResponse)
+	root := new(SuppressionBlockResponse)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -213,14 +228,14 @@ func (s *SuppressionService) CreateBlock(ctx context.Context, options *CreateSup
 	return root, res, nil
 }
 
-func (s *SuppressionService) CreateHardBounce(ctx context.Context, options *CreateSuppressionOptions) (*suppressionHardBouncesRoot, *Response, error) {
+func (s *suppressionService) CreateHardBounce(ctx context.Context, options *CreateSuppressionOptions) (*SuppressionHardBouncesRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", suppressionBasePath, HardBounces)
 	req, err := s.client.newRequest(http.MethodPost, path, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(suppressionHardBouncesRoot)
+	root := new(SuppressionHardBouncesRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -229,14 +244,14 @@ func (s *SuppressionService) CreateHardBounce(ctx context.Context, options *Crea
 	return root, res, nil
 }
 
-func (s *SuppressionService) CreateSpamComplaint(ctx context.Context, options *CreateSuppressionOptions) (*suppressionSpamComplaintsRoot, *Response, error) {
+func (s *suppressionService) CreateSpamComplaint(ctx context.Context, options *CreateSuppressionOptions) (*SuppressionSpamComplaintsRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", suppressionBasePath, SpamComplaints)
 	req, err := s.client.newRequest(http.MethodPost, path, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(suppressionSpamComplaintsRoot)
+	root := new(SuppressionSpamComplaintsRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -245,14 +260,14 @@ func (s *SuppressionService) CreateSpamComplaint(ctx context.Context, options *C
 	return root, res, nil
 }
 
-func (s *SuppressionService) CreateUnsubscribe(ctx context.Context, options *CreateSuppressionOptions) (*suppressionUnsubscribesRoot, *Response, error) {
+func (s *suppressionService) CreateUnsubscribe(ctx context.Context, options *CreateSuppressionOptions) (*SuppressionUnsubscribesRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", suppressionBasePath, Unsubscribes)
 	req, err := s.client.newRequest(http.MethodPost, path, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(suppressionUnsubscribesRoot)
+	root := new(SuppressionUnsubscribesRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -261,7 +276,7 @@ func (s *SuppressionService) CreateUnsubscribe(ctx context.Context, options *Cre
 	return root, res, nil
 }
 
-func (s *SuppressionService) Delete(ctx context.Context, options *DeleteSuppressionOptions, suppressionType string) (*Response, error) {
+func (s *suppressionService) Delete(ctx context.Context, options *DeleteSuppressionOptions, suppressionType string) (*Response, error) {
 	path := fmt.Sprintf("%s/%s", suppressionBasePath, suppressionType)
 
 	req, err := s.client.newRequest(http.MethodDelete, path, options)
@@ -273,10 +288,10 @@ func (s *SuppressionService) Delete(ctx context.Context, options *DeleteSuppress
 
 }
 
-func (s *SuppressionService) DeleteAll(ctx context.Context, domainID string, suppressionType string) (*Response, error) {
+func (s *suppressionService) DeleteAll(ctx context.Context, domainID string, suppressionType string) (*Response, error) {
 	path := fmt.Sprintf("%s/%s", suppressionBasePath, suppressionType)
 
-	options := deleteAll{All: true, DomainID: domainID}
+	options := DeleteAll{All: true, DomainID: domainID}
 
 	req, err := s.client.newRequest(http.MethodDelete, path, options)
 	if err != nil {

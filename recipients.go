@@ -8,21 +8,29 @@ import (
 
 const recipientBasePath = "/recipients"
 
-type RecipientService service
-
-// recipientRoot - recipients response
-type recipientRoot struct {
-	Data  []recipient `json:"data"`
-	Links Links       `json:"links"`
-	Meta  Meta        `json:"meta"`
+type RecipientService interface {
+	List(ctx context.Context, options *ListRecipientOptions) (*RecipientRoot, *Response, error)
+	Get(ctx context.Context, recipientID string) (*SingleRecipientRoot, *Response, error)
+	Delete(ctx context.Context, recipientID string) (*Response, error)
 }
 
-// singleRecipientRoot - single recipient response
-type singleRecipientRoot struct {
-	Data recipientData `json:"data"`
+type recipientService struct {
+	*service
 }
 
-type recipientData struct {
+// RecipientRoot - recipients response
+type RecipientRoot struct {
+	Data  []RecipientObject `json:"data"`
+	Links Links             `json:"links"`
+	Meta  Meta              `json:"meta"`
+}
+
+// SingleRecipientRoot - single recipient response
+type SingleRecipientRoot struct {
+	Data RecipientData `json:"data"`
+}
+
+type RecipientData struct {
 	ID        string        `json:"id"`
 	Email     string        `json:"email"`
 	CreatedAt string        `json:"created_at"`
@@ -32,8 +40,8 @@ type recipientData struct {
 	Domain    Domain        `json:"domain"`
 }
 
-// recipient - a single recipient
-type recipient struct {
+// RecipientObject - a single RecipientObject
+type RecipientObject struct {
 	ID        string `json:"id"`
 	Email     string `json:"email"`
 	CreatedAt string `json:"created_at"`
@@ -48,13 +56,13 @@ type ListRecipientOptions struct {
 	Limit    int    `url:"limit,omitempty"`
 }
 
-func (s *RecipientService) List(ctx context.Context, options *ListRecipientOptions) (*recipientRoot, *Response, error) {
+func (s *recipientService) List(ctx context.Context, options *ListRecipientOptions) (*RecipientRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, recipientBasePath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(recipientRoot)
+	root := new(RecipientRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -63,7 +71,7 @@ func (s *RecipientService) List(ctx context.Context, options *ListRecipientOptio
 	return root, res, nil
 }
 
-func (s *RecipientService) Get(ctx context.Context, recipientID string) (*singleRecipientRoot, *Response, error) {
+func (s *recipientService) Get(ctx context.Context, recipientID string) (*SingleRecipientRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", recipientBasePath, recipientID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -71,7 +79,7 @@ func (s *RecipientService) Get(ctx context.Context, recipientID string) (*single
 		return nil, nil, err
 	}
 
-	root := new(singleRecipientRoot)
+	root := new(SingleRecipientRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -80,7 +88,7 @@ func (s *RecipientService) Get(ctx context.Context, recipientID string) (*single
 	return root, res, nil
 }
 
-func (s *RecipientService) Delete(ctx context.Context, recipientID string) (*Response, error) {
+func (s *recipientService) Delete(ctx context.Context, recipientID string) (*Response, error) {
 	path := fmt.Sprintf("%s/%s", recipientBasePath, recipientID)
 
 	req, err := s.client.newRequest(http.MethodDelete, path, nil)

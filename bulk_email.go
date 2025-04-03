@@ -9,17 +9,24 @@ import (
 
 const bulkEmailBasePath = "/bulk-email"
 
-type BulkEmailService service
+type BulkEmailService interface {
+	Send(ctx context.Context, message []*Message) (*BulkEmailResponse, *Response, error)
+	Status(ctx context.Context, bulkEmailID string) (*BulkEmailRoot, *Response, error)
+}
 
-type bulkEmailResponse struct {
+type bulkEmailService struct {
+	*service
+}
+
+type BulkEmailResponse struct {
 	Message     string `json:"message"`
 	BulkEmailID string `json:"bulk_email_id"`
 }
 
-type bulkEmailRoot struct {
-	Data bulkEmailData `json:"data"`
+type BulkEmailRoot struct {
+	Data BulkEmailData `json:"data"`
 }
-type bulkEmailData struct {
+type BulkEmailData struct {
 	ID                        string      `json:"id"`
 	State                     string      `json:"state"`
 	TotalRecipientsCount      int         `json:"total_recipients_count"`
@@ -33,13 +40,13 @@ type bulkEmailData struct {
 }
 
 // Send - send bulk messages
-func (s *BulkEmailService) Send(ctx context.Context, message []*Message) (*bulkEmailResponse, *Response, error) {
+func (s *bulkEmailService) Send(ctx context.Context, message []*Message) (*BulkEmailResponse, *Response, error) {
 	req, err := s.client.newRequest(http.MethodPost, bulkEmailBasePath, message)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(bulkEmailResponse)
+	root := new(BulkEmailResponse)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -48,7 +55,7 @@ func (s *BulkEmailService) Send(ctx context.Context, message []*Message) (*bulkE
 	return root, res, nil
 }
 
-func (s *BulkEmailService) Status(ctx context.Context, bulkEmailID string) (*bulkEmailRoot, *Response, error) {
+func (s *bulkEmailService) Status(ctx context.Context, bulkEmailID string) (*BulkEmailRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", bulkEmailBasePath, bulkEmailID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -56,7 +63,7 @@ func (s *BulkEmailService) Status(ctx context.Context, bulkEmailID string) (*bul
 		return nil, nil, err
 	}
 
-	root := new(bulkEmailRoot)
+	root := new(BulkEmailRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err

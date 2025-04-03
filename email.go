@@ -7,7 +7,14 @@ import (
 
 const emailBasePath = "/email"
 
-type EmailService service
+type EmailService interface {
+	NewMessage() *Message
+	Send(ctx context.Context, message *Message) (*Response, error)
+}
+
+type emailService struct {
+	*service
+}
 
 const (
 	DispositionInline     = "inline"
@@ -78,7 +85,7 @@ func (ms *Mailersend) NewMessage() *Message {
 }
 
 // NewMessage - Setup a new email message ready to be sent.
-func (s *EmailService) NewMessage() *Message {
+func (s *emailService) NewMessage() *Message {
 	return &Message{}
 }
 
@@ -168,7 +175,7 @@ func (ms *Mailersend) Send(ctx context.Context, message *Message) (*Response, er
 }
 
 // Send - send the message
-func (s *EmailService) Send(ctx context.Context, message *Message) (*Response, error) {
+func (s *emailService) Send(ctx context.Context, message *Message) (*Response, error) {
 	req, err := s.client.newRequest(http.MethodPost, emailBasePath, message)
 	if err != nil {
 		return nil, err

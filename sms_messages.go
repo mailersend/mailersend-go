@@ -8,17 +8,24 @@ import (
 
 const smsMessagesPath = "/sms-messages"
 
-type SmsMessageService service
+type SmsMessageService interface {
+	List(ctx context.Context, options *ListSmsMessageOptions) (*SmsListMessagesRoot, *Response, error)
+	Get(ctx context.Context, smsMessageID string) (*SmsSingleMessagesRoot, *Response, error)
+}
 
-// smsListMessagesRoot - format of activity response
-type smsListMessagesRoot struct {
+type smsMessageService struct {
+	*service
+}
+
+// SmsListMessagesRoot - format of activity response
+type SmsListMessagesRoot struct {
 	Data  []SmsMessageData `json:"data"`
 	Links Links            `json:"links"`
 	Meta  Meta             `json:"meta"`
 }
 
-// smsSingleMessagesRoot - format of activity response
-type smsSingleMessagesRoot SmsMessageRoot
+// SmsSingleMessagesRoot - format of activity response
+type SmsSingleMessagesRoot SmsMessageRoot
 
 // ListSmsMessageOptions - modifies the behavior of SmsMessagesService.List method
 type ListSmsMessageOptions struct {
@@ -26,13 +33,13 @@ type ListSmsMessageOptions struct {
 	Limit int `url:"limit,omitempty"`
 }
 
-func (s *SmsMessageService) List(ctx context.Context, options *ListSmsMessageOptions) (*smsListMessagesRoot, *Response, error) {
+func (s *smsMessageService) List(ctx context.Context, options *ListSmsMessageOptions) (*SmsListMessagesRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, smsMessagesPath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(smsListMessagesRoot)
+	root := new(SmsListMessagesRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -41,7 +48,7 @@ func (s *SmsMessageService) List(ctx context.Context, options *ListSmsMessageOpt
 	return root, res, nil
 }
 
-func (s *SmsMessageService) Get(ctx context.Context, smsMessageID string) (*smsSingleMessagesRoot, *Response, error) {
+func (s *smsMessageService) Get(ctx context.Context, smsMessageID string) (*SmsSingleMessagesRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", smsMessagesPath, smsMessageID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -49,7 +56,7 @@ func (s *SmsMessageService) Get(ctx context.Context, smsMessageID string) (*smsS
 		return nil, nil, err
 	}
 
-	root := new(smsSingleMessagesRoot)
+	root := new(SmsSingleMessagesRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err

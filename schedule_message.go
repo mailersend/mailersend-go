@@ -9,15 +9,23 @@ import (
 
 const messageScheduleBasePath = "/message-schedules"
 
-type ScheduleMessageService service
+type ScheduleMessageService interface {
+	List(ctx context.Context, options *ListScheduleMessageOptions) (*ScheduleMessageRoot, *Response, error)
+	Get(ctx context.Context, messageID string) (*ScheduleMessageSingleRoot, *Response, error)
+	Delete(ctx context.Context, messageID string) (*Response, error)
+}
 
-type scheduleMessageRoot struct {
-	Data  []scheduleMessageData `json:"data"`
+type scheduleMessageService struct {
+	*service
+}
+
+type ScheduleMessageRoot struct {
+	Data  []ScheduleMessageData `json:"data"`
 	Links Links                 `json:"links"`
 	Meta  Meta                  `json:"meta"`
 }
 
-type scheduleMessageData struct {
+type ScheduleMessageData struct {
 	MessageID     string      `json:"message_id"`
 	Subject       string      `json:"subject"`
 	SendAt        time.Time   `json:"send_at"`
@@ -26,8 +34,8 @@ type scheduleMessageData struct {
 	CreatedAt     string      `json:"created_at"`
 }
 
-type scheduleMessageSingleRoot struct {
-	Data scheduleMessageSingleData `json:"data"`
+type ScheduleMessageSingleRoot struct {
+	Data ScheduleMessageSingleData `json:"data"`
 }
 
 type ScheduleDomain struct {
@@ -43,7 +51,7 @@ type ScheduleMessage struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-type scheduleMessageSingleData struct {
+type ScheduleMessageSingleData struct {
 	MessageID     string          `json:"message_id"`
 	Subject       string          `json:"subject"`
 	SendAt        time.Time       `json:"send_at"`
@@ -62,13 +70,13 @@ type ListScheduleMessageOptions struct {
 	Limit    int    `url:"limit,omitempty"`
 }
 
-func (s *ScheduleMessageService) List(ctx context.Context, options *ListScheduleMessageOptions) (*scheduleMessageRoot, *Response, error) {
+func (s *scheduleMessageService) List(ctx context.Context, options *ListScheduleMessageOptions) (*ScheduleMessageRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, messageScheduleBasePath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(scheduleMessageRoot)
+	root := new(ScheduleMessageRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -77,7 +85,7 @@ func (s *ScheduleMessageService) List(ctx context.Context, options *ListSchedule
 	return root, res, nil
 }
 
-func (s *ScheduleMessageService) Get(ctx context.Context, messageID string) (*scheduleMessageSingleRoot, *Response, error) {
+func (s *scheduleMessageService) Get(ctx context.Context, messageID string) (*ScheduleMessageSingleRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", messageScheduleBasePath, messageID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -85,7 +93,7 @@ func (s *ScheduleMessageService) Get(ctx context.Context, messageID string) (*sc
 		return nil, nil, err
 	}
 
-	root := new(scheduleMessageSingleRoot)
+	root := new(ScheduleMessageSingleRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -94,7 +102,7 @@ func (s *ScheduleMessageService) Get(ctx context.Context, messageID string) (*sc
 	return root, res, nil
 }
 
-func (s *ScheduleMessageService) Delete(ctx context.Context, messageID string) (*Response, error) {
+func (s *scheduleMessageService) Delete(ctx context.Context, messageID string) (*Response, error) {
 	path := fmt.Sprintf("%s/%s", messageScheduleBasePath, messageID)
 
 	req, err := s.client.newRequest(http.MethodDelete, path, nil)

@@ -8,21 +8,27 @@ import (
 
 const apiQuotaBasePath = "/api-quota"
 
-type ApiQuotaService service
+type ApiQuotaService interface {
+	Get(ctx context.Context) (*ApiQuotaRoot, *Response, error)
+}
 
-type apiQuotaRoot struct {
+type apiQuotaService struct {
+	*service
+}
+
+type ApiQuotaRoot struct {
 	Quota     int       `json:"quota"`
 	Remaining int       `json:"remaining"`
 	Reset     time.Time `json:"reset"`
 }
 
-func (s *ApiQuotaService) Get(ctx context.Context) (*apiQuotaRoot, *Response, error) {
+func (s *apiQuotaService) Get(ctx context.Context) (*ApiQuotaRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, apiQuotaBasePath, nil)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(apiQuotaRoot)
+	root := new(ApiQuotaRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err

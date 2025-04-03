@@ -9,21 +9,31 @@ import (
 
 const smsWebhookPath = "/sms-webhooks"
 
-type SmsWebhookService service
+type SmsWebhookService interface {
+	List(ctx context.Context, options *ListSmsWebhookOptions) (*SmsWebhookRoot, *Response, error)
+	Get(ctx context.Context, smsWebhookId string) (*SingleSmsWebhookRoot, *Response, error)
+	Create(ctx context.Context, options *CreateSmsWebhookOptions) (*SingleSmsWebhookRoot, *Response, error)
+	Update(ctx context.Context, options *UpdateSmsWebhookOptions) (*SingleSmsWebhookRoot, *Response, error)
+	Delete(ctx context.Context, smsWebhookId string) (*Response, error)
+}
 
-// smsWebhookRoot - format of activity response
-type smsWebhookRoot struct {
-	Data  []smsWebhook `json:"data"`
+type smsWebhookService struct {
+	*service
+}
+
+// SmsWebhookRoot - format of activity response
+type SmsWebhookRoot struct {
+	Data  []SmsWebhook `json:"data"`
 	Links Links        `json:"links"`
 	Meta  Meta         `json:"meta"`
 }
 
 // singleSmsNumberRoot - format of activity response
-type singleSmsWebhookRoot struct {
-	Data smsWebhook `json:"data"`
+type SingleSmsWebhookRoot struct {
+	Data SmsWebhook `json:"data"`
 }
 
-type smsWebhook struct {
+type SmsWebhook struct {
 	Id        string    `json:"id"`
 	Url       string    `json:"url"`
 	Events    []string  `json:"events"`
@@ -60,13 +70,13 @@ type ListSmsWebhookOptions struct {
 	Limit       int    `url:"limit,omitempty"`
 }
 
-func (s *SmsWebhookService) List(ctx context.Context, options *ListSmsWebhookOptions) (*smsWebhookRoot, *Response, error) {
+func (s *smsWebhookService) List(ctx context.Context, options *ListSmsWebhookOptions) (*SmsWebhookRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, smsWebhookPath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(smsWebhookRoot)
+	root := new(SmsWebhookRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -75,7 +85,7 @@ func (s *SmsWebhookService) List(ctx context.Context, options *ListSmsWebhookOpt
 	return root, res, nil
 }
 
-func (s *SmsWebhookService) Get(ctx context.Context, smsWebhookId string) (*singleSmsWebhookRoot, *Response, error) {
+func (s *smsWebhookService) Get(ctx context.Context, smsWebhookId string) (*SingleSmsWebhookRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", smsWebhookPath, smsWebhookId)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -83,7 +93,7 @@ func (s *SmsWebhookService) Get(ctx context.Context, smsWebhookId string) (*sing
 		return nil, nil, err
 	}
 
-	root := new(singleSmsWebhookRoot)
+	root := new(SingleSmsWebhookRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -92,13 +102,13 @@ func (s *SmsWebhookService) Get(ctx context.Context, smsWebhookId string) (*sing
 	return root, res, nil
 }
 
-func (s *SmsWebhookService) Create(ctx context.Context, options *CreateSmsWebhookOptions) (*singleSmsWebhookRoot, *Response, error) {
+func (s *smsWebhookService) Create(ctx context.Context, options *CreateSmsWebhookOptions) (*SingleSmsWebhookRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodPost, smsWebhookPath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(singleSmsWebhookRoot)
+	root := new(SingleSmsWebhookRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -107,7 +117,7 @@ func (s *SmsWebhookService) Create(ctx context.Context, options *CreateSmsWebhoo
 	return root, res, nil
 }
 
-func (s *SmsWebhookService) Update(ctx context.Context, options *UpdateSmsWebhookOptions) (*singleSmsWebhookRoot, *Response, error) {
+func (s *smsWebhookService) Update(ctx context.Context, options *UpdateSmsWebhookOptions) (*SingleSmsWebhookRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", smsWebhookPath, options.Id)
 
 	req, err := s.client.newRequest(http.MethodPut, path, options)
@@ -115,7 +125,7 @@ func (s *SmsWebhookService) Update(ctx context.Context, options *UpdateSmsWebhoo
 		return nil, nil, err
 	}
 
-	root := new(singleSmsWebhookRoot)
+	root := new(SingleSmsWebhookRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -124,7 +134,7 @@ func (s *SmsWebhookService) Update(ctx context.Context, options *UpdateSmsWebhoo
 	return root, res, nil
 }
 
-func (s *SmsWebhookService) Delete(ctx context.Context, smsWebhookId string) (*Response, error) {
+func (s *smsWebhookService) Delete(ctx context.Context, smsWebhookId string) (*Response, error) {
 	path := fmt.Sprintf("%s/%s", smsWebhookPath, smsWebhookId)
 
 	req, err := s.client.newRequest(http.MethodDelete, path, nil)
