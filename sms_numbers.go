@@ -9,17 +9,26 @@ import (
 
 const smsNumbersPath = "/sms-numbers"
 
-type SmsNumberService service
+type SmsNumberService interface {
+	List(ctx context.Context, options *SmsNumberOptions) (*SmsNumberRoot, *Response, error)
+	Get(ctx context.Context, numberID string) (*SingleSmsNumberRoot, *Response, error)
+	Update(ctx context.Context, options *SmsNumberSettingOptions) (*SingleSmsNumberRoot, *Response, error)
+	Delete(ctx context.Context, numberID string) (*Response, error)
+}
 
-// smsNumberRoot - format of activity response
-type smsNumberRoot struct {
+type smsNumberService struct {
+	*service
+}
+
+// SmsNumberRoot - format of activity response
+type SmsNumberRoot struct {
 	Data  []Number `json:"data"`
 	Links Links    `json:"links"`
 	Meta  Meta     `json:"meta"`
 }
 
-// singleSmsNumberRoot - format of activity response
-type singleSmsNumberRoot struct {
+// SingleSmsNumberRoot - format of activity response
+type SingleSmsNumberRoot struct {
 	Data Number `json:"data"`
 }
 
@@ -43,13 +52,13 @@ type SmsNumberOptions struct {
 	Limit  int  `url:"limit,omitempty"`
 }
 
-func (s *SmsNumberService) List(ctx context.Context, options *SmsNumberOptions) (*smsNumberRoot, *Response, error) {
+func (s *smsNumberService) List(ctx context.Context, options *SmsNumberOptions) (*SmsNumberRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, smsNumbersPath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(smsNumberRoot)
+	root := new(SmsNumberRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -58,7 +67,7 @@ func (s *SmsNumberService) List(ctx context.Context, options *SmsNumberOptions) 
 	return root, res, nil
 }
 
-func (s *SmsNumberService) Get(ctx context.Context, numberID string) (*singleSmsNumberRoot, *Response, error) {
+func (s *smsNumberService) Get(ctx context.Context, numberID string) (*SingleSmsNumberRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", smsNumbersPath, numberID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -66,7 +75,7 @@ func (s *SmsNumberService) Get(ctx context.Context, numberID string) (*singleSms
 		return nil, nil, err
 	}
 
-	root := new(singleSmsNumberRoot)
+	root := new(SingleSmsNumberRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -75,7 +84,7 @@ func (s *SmsNumberService) Get(ctx context.Context, numberID string) (*singleSms
 	return root, res, nil
 }
 
-func (s *SmsNumberService) Update(ctx context.Context, options *SmsNumberSettingOptions) (*singleSmsNumberRoot, *Response, error) {
+func (s *smsNumberService) Update(ctx context.Context, options *SmsNumberSettingOptions) (*SingleSmsNumberRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", smsNumbersPath, options.Id)
 
 	req, err := s.client.newRequest(http.MethodPut, path, options)
@@ -83,7 +92,7 @@ func (s *SmsNumberService) Update(ctx context.Context, options *SmsNumberSetting
 		return nil, nil, err
 	}
 
-	root := new(singleSmsNumberRoot)
+	root := new(SingleSmsNumberRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -92,7 +101,7 @@ func (s *SmsNumberService) Update(ctx context.Context, options *SmsNumberSetting
 	return root, res, nil
 }
 
-func (s *SmsNumberService) Delete(ctx context.Context, numberID string) (*Response, error) {
+func (s *smsNumberService) Delete(ctx context.Context, numberID string) (*Response, error) {
 	path := fmt.Sprintf("%s/%s", smsNumbersPath, numberID)
 
 	req, err := s.client.newRequest(http.MethodDelete, path, nil)

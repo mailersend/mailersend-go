@@ -8,14 +8,22 @@ import (
 
 const tokenBasePath = "/token"
 
-type TokenService service
-
-// tokenRoot - format of token response
-type tokenRoot struct {
-	Data token `json:"data"`
+type TokenService interface {
+	Create(ctx context.Context, options *CreateTokenOptions) (*TokenRoot, *Response, error)
+	Update(ctx context.Context, options *UpdateTokenOptions) (*TokenRoot, *Response, error)
+	Delete(ctx context.Context, tokenID string) (*Response, error)
 }
 
-type token struct {
+type tokenService struct {
+	*service
+}
+
+// TokenRoot - format of token response
+type TokenRoot struct {
+	Data Token `json:"data"`
+}
+
+type Token struct {
 	ID          string `json:"id,omitempty"`
 	AccessToken string `json:"accessToken,omitempty"`
 	Name        string `json:"name,omitempty"`
@@ -36,13 +44,13 @@ type UpdateTokenOptions struct {
 	Status  string `json:"status"`
 }
 
-func (s *TokenService) Create(ctx context.Context, options *CreateTokenOptions) (*tokenRoot, *Response, error) {
+func (s *tokenService) Create(ctx context.Context, options *CreateTokenOptions) (*TokenRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodPost, tokenBasePath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(tokenRoot)
+	root := new(TokenRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -51,7 +59,7 @@ func (s *TokenService) Create(ctx context.Context, options *CreateTokenOptions) 
 	return root, res, nil
 }
 
-func (s *TokenService) Update(ctx context.Context, options *UpdateTokenOptions) (*tokenRoot, *Response, error) {
+func (s *tokenService) Update(ctx context.Context, options *UpdateTokenOptions) (*TokenRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s/settings", tokenBasePath, options.TokenID)
 
 	req, err := s.client.newRequest(http.MethodPut, path, options)
@@ -59,7 +67,7 @@ func (s *TokenService) Update(ctx context.Context, options *UpdateTokenOptions) 
 		return nil, nil, err
 	}
 
-	root := new(tokenRoot)
+	root := new(TokenRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -68,7 +76,7 @@ func (s *TokenService) Update(ctx context.Context, options *UpdateTokenOptions) 
 	return root, res, nil
 }
 
-func (s *TokenService) Delete(ctx context.Context, tokenID string) (*Response, error) {
+func (s *tokenService) Delete(ctx context.Context, tokenID string) (*Response, error) {
 	path := fmt.Sprintf("%s/%s", tokenBasePath, tokenID)
 
 	req, err := s.client.newRequest(http.MethodDelete, path, nil)

@@ -8,21 +8,30 @@ import (
 
 const analyticsBasePath = "/analytics"
 
-type AnalyticsService service
-
-// analyticsActivityRoot - format of analytics response
-type analyticsActivityRoot struct {
-	Data analyticsData `json:"data"`
+type AnalyticsService interface {
+	GetActivityByDate(ctx context.Context, options *AnalyticsOptions) (*AnalyticsActivityRoot, *Response, error)
+	GetOpensByCountry(ctx context.Context, options *AnalyticsOptions) (*OpensRoot, *Response, error)
+	GetOpensByUserAgent(ctx context.Context, options *AnalyticsOptions) (*OpensRoot, *Response, error)
+	GetOpensByReadingEnvironment(ctx context.Context, options *AnalyticsOptions) (*OpensRoot, *Response, error)
 }
 
-type analyticsData struct {
+type analyticsService struct {
+	*service
+}
+
+// AnalyticsActivityRoot - format of analytics response
+type AnalyticsActivityRoot struct {
+	Data AnalyticsData `json:"data"`
+}
+
+type AnalyticsData struct {
 	DateFrom string           `json:"date_from"`
 	DateTo   string           `json:"date_to"`
 	GroupBy  string           `json:"group_by"`
-	Stats    []analyticsStats `json:"stats"`
+	Stats    []AnalyticsStats `json:"stats"`
 }
 
-type analyticsStats struct {
+type AnalyticsStats struct {
 	Date           string `json:"date"`
 	Queued         int    `json:"queued,omitempty"`
 	Sent           int    `json:"sent,omitempty"`
@@ -36,17 +45,17 @@ type analyticsStats struct {
 	SpamComplaints int    `json:"spam_complaints,omitempty"`
 }
 
-type opensRoot struct {
-	Data openData `json:"data"`
+type OpensRoot struct {
+	Data OpenData `json:"data"`
 }
 
-type openData struct {
+type OpenData struct {
 	DateFrom int         `json:"date_from"`
 	DateTo   int         `json:"date_to"`
-	Stats    []openStats `json:"stats"`
+	Stats    []OpenStats `json:"stats"`
 }
 
-type openStats struct {
+type OpenStats struct {
 	Name  string `json:"name"`
 	Count int    `json:"count"`
 }
@@ -62,7 +71,7 @@ type AnalyticsOptions struct {
 	Event       []string `url:"event[],omitempty"`
 }
 
-func (s *AnalyticsService) GetActivityByDate(ctx context.Context, options *AnalyticsOptions) (*analyticsActivityRoot, *Response, error) {
+func (s *analyticsService) GetActivityByDate(ctx context.Context, options *AnalyticsOptions) (*AnalyticsActivityRoot, *Response, error) {
 	path := fmt.Sprintf("%s/date", analyticsBasePath)
 
 	req, err := s.client.newRequest("GET", path, options)
@@ -70,7 +79,7 @@ func (s *AnalyticsService) GetActivityByDate(ctx context.Context, options *Analy
 		return nil, nil, err
 	}
 
-	root := new(analyticsActivityRoot)
+	root := new(AnalyticsActivityRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -79,7 +88,7 @@ func (s *AnalyticsService) GetActivityByDate(ctx context.Context, options *Analy
 	return root, res, nil
 }
 
-func (s *AnalyticsService) GetOpensByCountry(ctx context.Context, options *AnalyticsOptions) (*opensRoot, *Response, error) {
+func (s *analyticsService) GetOpensByCountry(ctx context.Context, options *AnalyticsOptions) (*OpensRoot, *Response, error) {
 	path := fmt.Sprintf("%s/country", analyticsBasePath)
 
 	req, err := s.client.newRequest(http.MethodGet, path, options)
@@ -87,7 +96,7 @@ func (s *AnalyticsService) GetOpensByCountry(ctx context.Context, options *Analy
 		return nil, nil, err
 	}
 
-	root := new(opensRoot)
+	root := new(OpensRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -96,7 +105,7 @@ func (s *AnalyticsService) GetOpensByCountry(ctx context.Context, options *Analy
 	return root, res, nil
 }
 
-func (s *AnalyticsService) GetOpensByUserAgent(ctx context.Context, options *AnalyticsOptions) (*opensRoot, *Response, error) {
+func (s *analyticsService) GetOpensByUserAgent(ctx context.Context, options *AnalyticsOptions) (*OpensRoot, *Response, error) {
 	path := fmt.Sprintf("%s/ua-name", analyticsBasePath)
 
 	req, err := s.client.newRequest(http.MethodGet, path, options)
@@ -104,7 +113,7 @@ func (s *AnalyticsService) GetOpensByUserAgent(ctx context.Context, options *Ana
 		return nil, nil, err
 	}
 
-	root := new(opensRoot)
+	root := new(OpensRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -113,7 +122,7 @@ func (s *AnalyticsService) GetOpensByUserAgent(ctx context.Context, options *Ana
 	return root, res, nil
 }
 
-func (s *AnalyticsService) GetOpensByReadingEnvironment(ctx context.Context, options *AnalyticsOptions) (*opensRoot, *Response, error) {
+func (s *analyticsService) GetOpensByReadingEnvironment(ctx context.Context, options *AnalyticsOptions) (*OpensRoot, *Response, error) {
 	path := fmt.Sprintf("%s/ua-type", analyticsBasePath)
 
 	req, err := s.client.newRequest(http.MethodGet, path, options)
@@ -121,7 +130,7 @@ func (s *AnalyticsService) GetOpensByReadingEnvironment(ctx context.Context, opt
 		return nil, nil, err
 	}
 
-	root := new(opensRoot)
+	root := new(OpensRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err

@@ -9,16 +9,24 @@ import (
 
 const templateBasePath = "/templates"
 
-type TemplateService service
+type TemplateService interface {
+	List(ctx context.Context, options *ListTemplateOptions) (*TemplateRoot, *Response, error)
+	Get(ctx context.Context, templateID string) (*SingleTemplateRoot, *Response, error)
+	Delete(ctx context.Context, templateID string) (*Response, error)
+}
 
-// templateRoot format of template response
-type templateRoot struct {
-	Data  []template `json:"data"`
+type templateService struct {
+	*service
+}
+
+// TemplateRoot format of template response
+type TemplateRoot struct {
+	Data  []Template `json:"data"`
 	Links Links      `json:"links"`
 	Meta  Meta       `json:"meta"`
 }
 
-type template struct {
+type Template struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
 	Type      string `json:"type"`
@@ -26,11 +34,11 @@ type template struct {
 	CreatedAt string `json:"created_at"`
 }
 
-type singleTemplateRoot struct {
-	Data singleTemplate `json:"data"`
+type SingleTemplateRoot struct {
+	Data SingleTemplate `json:"data"`
 }
 
-type singleTemplate struct {
+type SingleTemplate struct {
 	ID            string        `json:"id"`
 	Name          string        `json:"name"`
 	Type          string        `json:"type"`
@@ -38,10 +46,10 @@ type singleTemplate struct {
 	CreatedAt     time.Time     `json:"created_at"`
 	Category      interface{}   `json:"category"`
 	Domain        Domain        `json:"domain"`
-	TemplateStats templateStats `json:"template_stats"`
+	TemplateStats TemplateStats `json:"template_stats"`
 }
 
-type templateStats struct {
+type TemplateStats struct {
 	Total           int       `json:"total"`
 	Queued          int       `json:"queued"`
 	Sent            int       `json:"sent"`
@@ -57,13 +65,13 @@ type ListTemplateOptions struct {
 	Limit    int    `url:"limit,omitempty"`
 }
 
-func (s *TemplateService) List(ctx context.Context, options *ListTemplateOptions) (*templateRoot, *Response, error) {
+func (s *templateService) List(ctx context.Context, options *ListTemplateOptions) (*TemplateRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, templateBasePath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(templateRoot)
+	root := new(TemplateRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -72,7 +80,7 @@ func (s *TemplateService) List(ctx context.Context, options *ListTemplateOptions
 	return root, res, nil
 }
 
-func (s *TemplateService) Get(ctx context.Context, templateID string) (*singleTemplateRoot, *Response, error) {
+func (s *templateService) Get(ctx context.Context, templateID string) (*SingleTemplateRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", templateBasePath, templateID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -80,7 +88,7 @@ func (s *TemplateService) Get(ctx context.Context, templateID string) (*singleTe
 		return nil, nil, err
 	}
 
-	root := new(singleTemplateRoot)
+	root := new(SingleTemplateRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -89,7 +97,7 @@ func (s *TemplateService) Get(ctx context.Context, templateID string) (*singleTe
 	return root, res, nil
 }
 
-func (s *TemplateService) Delete(ctx context.Context, templateID string) (*Response, error) {
+func (s *templateService) Delete(ctx context.Context, templateID string) (*Response, error) {
 	path := fmt.Sprintf("%s/%s", templateBasePath, templateID)
 
 	req, err := s.client.newRequest(http.MethodDelete, path, nil)

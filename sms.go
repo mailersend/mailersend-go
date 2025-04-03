@@ -8,7 +8,14 @@ import (
 
 const smsBasePath = "/sms"
 
-type SmsService service
+type SmsService interface {
+	NewMessage() *Sms
+	Send(ctx context.Context, sms *Sms) (*Response, error)
+}
+
+type smsService struct {
+	*service
+}
 
 type Sms struct {
 	From            string               `json:"from"`
@@ -35,7 +42,7 @@ type SmsMessageData struct {
 	Paused          bool              `json:"paused"`
 	CreatedAt       time.Time         `json:"created_at"`
 	SmsMessage      []SmsMessage      `json:"sms"`
-	SmsActivityData []smsActivityData `json:"sms_activity"`
+	SmsActivityData []SmsActivityData `json:"sms_activity"`
 }
 
 type SmsMessage struct {
@@ -50,7 +57,7 @@ type SmsMessage struct {
 }
 
 // NewMessage - Setup a new Sms message ready to be sent.
-func (s *SmsService) NewMessage() *Sms {
+func (s *smsService) NewMessage() *Sms {
 	return &Sms{}
 }
 
@@ -75,7 +82,7 @@ func (m *Sms) SetPersonalization(personalization []SmsPersonalization) {
 }
 
 // Send - send the message
-func (s *SmsService) Send(ctx context.Context, sms *Sms) (*Response, error) {
+func (s *smsService) Send(ctx context.Context, sms *Sms) (*Response, error) {
 	req, err := s.client.newRequest(http.MethodPost, smsBasePath, sms)
 	if err != nil {
 		return nil, err

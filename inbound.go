@@ -8,21 +8,31 @@ import (
 
 const inboundBasePath = "/inbound"
 
-type InboundService service
+type InboundService interface {
+	List(ctx context.Context, options *ListInboundOptions) (*InboundRoot, *Response, error)
+	Get(ctx context.Context, inboundID string) (*SingleInboundRoot, *Response, error)
+	Create(ctx context.Context, options *CreateInboundOptions) (*SingleInboundRoot, *Response, error)
+	Update(ctx context.Context, inboundID string, options *UpdateInboundOptions) (*SingleInboundRoot, *Response, error)
+	Delete(ctx context.Context, inboundID string) (*Response, error)
+}
 
-// inboundRoot - format of webhook response
-type inboundRoot struct {
-	Data  []inbound `json:"data"`
+type inboundService struct {
+	*service
+}
+
+// InboundRoot - format of webhook response
+type InboundRoot struct {
+	Data  []Inbound `json:"data"`
 	Links Links     `json:"links"`
 	Meta  Meta      `json:"meta"`
 }
 
-// singleInboundRoot - format of inbound response
-type singleInboundRoot struct {
-	Data inbound `json:"data"`
+// SingleInboundRoot - format of Inbound response
+type SingleInboundRoot struct {
+	Data Inbound `json:"data"`
 }
 
-type inbound struct {
+type Inbound struct {
 	ID           string      `json:"id"`
 	Name         string      `json:"name"`
 	Address      string      `json:"address"`
@@ -30,19 +40,19 @@ type inbound struct {
 	DNSCheckedAt interface{} `json:"dns_checked_at"`
 	Priority     int         `json:"priority"`
 	Enabled      bool        `json:"enabled"`
-	Filters      []filters   `json:"filters"`
-	Forwards     []forwards  `json:"forwards"`
+	Filters      []Filters   `json:"filters"`
+	Forwards     []Forwards  `json:"forwards"`
 	MxValues     mxValues    `json:"mxValues"`
 }
 
-type filters struct {
+type Filters struct {
 	Type     string      `json:"type"`
 	Key      interface{} `json:"key"`
 	Comparer string      `json:"comparer"`
 	Value    string      `json:"value"`
 }
 
-type forwards struct {
+type Forwards struct {
 	ID     string `json:"id"`
 	Type   string `json:"type"`
 	Value  string `json:"value"`
@@ -54,7 +64,7 @@ type mxValues struct {
 	Target   string `json:"target"`
 }
 
-// ListInboundOptions - modifies the behavior of *InboundService.List Method
+// ListInboundOptions - modifies the behavior of *inboundService.List Method
 type ListInboundOptions struct {
 	DomainID string `url:"domain_id"`
 	Page     int    `url:"page,omitempty"`
@@ -63,16 +73,16 @@ type ListInboundOptions struct {
 
 // CreateInboundOptions - the Options to set when creating an inbound resource
 type CreateInboundOptions struct {
-	DomainID         string       `json:"domain_id"`
-	Name             string       `json:"name"`
-	DomainEnabled    bool         `json:"domain_enabled"`
-	InboundDomain    string       `json:"inbound_domain,omitempty"`
-	InboundAddress   string       `json:"inbound_address,omitempty"`
-	InboundSubdomain string       `json:"inbound_subdomain,omitempty"`
-	InboundPriority  int          `json:"inbound_priority,omitempty"`
-	MatchFilter      *MatchFilter `json:"match_filter,omitempty"`
-	CatchFilter      *CatchFilter `json:"catch_filter,omitempty"`
-	Forwards         []Forwards   `json:"forwards"`
+	DomainID         string           `json:"domain_id"`
+	Name             string           `json:"name"`
+	DomainEnabled    bool             `json:"domain_enabled"`
+	InboundDomain    string           `json:"inbound_domain,omitempty"`
+	InboundAddress   string           `json:"inbound_address,omitempty"`
+	InboundSubdomain string           `json:"inbound_subdomain,omitempty"`
+	InboundPriority  int              `json:"inbound_priority,omitempty"`
+	MatchFilter      *MatchFilter     `json:"match_filter,omitempty"`
+	CatchFilter      *CatchFilter     `json:"catch_filter,omitempty"`
+	Forwards         []ForwardsFilter `json:"forwards"`
 }
 
 type MatchFilter struct {
@@ -84,7 +94,7 @@ type CatchFilter struct {
 	Filters []Filter `json:"filters,omitempty"`
 }
 
-type Forwards struct {
+type ForwardsFilter struct {
 	Type  string `json:"type"`
 	Value string `json:"value"`
 }
@@ -92,13 +102,13 @@ type Forwards struct {
 // UpdateInboundOptions - the Options to set when creating an inbound resource
 type UpdateInboundOptions CreateInboundOptions
 
-func (s *InboundService) List(ctx context.Context, options *ListInboundOptions) (*inboundRoot, *Response, error) {
+func (s *inboundService) List(ctx context.Context, options *ListInboundOptions) (*InboundRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, inboundBasePath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(inboundRoot)
+	root := new(InboundRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -107,7 +117,7 @@ func (s *InboundService) List(ctx context.Context, options *ListInboundOptions) 
 	return root, res, nil
 }
 
-func (s *InboundService) Get(ctx context.Context, inboundID string) (*singleInboundRoot, *Response, error) {
+func (s *inboundService) Get(ctx context.Context, inboundID string) (*SingleInboundRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", inboundBasePath, inboundID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -115,7 +125,7 @@ func (s *InboundService) Get(ctx context.Context, inboundID string) (*singleInbo
 		return nil, nil, err
 	}
 
-	root := new(singleInboundRoot)
+	root := new(SingleInboundRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -124,13 +134,13 @@ func (s *InboundService) Get(ctx context.Context, inboundID string) (*singleInbo
 	return root, res, nil
 }
 
-func (s *InboundService) Create(ctx context.Context, options *CreateInboundOptions) (*singleInboundRoot, *Response, error) {
+func (s *inboundService) Create(ctx context.Context, options *CreateInboundOptions) (*SingleInboundRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodPost, inboundBasePath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(singleInboundRoot)
+	root := new(SingleInboundRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -139,7 +149,7 @@ func (s *InboundService) Create(ctx context.Context, options *CreateInboundOptio
 	return root, res, nil
 }
 
-func (s *InboundService) Update(ctx context.Context, inboundID string, options *UpdateInboundOptions) (*singleInboundRoot, *Response, error) {
+func (s *inboundService) Update(ctx context.Context, inboundID string, options *UpdateInboundOptions) (*SingleInboundRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", inboundBasePath, inboundID)
 
 	req, err := s.client.newRequest(http.MethodPut, path, options)
@@ -147,7 +157,7 @@ func (s *InboundService) Update(ctx context.Context, inboundID string, options *
 		return nil, nil, err
 	}
 
-	root := new(singleInboundRoot)
+	root := new(SingleInboundRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -156,7 +166,7 @@ func (s *InboundService) Update(ctx context.Context, inboundID string, options *
 	return root, res, nil
 }
 
-func (s *InboundService) Delete(ctx context.Context, inboundID string) (*Response, error) {
+func (s *inboundService) Delete(ctx context.Context, inboundID string) (*Response, error) {
 	path := fmt.Sprintf("%s/%s", inboundBasePath, inboundID)
 
 	req, err := s.client.newRequest(http.MethodDelete, path, nil)

@@ -24,29 +24,29 @@ type Mailersend struct {
 	common service // Reuse a single struct.
 
 	// Services
-	Activity          *ActivityService
-	Analytics         *AnalyticsService
-	Domain            *DomainService
-	Email             *EmailService
-	BulkEmail         *BulkEmailService
-	Message           *MessageService
-	ScheduleMessage   *ScheduleMessageService
-	Recipient         *RecipientService
-	Template          *TemplateService
-	Token             *TokenService
-	Webhook           *WebhookService
-	Suppression       *SuppressionService
-	Inbound           *InboundService
-	Sms               *SmsService
-	SmsActivity       *SmsActivityService
-	SmsNumber         *SmsNumberService
-	SmsRecipient      *SmsRecipientService
-	SmsWebhook        *SmsWebhookService
-	SmsMessage        *SmsMessageService
-	SmsInbound        *SmsInboundService
-	EmailVerification *EmailVerificationService
-	Identity          *IdentityService
-	ApiQuota          *ApiQuotaService
+	Activity          ActivityService
+	Analytics         AnalyticsService
+	Domain            DomainService
+	Email             EmailService
+	BulkEmail         BulkEmailService
+	Message           MessageService
+	ScheduleMessage   ScheduleMessageService
+	Recipient         RecipientService
+	Template          TemplateService
+	Token             TokenService
+	Webhook           WebhookService
+	Suppression       SuppressionService
+	Inbound           InboundService
+	Sms               SmsService
+	SmsActivity       SmsActivityService
+	SmsNumber         SmsNumberService
+	SmsRecipient      SmsRecipientService
+	SmsWebhook        SmsWebhookService
+	SmsMessage        SmsMessageService
+	SmsInbound        SmsInboundService
+	EmailVerification EmailVerificationService
+	Identity          IdentityService
+	ApiQuota          ApiQuotaService
 }
 
 type service struct {
@@ -109,29 +109,29 @@ func NewMailersend(apiKey string) *Mailersend {
 	}
 
 	ms.common.client = ms
-	ms.Activity = (*ActivityService)(&ms.common)
-	ms.Analytics = (*AnalyticsService)(&ms.common)
-	ms.Domain = (*DomainService)(&ms.common)
-	ms.Email = (*EmailService)(&ms.common)
-	ms.BulkEmail = (*BulkEmailService)(&ms.common)
-	ms.Message = (*MessageService)(&ms.common)
-	ms.ScheduleMessage = (*ScheduleMessageService)(&ms.common)
-	ms.Recipient = (*RecipientService)(&ms.common)
-	ms.Template = (*TemplateService)(&ms.common)
-	ms.Token = (*TokenService)(&ms.common)
-	ms.Webhook = (*WebhookService)(&ms.common)
-	ms.Suppression = (*SuppressionService)(&ms.common)
-	ms.Inbound = (*InboundService)(&ms.common)
-	ms.Sms = (*SmsService)(&ms.common)
-	ms.SmsActivity = (*SmsActivityService)(&ms.common)
-	ms.SmsNumber = (*SmsNumberService)(&ms.common)
-	ms.SmsRecipient = (*SmsRecipientService)(&ms.common)
-	ms.SmsWebhook = (*SmsWebhookService)(&ms.common)
-	ms.SmsMessage = (*SmsMessageService)(&ms.common)
-	ms.SmsInbound = (*SmsInboundService)(&ms.common)
-	ms.EmailVerification = (*EmailVerificationService)(&ms.common)
-	ms.Identity = (*IdentityService)(&ms.common)
-	ms.ApiQuota = (*ApiQuotaService)(&ms.common)
+	ms.Activity = &activityService{&ms.common}
+	ms.Analytics = &analyticsService{&ms.common}
+	ms.Domain = &domainService{&ms.common}
+	ms.Email = &emailService{&ms.common}
+	ms.BulkEmail = &bulkEmailService{&ms.common}
+	ms.Message = &messageService{&ms.common}
+	ms.ScheduleMessage = &scheduleMessageService{&ms.common}
+	ms.Recipient = &recipientService{&ms.common}
+	ms.Template = &templateService{&ms.common}
+	ms.Token = &tokenService{&ms.common}
+	ms.Webhook = &webhookService{&ms.common}
+	ms.Suppression = &suppressionService{&ms.common}
+	ms.Inbound = &inboundService{&ms.common}
+	ms.Sms = &smsService{&ms.common}
+	ms.SmsActivity = &smsActivityService{&ms.common}
+	ms.SmsNumber = &smsNumberService{&ms.common}
+	ms.SmsRecipient = &smsRecipientService{&ms.common}
+	ms.SmsWebhook = &smsWebhookService{&ms.common}
+	ms.SmsMessage = &smsMessageService{&ms.common}
+	ms.SmsInbound = &smsInboundService{&ms.common}
+	ms.EmailVerification = &emailVerificationService{&ms.common}
+	ms.Identity = &identityService{&ms.common}
+	ms.ApiQuota = &apiQuotaService{&ms.common}
 
 	return ms
 }

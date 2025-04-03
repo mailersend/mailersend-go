@@ -9,17 +9,24 @@ import (
 
 const smsActivityPath = "/sms-activity"
 
-type SmsActivityService service
+type SmsActivityService interface {
+	List(ctx context.Context, options *SmsActivityOptions) (*SmsListActivityRoot, *Response, error)
+	Get(ctx context.Context, smsMessageID string) (*SmsMessageRoot, *Response, error)
+}
 
-// smsListActivityRoot - format of activity response
-type smsListActivityRoot struct {
-	Data  []smsActivityData `json:"data"`
+type smsActivityService struct {
+	*service
+}
+
+// SmsListActivityRoot - format of activity response
+type SmsListActivityRoot struct {
+	Data  []SmsActivityData `json:"data"`
 	Links Links             `json:"links"`
 	Meta  Meta              `json:"meta"`
 }
 
-// smsActivityData - format of sms activity data
-type smsActivityData struct {
+// SmsActivityData - format of sms activity data
+type SmsActivityData struct {
 	From         string    `json:"from"`
 	To           string    `json:"to"`
 	CreatedAt    time.Time `json:"created_at"`
@@ -37,13 +44,13 @@ type SmsActivityOptions struct {
 	Limit       int      `url:"limit,omitempty"`
 }
 
-func (s *SmsActivityService) List(ctx context.Context, options *SmsActivityOptions) (*smsListActivityRoot, *Response, error) {
+func (s *smsActivityService) List(ctx context.Context, options *SmsActivityOptions) (*SmsListActivityRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, smsActivityPath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(smsListActivityRoot)
+	root := new(SmsListActivityRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -52,7 +59,7 @@ func (s *SmsActivityService) List(ctx context.Context, options *SmsActivityOptio
 	return root, res, nil
 }
 
-func (s *SmsActivityService) Get(ctx context.Context, smsMessageID string) (*SmsMessageRoot, *Response, error) {
+func (s *smsActivityService) Get(ctx context.Context, smsMessageID string) (*SmsMessageRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", smsMessagesPath, smsMessageID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)

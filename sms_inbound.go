@@ -9,21 +9,31 @@ import (
 
 const smsInboundPath = "/sms-inbounds"
 
-type SmsInboundService service
+type SmsInboundService interface {
+	List(ctx context.Context, options *ListSmsInboundOptions) (*SmsInboundRoot, *Response, error)
+	Get(ctx context.Context, smsInboundId string) (*SingleSmsInboundRoot, *Response, error)
+	Create(ctx context.Context, options *CreateSmsInboundOptions) (*SingleSmsInboundRoot, *Response, error)
+	Update(ctx context.Context, options *UpdateSmsInboundOptions) (*SingleSmsInboundRoot, *Response, error)
+	Delete(ctx context.Context, smsInboundId string) (*Response, error)
+}
 
-// smsInboundRoot - format of activity response
-type smsInboundRoot struct {
-	Data  []smsInbound `json:"data"`
+type smsInboundService struct {
+	*service
+}
+
+// SmsInboundRoot - format of activity response
+type SmsInboundRoot struct {
+	Data  []SmsInbound `json:"data"`
 	Links Links        `json:"links"`
 	Meta  Meta         `json:"meta"`
 }
 
-// singleSmsInboundRoot - format of activity response
-type singleSmsInboundRoot struct {
-	Data smsInbound `json:"data"`
+// SingleSmsInboundRoot - format of activity response
+type SingleSmsInboundRoot struct {
+	Data SmsInbound `json:"data"`
 }
 
-type smsInbound struct {
+type SmsInbound struct {
 	Id         string `json:"id"`
 	Name       string `json:"name"`
 	Filter     Filter
@@ -60,13 +70,13 @@ type ListSmsInboundOptions struct {
 	Limit       int    `url:"limit,omitempty"`
 }
 
-func (s *SmsInboundService) List(ctx context.Context, options *ListSmsInboundOptions) (*smsInboundRoot, *Response, error) {
+func (s *smsInboundService) List(ctx context.Context, options *ListSmsInboundOptions) (*SmsInboundRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, smsInboundPath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(smsInboundRoot)
+	root := new(SmsInboundRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -75,7 +85,7 @@ func (s *SmsInboundService) List(ctx context.Context, options *ListSmsInboundOpt
 	return root, res, nil
 }
 
-func (s *SmsInboundService) Get(ctx context.Context, smsInboundId string) (*singleSmsInboundRoot, *Response, error) {
+func (s *smsInboundService) Get(ctx context.Context, smsInboundId string) (*SingleSmsInboundRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", smsInboundPath, smsInboundId)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -83,7 +93,7 @@ func (s *SmsInboundService) Get(ctx context.Context, smsInboundId string) (*sing
 		return nil, nil, err
 	}
 
-	root := new(singleSmsInboundRoot)
+	root := new(SingleSmsInboundRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -92,13 +102,13 @@ func (s *SmsInboundService) Get(ctx context.Context, smsInboundId string) (*sing
 	return root, res, nil
 }
 
-func (s *SmsInboundService) Create(ctx context.Context, options *CreateSmsInboundOptions) (*singleSmsInboundRoot, *Response, error) {
+func (s *smsInboundService) Create(ctx context.Context, options *CreateSmsInboundOptions) (*SingleSmsInboundRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodPost, smsInboundPath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(singleSmsInboundRoot)
+	root := new(SingleSmsInboundRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -107,7 +117,7 @@ func (s *SmsInboundService) Create(ctx context.Context, options *CreateSmsInboun
 	return root, res, nil
 }
 
-func (s *SmsInboundService) Update(ctx context.Context, options *UpdateSmsInboundOptions) (*singleSmsInboundRoot, *Response, error) {
+func (s *smsInboundService) Update(ctx context.Context, options *UpdateSmsInboundOptions) (*SingleSmsInboundRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", smsInboundPath, options.Id)
 
 	req, err := s.client.newRequest(http.MethodPut, path, options)
@@ -115,7 +125,7 @@ func (s *SmsInboundService) Update(ctx context.Context, options *UpdateSmsInboun
 		return nil, nil, err
 	}
 
-	root := new(singleSmsInboundRoot)
+	root := new(SingleSmsInboundRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -124,7 +134,7 @@ func (s *SmsInboundService) Update(ctx context.Context, options *UpdateSmsInboun
 	return root, res, nil
 }
 
-func (s *SmsInboundService) Delete(ctx context.Context, smsInboundId string) (*Response, error) {
+func (s *smsInboundService) Delete(ctx context.Context, smsInboundId string) (*Response, error) {
 	path := fmt.Sprintf("%s/%s", smsInboundPath, smsInboundId)
 
 	req, err := s.client.newRequest(http.MethodDelete, path, nil)

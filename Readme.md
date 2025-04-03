@@ -3342,6 +3342,29 @@ mailersend.String("string")
 
 # Testing
 
+We provide interfaces for all services to help with testing
+
+```go
+type mockDomainService struct {
+	mailersend.DomainService
+}
+
+func (m *mockDomainService) List(ctx context.Context, options *ListDomainOptions) (*DomainRoot, *Response, error) {
+	return &mailersend.DomainRoot{Data: []mailersend.Domain{{Name: "example.com"}}}, nil, nil
+}
+
+func TestListDomains(t *testing.T) {
+	client := &mailersend.Client{}
+	client.Domain = &mockDomainService{}
+
+	ctx := context.Background()
+	result, _, err := client.Domain.List(ctx, nil)
+	if err != nil || len(result.Data) == 0 || result.Data[0].Name != "example.com" {
+		t.Fatalf("mock failed")
+	}
+}
+```
+
 [pkg/testing](https://golang.org/pkg/testing/)
 
 ```

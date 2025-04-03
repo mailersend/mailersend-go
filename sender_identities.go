@@ -9,21 +9,34 @@ import (
 
 const identitiesBasePath = "/identities"
 
-type IdentityService service
+type IdentityService interface {
+	List(ctx context.Context, options *ListIdentityOptions) (*IdentityRoot, *Response, error)
+	Get(ctx context.Context, identityID string) (*SingleIdentityRoot, *Response, error)
+	GetByEmail(ctx context.Context, identityEmail string) (*SingleIdentityRoot, *Response, error)
+	Create(ctx context.Context, options *CreateIdentityOptions) (*SingleIdentityRoot, *Response, error)
+	Update(ctx context.Context, identityID string, options *UpdateIdentityOptions) (*SingleIdentityRoot, *Response, error)
+	UpdateByEmail(ctx context.Context, identityEmail string, options *UpdateIdentityOptions) (*SingleIdentityRoot, *Response, error)
+	Delete(ctx context.Context, identityID string) (*Response, error)
+	DeleteByEmail(ctx context.Context, identityEmail string) (*Response, error)
+}
 
-// identityRoot - format of identity response
-type identityRoot struct {
-	Data  []identity `json:"data"`
+type identityService struct {
+	*service
+}
+
+// IdentityRoot - format of identity response
+type IdentityRoot struct {
+	Data  []Identity `json:"data"`
 	Links Links      `json:"links"`
 	Meta  Meta       `json:"meta"`
 }
 
-// singleIdentityRoot - format of inbound response
-type singleIdentityRoot struct {
-	Data identity `json:"data"`
+// SingleIdentityRoot - format of inbound response
+type SingleIdentityRoot struct {
+	Data Identity `json:"data"`
 }
 
-type identity struct {
+type Identity struct {
 	ID           string         `json:"id"`
 	Email        string         `json:"email"`
 	Name         string         `json:"name"`
@@ -33,10 +46,10 @@ type identity struct {
 	Resends      int            `json:"resends"`
 	AddNote      bool           `json:"add_note"`
 	PersonalNote interface{}    `json:"personal_note"`
-	Domain       identityDomain `json:"domain"`
+	Domain       IdentityDomain `json:"domain"`
 }
 
-type identityDomain struct {
+type IdentityDomain struct {
 	ID        string    `json:"id"`
 	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"created_at"`
@@ -63,13 +76,13 @@ type CreateIdentityOptions struct {
 // UpdateIdentityOptions - the Options to set when creating an Identity resource
 type UpdateIdentityOptions CreateIdentityOptions
 
-func (s *IdentityService) List(ctx context.Context, options *ListIdentityOptions) (*identityRoot, *Response, error) {
+func (s *identityService) List(ctx context.Context, options *ListIdentityOptions) (*IdentityRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, identitiesBasePath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(identityRoot)
+	root := new(IdentityRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -78,7 +91,7 @@ func (s *IdentityService) List(ctx context.Context, options *ListIdentityOptions
 	return root, res, nil
 }
 
-func (s *IdentityService) Get(ctx context.Context, identityID string) (*singleIdentityRoot, *Response, error) {
+func (s *identityService) Get(ctx context.Context, identityID string) (*SingleIdentityRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", identitiesBasePath, identityID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -86,7 +99,7 @@ func (s *IdentityService) Get(ctx context.Context, identityID string) (*singleId
 		return nil, nil, err
 	}
 
-	root := new(singleIdentityRoot)
+	root := new(SingleIdentityRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -95,7 +108,7 @@ func (s *IdentityService) Get(ctx context.Context, identityID string) (*singleId
 	return root, res, nil
 }
 
-func (s *IdentityService) GetByEmail(ctx context.Context, identityEmail string) (*singleIdentityRoot, *Response, error) {
+func (s *identityService) GetByEmail(ctx context.Context, identityEmail string) (*SingleIdentityRoot, *Response, error) {
 	path := fmt.Sprintf("%s/email/%s", identitiesBasePath, identityEmail)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -103,7 +116,7 @@ func (s *IdentityService) GetByEmail(ctx context.Context, identityEmail string) 
 		return nil, nil, err
 	}
 
-	root := new(singleIdentityRoot)
+	root := new(SingleIdentityRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -112,13 +125,13 @@ func (s *IdentityService) GetByEmail(ctx context.Context, identityEmail string) 
 	return root, res, nil
 }
 
-func (s *IdentityService) Create(ctx context.Context, options *CreateIdentityOptions) (*singleIdentityRoot, *Response, error) {
+func (s *identityService) Create(ctx context.Context, options *CreateIdentityOptions) (*SingleIdentityRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodPost, identitiesBasePath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(singleIdentityRoot)
+	root := new(SingleIdentityRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -127,7 +140,7 @@ func (s *IdentityService) Create(ctx context.Context, options *CreateIdentityOpt
 	return root, res, nil
 }
 
-func (s *IdentityService) Update(ctx context.Context, identityID string, options *UpdateIdentityOptions) (*singleIdentityRoot, *Response, error) {
+func (s *identityService) Update(ctx context.Context, identityID string, options *UpdateIdentityOptions) (*SingleIdentityRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", identitiesBasePath, identityID)
 
 	req, err := s.client.newRequest(http.MethodPut, path, options)
@@ -135,7 +148,7 @@ func (s *IdentityService) Update(ctx context.Context, identityID string, options
 		return nil, nil, err
 	}
 
-	root := new(singleIdentityRoot)
+	root := new(SingleIdentityRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -144,7 +157,7 @@ func (s *IdentityService) Update(ctx context.Context, identityID string, options
 	return root, res, nil
 }
 
-func (s *IdentityService) UpdateByEmail(ctx context.Context, identityEmail string, options *UpdateIdentityOptions) (*singleIdentityRoot, *Response, error) {
+func (s *identityService) UpdateByEmail(ctx context.Context, identityEmail string, options *UpdateIdentityOptions) (*SingleIdentityRoot, *Response, error) {
 	path := fmt.Sprintf("%s/email/%s", identitiesBasePath, identityEmail)
 
 	req, err := s.client.newRequest(http.MethodPut, path, options)
@@ -152,7 +165,7 @@ func (s *IdentityService) UpdateByEmail(ctx context.Context, identityEmail strin
 		return nil, nil, err
 	}
 
-	root := new(singleIdentityRoot)
+	root := new(SingleIdentityRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -161,7 +174,7 @@ func (s *IdentityService) UpdateByEmail(ctx context.Context, identityEmail strin
 	return root, res, nil
 }
 
-func (s *IdentityService) Delete(ctx context.Context, identityID string) (*Response, error) {
+func (s *identityService) Delete(ctx context.Context, identityID string) (*Response, error) {
 	path := fmt.Sprintf("%s/%s", identitiesBasePath, identityID)
 
 	req, err := s.client.newRequest(http.MethodDelete, path, nil)
@@ -172,7 +185,7 @@ func (s *IdentityService) Delete(ctx context.Context, identityID string) (*Respo
 	return s.client.do(ctx, req, nil)
 }
 
-func (s *IdentityService) DeleteByEmail(ctx context.Context, identityEmail string) (*Response, error) {
+func (s *identityService) DeleteByEmail(ctx context.Context, identityEmail string) (*Response, error) {
 	path := fmt.Sprintf("%s/email/%s", identitiesBasePath, identityEmail)
 
 	req, err := s.client.newRequest(http.MethodDelete, path, nil)

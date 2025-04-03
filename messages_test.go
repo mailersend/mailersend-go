@@ -81,7 +81,7 @@ func TestCodeMessageGetResponse(t *testing.T) {
 		}
 	}`
 
-	var root singleMessageRoot
+	var root SingleMessageRoot
 	err := json.NewDecoder(strings.NewReader(response)).Decode(&root)
 	if err != nil {
 		t.Error(err)

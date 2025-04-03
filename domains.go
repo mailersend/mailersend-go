@@ -8,17 +8,30 @@ import (
 
 const domainBasePath = "/domains"
 
-type DomainService service
+type DomainService interface {
+	List(ctx context.Context, options *ListDomainOptions) (*DomainRoot, *Response, error)
+	Get(ctx context.Context, domainID string) (*SingleDomainRoot, *Response, error)
+	Update(ctx context.Context, options *DomainSettingOptions) (*SingleDomainRoot, *Response, error)
+	Delete(ctx context.Context, domainID string) (*Response, error)
+	Create(ctx context.Context, options *CreateDomainOptions) (*SingleDomainRoot, *Response, error)
+	GetDNS(ctx context.Context, domainID string) (*DnsRoot, *Response, error)
+	Verify(ctx context.Context, domainID string) (*VerifyRoot, *Response, error)
+	GetRecipients(ctx context.Context, options *GetRecipientsOptions) (*DomainRecipientRoot, *Response, error)
+}
 
-// domainRoot format of domain response
-type domainRoot struct {
+type domainService struct {
+	*service
+}
+
+// DomainRoot format of domain response
+type DomainRoot struct {
 	Data  []Domain `json:"data"`
 	Links Links    `json:"links"`
 	Meta  Meta     `json:"meta"`
 }
 
-// singleDomainRoot format of domain response
-type singleDomainRoot struct {
+// SingleDomainRoot format of domain response
+type SingleDomainRoot struct {
 	Data Domain `json:"data"`
 }
 
@@ -54,8 +67,8 @@ type DomainSettings struct {
 	PrecedenceBulk             bool   `json:"precedence_bulk,omitempty"`
 }
 
-type dnsRoot struct {
-	Data dns `json:"data"`
+type DnsRoot struct {
+	Data Dns `json:"data"`
 }
 
 type Spf struct {
@@ -89,7 +102,7 @@ type InboundRouting struct {
 	Priority string `json:"priority"`
 }
 
-type dns struct {
+type Dns struct {
 	ID             string         `json:"id"`
 	Spf            Spf            `json:"spf"`
 	Dkim           Dkim           `json:"dkim"`
@@ -98,11 +111,11 @@ type dns struct {
 	InboundRouting InboundRouting `json:"inbound_routing"`
 }
 
-type verifyRoot struct {
+type VerifyRoot struct {
 	Message string `json:"message"`
-	Data    verify `json:"data"`
+	Data    Verify `json:"data"`
 }
-type verify struct {
+type Verify struct {
 	Dkim     bool `json:"dkim"`
 	Spf      bool `json:"spf"`
 	Mx       bool `json:"mx"`
@@ -111,15 +124,15 @@ type verify struct {
 	RpCname  bool `json:"rp_cname"`
 }
 
-// domainRecipientRoot format of domain response
-type domainRecipientRoot struct {
-	Data  []domainRecipient `json:"data"`
+// DomainRecipientRoot format of domain response
+type DomainRecipientRoot struct {
+	Data  []DomainRecipient `json:"data"`
 	Links Links             `json:"links"`
 	Meta  Meta              `json:"meta"`
 }
 
-// domainRecipient list of domain recipients
-type domainRecipient struct {
+// DomainRecipient list of domain recipients
+type DomainRecipient struct {
 	ID        string `json:"id"`
 	Email     string `json:"email"`
 	CreatedAt string `json:"created_at"`
@@ -127,14 +140,14 @@ type domainRecipient struct {
 	DeletedAt string `json:"deleted_at"`
 }
 
-// ListDomainOptions - modifies the behavior of DomainService.List Method
+// ListDomainOptions - modifies the behavior of domainService.List Method
 type ListDomainOptions struct {
 	Page     int   `url:"page,omitempty"`
 	Limit    int   `url:"limit,omitempty"`
 	Verified *bool `url:"verified,omitempty"`
 }
 
-// DomainSettingOptions - modifies the behavior of DomainService.Update Method
+// DomainSettingOptions - modifies the behavior of domainService.Update Method
 type DomainSettingOptions struct {
 	DomainID                   string `json:"-"`
 	SendPaused                 *bool  `json:"send_paused,omitempty"`
@@ -157,20 +170,20 @@ type CreateDomainOptions struct {
 	InboundRoutingSubdomain string `json:"inbound_routing_subdomain,omitempty"`
 }
 
-// GetRecipientsOptions - modifies the behavior of DomainService.GetRecipients Method
+// GetRecipientsOptions - modifies the behavior of domainService.GetRecipients Method
 type GetRecipientsOptions struct {
 	DomainID string `url:"-"`
 	Page     int    `url:"page,omitempty"`
 	Limit    int    `url:"limit,omitempty"`
 }
 
-func (s *DomainService) List(ctx context.Context, options *ListDomainOptions) (*domainRoot, *Response, error) {
+func (s *domainService) List(ctx context.Context, options *ListDomainOptions) (*DomainRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, domainBasePath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(domainRoot)
+	root := new(DomainRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -179,7 +192,7 @@ func (s *DomainService) List(ctx context.Context, options *ListDomainOptions) (*
 	return root, res, nil
 }
 
-func (s *DomainService) Get(ctx context.Context, domainID string) (*singleDomainRoot, *Response, error) {
+func (s *domainService) Get(ctx context.Context, domainID string) (*SingleDomainRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", domainBasePath, domainID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -187,7 +200,7 @@ func (s *DomainService) Get(ctx context.Context, domainID string) (*singleDomain
 		return nil, nil, err
 	}
 
-	root := new(singleDomainRoot)
+	root := new(SingleDomainRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -196,7 +209,7 @@ func (s *DomainService) Get(ctx context.Context, domainID string) (*singleDomain
 	return root, res, nil
 }
 
-func (s *DomainService) Update(ctx context.Context, options *DomainSettingOptions) (*singleDomainRoot, *Response, error) {
+func (s *domainService) Update(ctx context.Context, options *DomainSettingOptions) (*SingleDomainRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s/settings", domainBasePath, options.DomainID)
 
 	req, err := s.client.newRequest(http.MethodPut, path, options)
@@ -204,7 +217,7 @@ func (s *DomainService) Update(ctx context.Context, options *DomainSettingOption
 		return nil, nil, err
 	}
 
-	root := new(singleDomainRoot)
+	root := new(SingleDomainRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -213,7 +226,7 @@ func (s *DomainService) Update(ctx context.Context, options *DomainSettingOption
 	return root, res, nil
 }
 
-func (s *DomainService) Delete(ctx context.Context, domainID string) (*Response, error) {
+func (s *domainService) Delete(ctx context.Context, domainID string) (*Response, error) {
 	path := fmt.Sprintf("%s/%s", domainBasePath, domainID)
 
 	req, err := s.client.newRequest(http.MethodDelete, path, nil)
@@ -224,13 +237,13 @@ func (s *DomainService) Delete(ctx context.Context, domainID string) (*Response,
 	return s.client.do(ctx, req, nil)
 }
 
-func (s *DomainService) Create(ctx context.Context, options *CreateDomainOptions) (*singleDomainRoot, *Response, error) {
+func (s *domainService) Create(ctx context.Context, options *CreateDomainOptions) (*SingleDomainRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodPost, domainBasePath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(singleDomainRoot)
+	root := new(SingleDomainRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -239,7 +252,7 @@ func (s *DomainService) Create(ctx context.Context, options *CreateDomainOptions
 	return root, res, nil
 }
 
-func (s *DomainService) GetDNS(ctx context.Context, domainID string) (*dnsRoot, *Response, error) {
+func (s *domainService) GetDNS(ctx context.Context, domainID string) (*DnsRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s/dns-records", domainBasePath, domainID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -247,7 +260,7 @@ func (s *DomainService) GetDNS(ctx context.Context, domainID string) (*dnsRoot, 
 		return nil, nil, err
 	}
 
-	root := new(dnsRoot)
+	root := new(DnsRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -256,7 +269,7 @@ func (s *DomainService) GetDNS(ctx context.Context, domainID string) (*dnsRoot, 
 	return root, res, nil
 }
 
-func (s *DomainService) Verify(ctx context.Context, domainID string) (*verifyRoot, *Response, error) {
+func (s *domainService) Verify(ctx context.Context, domainID string) (*VerifyRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s/verify", domainBasePath, domainID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -264,7 +277,7 @@ func (s *DomainService) Verify(ctx context.Context, domainID string) (*verifyRoo
 		return nil, nil, err
 	}
 
-	root := new(verifyRoot)
+	root := new(VerifyRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -273,7 +286,7 @@ func (s *DomainService) Verify(ctx context.Context, domainID string) (*verifyRoo
 	return root, res, nil
 }
 
-func (s *DomainService) GetRecipients(ctx context.Context, options *GetRecipientsOptions) (*domainRecipientRoot, *Response, error) {
+func (s *domainService) GetRecipients(ctx context.Context, options *GetRecipientsOptions) (*DomainRecipientRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s/recipients", domainBasePath, options.DomainID)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -281,7 +294,7 @@ func (s *DomainService) GetRecipients(ctx context.Context, options *GetRecipient
 		return nil, nil, err
 	}
 
-	root := new(domainRecipientRoot)
+	root := new(DomainRecipientRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err

@@ -9,31 +9,44 @@ import (
 
 const emailVerificationBasePath = "/email-verification"
 
-type EmailVerificationService service
+type EmailVerificationService interface {
+	List(ctx context.Context, options *ListEmailVerificationOptions) (*EmailVerificationRoot, *Response, error)
+	Get(ctx context.Context, emailVerificationId string) (*SingleEmailVerificationRoot, *Response, error)
+	Update(ctx context.Context, options *DomainSettingOptions) (*SingleEmailVerificationRoot, *Response, error)
+	Delete(ctx context.Context, domainID string) (*Response, error)
+	Create(ctx context.Context, options *CreateEmailVerificationOptions) (*SingleEmailVerificationRoot, *Response, error)
+	Verify(ctx context.Context, emailVerificationId string) (*SingleEmailVerificationRoot, *Response, error)
+	VerifySingle(ctx context.Context, options *SingleEmailVerificationOptions) (*ResultSingleEmailVerification, *Response, error)
+	GetResults(ctx context.Context, options *GetEmailVerificationOptions) (*ResultEmailVerificationRoot, *Response, error)
+}
 
-// emailVerificationRoot format of verification response
-type emailVerificationRoot struct {
-	Data  []emailVerification `json:"data"`
+type emailVerificationService struct {
+	*service
+}
+
+// EmailVerificationRoot format of verification response
+type EmailVerificationRoot struct {
+	Data  []EmailVerification `json:"data"`
 	Links Links               `json:"links"`
 	Meta  Meta                `json:"meta"`
 }
 
 // singleDomainRoot format of single verification response
-type singleEmailVerificationRoot struct {
-	Data emailVerification `json:"data"`
+type SingleEmailVerificationRoot struct {
+	Data EmailVerification `json:"data"`
 }
 
-type resultEmailVerificationRoot struct {
-	Data  []result `json:"data"`
+type ResultEmailVerificationRoot struct {
+	Data  []Result `json:"data"`
 	Links Links    `json:"links"`
 	Meta  Meta     `json:"meta"`
 }
 
-type resultSingleEmailVerification struct {
+type ResultSingleEmailVerification struct {
 	Status string `json:"status"`
 }
 
-type emailVerification struct {
+type EmailVerification struct {
 	Id                  string      `json:"id"`
 	Name                string      `json:"name"`
 	Total               int         `json:"total"`
@@ -41,17 +54,17 @@ type emailVerification struct {
 	VerificationEnded   interface{} `json:"verification_ended"`
 	CreatedAt           time.Time   `json:"created_at"`
 	UpdatedAt           time.Time   `json:"updated_at"`
-	Status              status      `json:"status"`
+	Status              Status      `json:"status"`
 	Source              string      `json:"source"`
-	Statistics          statistics  `json:"statistics"`
+	Statistics          Statistics  `json:"statistics"`
 }
 
-type status struct {
+type Status struct {
 	Name  string `json:"name"`
 	Count int    `json:"count"`
 }
 
-type statistics struct {
+type Statistics struct {
 	Valid           int `json:"valid"`
 	CatchAll        int `json:"catch_all"`
 	MailboxFull     int `json:"mailbox_full"`
@@ -65,24 +78,24 @@ type statistics struct {
 	Failed          int `json:"failed"`
 }
 
-type result struct {
+type Result struct {
 	Address string `json:"address"`
 	Result  string `json:"result"`
 }
 
-// ListEmailVerificationOptions - modifies the behavior of EmailVerificationService.List Method
+// ListEmailVerificationOptions - modifies the behavior of emailVerificationService.List Method
 type ListEmailVerificationOptions struct {
 	Page  int `url:"page,omitempty"`
 	Limit int `url:"limit,omitempty"`
 }
 
-// CreateEmailVerificationOptions -  modifies the behavior of EmailVerificationService.Create Method
+// CreateEmailVerificationOptions -  modifies the behavior of emailVerificationService.Create Method
 type CreateEmailVerificationOptions struct {
 	Name   string   `json:"name"`
 	Emails []string `json:"emails"`
 }
 
-// GetEmailVerificationOptions - modifies the behavior of EmailVerificationService.List and EmailVerificationService.GetResult Method
+// GetEmailVerificationOptions - modifies the behavior of emailVerificationService.List and emailVerificationService.GetResult Method
 type GetEmailVerificationOptions struct {
 	EmailVerificationId string `url:"-"`
 	Page                int    `url:"page,omitempty"`
@@ -93,13 +106,13 @@ type SingleEmailVerificationOptions struct {
 	Email string `json:"email"`
 }
 
-func (s *EmailVerificationService) List(ctx context.Context, options *ListEmailVerificationOptions) (*emailVerificationRoot, *Response, error) {
+func (s *emailVerificationService) List(ctx context.Context, options *ListEmailVerificationOptions) (*EmailVerificationRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodGet, emailVerificationBasePath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(emailVerificationRoot)
+	root := new(EmailVerificationRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -108,7 +121,7 @@ func (s *EmailVerificationService) List(ctx context.Context, options *ListEmailV
 	return root, res, nil
 }
 
-func (s *EmailVerificationService) Get(ctx context.Context, emailVerificationId string) (*singleEmailVerificationRoot, *Response, error) {
+func (s *emailVerificationService) Get(ctx context.Context, emailVerificationId string) (*SingleEmailVerificationRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s", emailVerificationBasePath, emailVerificationId)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -116,7 +129,7 @@ func (s *EmailVerificationService) Get(ctx context.Context, emailVerificationId 
 		return nil, nil, err
 	}
 
-	root := new(singleEmailVerificationRoot)
+	root := new(SingleEmailVerificationRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -125,7 +138,7 @@ func (s *EmailVerificationService) Get(ctx context.Context, emailVerificationId 
 	return root, res, nil
 }
 
-func (s *EmailVerificationService) Update(ctx context.Context, options *DomainSettingOptions) (*singleEmailVerificationRoot, *Response, error) {
+func (s *emailVerificationService) Update(ctx context.Context, options *DomainSettingOptions) (*SingleEmailVerificationRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s/settings", emailVerificationBasePath, options.DomainID)
 
 	req, err := s.client.newRequest(http.MethodPut, path, options)
@@ -133,7 +146,7 @@ func (s *EmailVerificationService) Update(ctx context.Context, options *DomainSe
 		return nil, nil, err
 	}
 
-	root := new(singleEmailVerificationRoot)
+	root := new(SingleEmailVerificationRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -142,7 +155,7 @@ func (s *EmailVerificationService) Update(ctx context.Context, options *DomainSe
 	return root, res, nil
 }
 
-func (s *EmailVerificationService) Delete(ctx context.Context, domainID string) (*Response, error) {
+func (s *emailVerificationService) Delete(ctx context.Context, domainID string) (*Response, error) {
 	path := fmt.Sprintf("%s/%s", emailVerificationBasePath, domainID)
 
 	req, err := s.client.newRequest(http.MethodDelete, path, nil)
@@ -153,13 +166,13 @@ func (s *EmailVerificationService) Delete(ctx context.Context, domainID string) 
 	return s.client.do(ctx, req, nil)
 }
 
-func (s *EmailVerificationService) Create(ctx context.Context, options *CreateEmailVerificationOptions) (*singleEmailVerificationRoot, *Response, error) {
+func (s *emailVerificationService) Create(ctx context.Context, options *CreateEmailVerificationOptions) (*SingleEmailVerificationRoot, *Response, error) {
 	req, err := s.client.newRequest(http.MethodPost, emailVerificationBasePath, options)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	root := new(singleEmailVerificationRoot)
+	root := new(SingleEmailVerificationRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -168,7 +181,7 @@ func (s *EmailVerificationService) Create(ctx context.Context, options *CreateEm
 	return root, res, nil
 }
 
-func (s *EmailVerificationService) Verify(ctx context.Context, emailVerificationId string) (*singleEmailVerificationRoot, *Response, error) {
+func (s *emailVerificationService) Verify(ctx context.Context, emailVerificationId string) (*SingleEmailVerificationRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s/verify", emailVerificationBasePath, emailVerificationId)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -176,7 +189,7 @@ func (s *EmailVerificationService) Verify(ctx context.Context, emailVerification
 		return nil, nil, err
 	}
 
-	root := new(singleEmailVerificationRoot)
+	root := new(SingleEmailVerificationRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
@@ -185,7 +198,7 @@ func (s *EmailVerificationService) Verify(ctx context.Context, emailVerification
 	return root, res, nil
 }
 
-func (s *EmailVerificationService) VerifySingle(ctx context.Context, options *SingleEmailVerificationOptions) (*resultSingleEmailVerification, *Response, error) {
+func (s *emailVerificationService) VerifySingle(ctx context.Context, options *SingleEmailVerificationOptions) (*ResultSingleEmailVerification, *Response, error) {
 	path := fmt.Sprintf("%s/verify", emailVerificationBasePath)
 
 	req, err := s.client.newRequest(http.MethodPost, path, options)
@@ -193,7 +206,7 @@ func (s *EmailVerificationService) VerifySingle(ctx context.Context, options *Si
 		return nil, nil, err
 	}
 
-	verification := new(resultSingleEmailVerification)
+	verification := new(ResultSingleEmailVerification)
 	res, err := s.client.do(ctx, req, verification)
 	if err != nil {
 		return nil, res, err
@@ -202,7 +215,7 @@ func (s *EmailVerificationService) VerifySingle(ctx context.Context, options *Si
 	return verification, res, nil
 }
 
-func (s *EmailVerificationService) GetResults(ctx context.Context, options *GetEmailVerificationOptions) (*resultEmailVerificationRoot, *Response, error) {
+func (s *emailVerificationService) GetResults(ctx context.Context, options *GetEmailVerificationOptions) (*ResultEmailVerificationRoot, *Response, error) {
 	path := fmt.Sprintf("%s/%s/results", emailVerificationBasePath, options.EmailVerificationId)
 
 	req, err := s.client.newRequest(http.MethodGet, path, nil)
@@ -210,7 +223,7 @@ func (s *EmailVerificationService) GetResults(ctx context.Context, options *GetE
 		return nil, nil, err
 	}
 
-	root := new(resultEmailVerificationRoot)
+	root := new(ResultEmailVerificationRoot)
 	res, err := s.client.do(ctx, req, root)
 	if err != nil {
 		return nil, res, err
