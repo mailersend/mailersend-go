@@ -39,6 +39,8 @@ type Message struct {
 
 	TemplateVariables []Variables       `json:"variables"`
 	Personalization   []Personalization `json:"personalization"`
+	Headers           []Header          `json:"headers"`
+	ListUnsubscribe   string            `json:"list_unsubscribe"`
 }
 
 // From - simple struct to declare from name/ email
@@ -69,6 +71,12 @@ type Substitution struct {
 type Personalization struct {
 	Email string                 `json:"email"`
 	Data  map[string]interface{} `json:"data"`
+}
+
+// Header - you can set multiple Personalization for each Recipient
+type Header struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
 }
 
 // Attachment - you can set multiple Attachments
@@ -147,6 +155,16 @@ func (m *Message) SetSubstitutions(variables []Variables) {
 // SetPersonalization - Set the template personalization.
 func (m *Message) SetPersonalization(personalization []Personalization) {
 	m.Personalization = personalization
+}
+
+// SetHeaders - Set the custom headers.
+func (m *Message) SetHeaders(headers []Header) {
+	m.Headers = headers
+}
+
+// SetListUnsubscribe - Set the custom list unsubscribe header (Professional and Enterprise accounts only)
+func (m *Message) SetListUnsubscribe(listUnsubscribe string) {
+	m.ListUnsubscribe = listUnsubscribe
 }
 
 // SetTags - Set all the tags.
