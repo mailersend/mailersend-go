@@ -23,27 +23,27 @@ const (
 
 // Message structures contain both the message text and the envelop for an e-mail message.
 type Message struct {
-	Recipients     []Recipient  `json:"to"`
-	From           From         `json:"from"`
-	CC             []Recipient  `json:"cc,omitempty"`
-	Bcc            []Recipient  `json:"bcc,omitempty"`
-	ReplyTo        ReplyTo      `json:"reply_to,omitempty"`
-	InReplyTo      string       `json:"in_reply_to,omitempty"`
-	Subject        string       `json:"subject,omitempty"`
-	Text           string       `json:"text,omitempty"`
-	HTML           string       `json:"html,omitempty"`
-	TemplateID     string       `json:"template_id,omitempty"`
-	SendAt         int64        `json:"send_at,omitempty"`
-	Tags           []string     `json:"tags,omitempty"`
-	Attachments    []Attachment `json:"attachments,omitempty"`
-	PrecedenceBulk bool         `json:"presedence_bulk,omitempty"`
-	References     []string     `json:"references,omitempty"`
-	Settings       Settings     `json:"settings,omitempty"`
+	Recipients  []Recipient  `json:"to"`
+	From        From         `json:"from"`
+	CC          []Recipient  `json:"cc,omitempty"`
+	Bcc         []Recipient  `json:"bcc,omitempty"`
+	ReplyTo     ReplyTo      `json:"reply_to,omitempty"`
+	InReplyTo   string       `json:"in_reply_to,omitempty"`
+	Subject     string       `json:"subject,omitempty"`
+	Text        string       `json:"text,omitempty"`
+	HTML        string       `json:"html,omitempty"`
+	TemplateID  string       `json:"template_id,omitempty"`
+	SendAt      int64        `json:"send_at,omitempty"`
+	Tags        []string     `json:"tags,omitempty"`
+	Attachments []Attachment `json:"attachments,omitempty"`
 
 	TemplateVariables []Variables       `json:"variables"`
 	Personalization   []Personalization `json:"personalization"`
 	Headers           []Header          `json:"headers"`
 	ListUnsubscribe   string            `json:"list_unsubscribe"`
+	PrecedenceBulk    bool              `json:"presedence_bulk,omitempty"`
+	References        []string          `json:"references,omitempty"`
+	Settings          Settings          `json:"settings,omitempty"`
 }
 
 // From - simple struct to declare from name/ email
