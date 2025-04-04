@@ -41,6 +41,9 @@ type Message struct {
 	Personalization   []Personalization `json:"personalization"`
 	Headers           []Header          `json:"headers"`
 	ListUnsubscribe   string            `json:"list_unsubscribe"`
+	PrecedenceBulk    bool              `json:"precedence_bulk,omitempty"`
+	References        []string          `json:"references,omitempty"`
+	Settings          Settings          `json:"settings,omitempty"`
 }
 
 // From - simple struct to declare from name/ email
@@ -85,6 +88,13 @@ type Attachment struct {
 	Filename    string `json:"filename"`
 	Disposition string `json:"disposition,omitempty"`
 	ID          string `json:"id,omitempty"`
+}
+
+// Settings - you can set email Settings
+type Settings struct {
+	TrackClicks  bool `json:"track_clicks"`
+	TrackOpens   bool `json:"track_opens"`
+	TrackContent bool `json:"track_content"`
 }
 
 // Deprecated: NewMessage - Setup a new message ready to be sent
@@ -180,6 +190,26 @@ func (m *Message) AddAttachment(attachment Attachment) {
 // SetSendAt - Set send_at.
 func (m *Message) SetSendAt(sendAt int64) {
 	m.SendAt = sendAt
+}
+
+// SetPrecedenceBulk - Set precedence_bulk
+func (m *Message) SetPrecedenceBulk(precedenceBulk bool) {
+	m.PrecedenceBulk = precedenceBulk
+}
+
+// SetReferences - Set references
+func (m *Message) SetReferences(references []string) {
+	m.References = references
+}
+
+// AddReference - Add a reference
+func (m *Message) AddReference(reference string) {
+	m.References = append(m.References, reference)
+}
+
+// SetSettings - Set settings
+func (m *Message) SetSettings(settings Settings) {
+	m.Settings = settings
 }
 
 // Deprecated: Send - send the message
