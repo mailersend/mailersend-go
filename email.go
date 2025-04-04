@@ -204,11 +204,7 @@ func (m *Message) SetReferences(references []string) {
 
 // SetReferences - Set references
 func (m *Message) AddReference(reference string) {
-	if m.References == nil {
-		m.References = []string{reference}
-	} else {
-		m.References = append(m.References, reference)
-	}
+	m.References = append(m.References, reference)
 }
 
 // SetSettings - Set settings
