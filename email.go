@@ -202,7 +202,7 @@ func (m *Message) SetReferences(references []string) {
 	m.References = references
 }
 
-// SetReferences - Set references
+// AddReference - Add a reference
 func (m *Message) AddReference(reference string) {
 	m.References = append(m.References, reference)
 }
