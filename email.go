@@ -92,9 +92,9 @@ type Attachment struct {
 
 // Settings - you can set email Settings
 type Settings struct {
-	Track_clicks  bool `json:"track_clicks"`
-	Track_opens   bool `json:"track_opens"`
-	Track_content bool `json:"track_content"`
+	TrackClicks  bool `json:"track_clicks"`
+	TrackOpens   bool `json:"track_opens"`
+	TrackContent bool `json:"track_content"`
 }
 
 // Deprecated: NewMessage - Setup a new message ready to be sent
@@ -200,6 +200,11 @@ func (m *Message) SetPrecedenceBulk(precedenceBulk bool) {
 // SetReferences - Set references
 func (m *Message) SetReferences(references []string) {
 	m.References = references
+}
+
+// SetReferences - Set references
+func (m *Message) AddReference(reference string) {
+	m.References = append(m.References, reference)
 }
 
 // SetSettings - Set settings
