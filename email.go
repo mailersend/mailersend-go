@@ -23,19 +23,22 @@ const (
 
 // Message structures contain both the message text and the envelop for an e-mail message.
 type Message struct {
-	Recipients  []Recipient  `json:"to"`
-	From        From         `json:"from"`
-	CC          []Recipient  `json:"cc,omitempty"`
-	Bcc         []Recipient  `json:"bcc,omitempty"`
-	ReplyTo     ReplyTo      `json:"reply_to,omitempty"`
-	InReplyTo   string       `json:"in_reply_to,omitempty"`
-	Subject     string       `json:"subject,omitempty"`
-	Text        string       `json:"text,omitempty"`
-	HTML        string       `json:"html,omitempty"`
-	TemplateID  string       `json:"template_id,omitempty"`
-	SendAt      int64        `json:"send_at,omitempty"`
-	Tags        []string     `json:"tags,omitempty"`
-	Attachments []Attachment `json:"attachments,omitempty"`
+	Recipients     []Recipient  `json:"to"`
+	From           From         `json:"from"`
+	CC             []Recipient  `json:"cc,omitempty"`
+	Bcc            []Recipient  `json:"bcc,omitempty"`
+	ReplyTo        ReplyTo      `json:"reply_to,omitempty"`
+	InReplyTo      string       `json:"in_reply_to,omitempty"`
+	Subject        string       `json:"subject,omitempty"`
+	Text           string       `json:"text,omitempty"`
+	HTML           string       `json:"html,omitempty"`
+	TemplateID     string       `json:"template_id,omitempty"`
+	SendAt         int64        `json:"send_at,omitempty"`
+	Tags           []string     `json:"tags,omitempty"`
+	Attachments    []Attachment `json:"attachments,omitempty"`
+	PrecedenceBulk bool         `json:"presedence_bulk,omitempty"`
+	References     []string     `json:"references,omitempty"`
+	Settings       Settings     `json:"settings,omitempty"`
 
 	TemplateVariables []Variables       `json:"variables"`
 	Personalization   []Personalization `json:"personalization"`
@@ -85,6 +88,13 @@ type Attachment struct {
 	Filename    string `json:"filename"`
 	Disposition string `json:"disposition,omitempty"`
 	ID          string `json:"id,omitempty"`
+}
+
+// Settings - you can set email Settings
+type Settings struct {
+	Track_clicks  bool `json:"track_clicks"`
+	Track_opens   bool `json:"track_opens"`
+	Track_content bool `json:"track_content"`
 }
 
 // Deprecated: NewMessage - Setup a new message ready to be sent
