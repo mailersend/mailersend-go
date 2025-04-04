@@ -41,7 +41,7 @@ type Message struct {
 	Personalization   []Personalization `json:"personalization"`
 	Headers           []Header          `json:"headers"`
 	ListUnsubscribe   string            `json:"list_unsubscribe"`
-	PrecedenceBulk    bool              `json:"presedence_bulk,omitempty"`
+	PrecedenceBulk    bool              `json:"precedence_bulk,omitempty"`
 	References        []string          `json:"references,omitempty"`
 	Settings          Settings          `json:"settings,omitempty"`
 }
@@ -190,6 +190,21 @@ func (m *Message) AddAttachment(attachment Attachment) {
 // SetSendAt - Set send_at.
 func (m *Message) SetSendAt(sendAt int64) {
 	m.SendAt = sendAt
+}
+
+// SetPrecedenceBulk - Set precedence_bulk
+func (m *Message) SetPrecedenceBulk(precedenceBulk bool) {
+	m.PrecedenceBulk = precedenceBulk
+}
+
+// SetReferences - Set references
+func (m *Message) SetReferences(references []string) {
+	m.References = references
+}
+
+// SetSettings - Set settings
+func (m *Message) SetSettings(settings Settings) {
+	m.Settings = settings
 }
 
 // Deprecated: Send - send the message
