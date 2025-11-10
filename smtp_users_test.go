@@ -13,24 +13,20 @@ import (
 
 func TestCanCreateSmtpUserListOptions(t *testing.T) {
 	options := mailersend.ListSmtpUserOptions{
-		DomainID: "domain-id",
-		Page:     1,
-		Limit:    25,
+		Page:  1,
+		Limit: 25,
 	}
 
-	assert.Equal(t, "domain-id", options.DomainID)
 	assert.Equal(t, 1, options.Page)
 	assert.Equal(t, 25, options.Limit)
 }
 
 func TestCanCreateSmtpUserCreateOptions(t *testing.T) {
 	options := mailersend.CreateSmtpUserOptions{
-		DomainID: "domain-id",
-		Name:     "SMTP User",
-		Enabled:  mailersend.Bool(true),
+		Name:    "SMTP User",
+		Enabled: mailersend.Bool(true),
 	}
 
-	assert.Equal(t, "domain-id", options.DomainID)
 	assert.Equal(t, "SMTP User", options.Name)
 	assert.Equal(t, mailersend.Bool(true), options.Enabled)
 }
@@ -49,7 +45,7 @@ func TestSmtpUserService_List(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/smtp-users?domain_id=domain-id&limit=25&page=1", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/v1/domains/domain-id/smtp-users?limit=25&page=1", req.URL.String())
 
 		return &http.Response{
 			StatusCode: http.StatusOK,
@@ -71,12 +67,11 @@ func TestSmtpUserService_List(t *testing.T) {
 	ms.SetClient(client)
 
 	options := &mailersend.ListSmtpUserOptions{
-		DomainID: "domain-id",
-		Page:     1,
-		Limit:    25,
+		Page:  1,
+		Limit: 25,
 	}
 
-	response, _, err := ms.SmtpUser.List(ctx, options)
+	response, _, err := ms.SmtpUser.List(ctx, "domain-id", options)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, response)
@@ -88,7 +83,7 @@ func TestSmtpUserService_Get(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/smtp-users/smtp-user-id", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/v1/domains/domain-id/smtp-users/smtp-user-id", req.URL.String())
 
 		return &http.Response{
 			StatusCode: http.StatusOK,
@@ -107,7 +102,7 @@ func TestSmtpUserService_Get(t *testing.T) {
 	ctx := context.TODO()
 	ms.SetClient(client)
 
-	response, _, err := ms.SmtpUser.Get(ctx, "smtp-user-id")
+	response, _, err := ms.SmtpUser.Get(ctx, "domain-id", "smtp-user-id")
 
 	assert.NoError(t, err)
 	assert.NotNil(t, response)
@@ -118,7 +113,7 @@ func TestSmtpUserService_Create(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/smtp-users", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/v1/domains/domain-id/smtp-users", req.URL.String())
 		assert.Equal(t, http.MethodPost, req.Method)
 
 		return &http.Response{
@@ -139,12 +134,11 @@ func TestSmtpUserService_Create(t *testing.T) {
 	ms.SetClient(client)
 
 	options := &mailersend.CreateSmtpUserOptions{
-		DomainID: "domain-id",
-		Name:     "New SMTP User",
-		Enabled:  mailersend.Bool(true),
+		Name:    "New SMTP User",
+		Enabled: mailersend.Bool(true),
 	}
 
-	response, _, err := ms.SmtpUser.Create(ctx, options)
+	response, _, err := ms.SmtpUser.Create(ctx, "domain-id", options)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, response)
@@ -155,7 +149,7 @@ func TestSmtpUserService_Update(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/smtp-users/smtp-user-id", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/v1/domains/domain-id/smtp-users/smtp-user-id", req.URL.String())
 		assert.Equal(t, http.MethodPut, req.Method)
 
 		return &http.Response{
@@ -180,7 +174,7 @@ func TestSmtpUserService_Update(t *testing.T) {
 		Enabled: mailersend.Bool(false),
 	}
 
-	response, _, err := ms.SmtpUser.Update(ctx, "smtp-user-id", options)
+	response, _, err := ms.SmtpUser.Update(ctx, "domain-id", "smtp-user-id", options)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, response)
@@ -192,7 +186,7 @@ func TestSmtpUserService_Delete(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/smtp-users/smtp-user-id", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/v1/domains/domain-id/smtp-users/smtp-user-id", req.URL.String())
 		assert.Equal(t, http.MethodDelete, req.Method)
 
 		return &http.Response{
@@ -204,7 +198,7 @@ func TestSmtpUserService_Delete(t *testing.T) {
 	ctx := context.TODO()
 	ms.SetClient(client)
 
-	_, err := ms.SmtpUser.Delete(ctx, "smtp-user-id")
+	_, err := ms.SmtpUser.Delete(ctx, "domain-id", "smtp-user-id")
 
 	assert.NoError(t, err)
 }

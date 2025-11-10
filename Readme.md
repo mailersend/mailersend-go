@@ -3314,13 +3314,14 @@ func main() {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
+	domainID := "domain-id"
+	
 	options := &mailersend.ListSmtpUserOptions{
-		DomainID: "domain-id",
-		Page:     1,
-		Limit:    25,
+		Page:  1,
+		Limit: 25,
 	}
 
-	_, _, err := ms.SmtpUser.List(ctx, options)
+	_, _, err := ms.SmtpUser.List(ctx, domainID, options)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -3349,7 +3350,10 @@ func main() {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	_, _, err := ms.SmtpUser.Get(ctx, "smtp-user-id")
+	domainID := "domain-id"
+	smtpUserID := "smtp-user-id"
+
+	_, _, err := ms.SmtpUser.Get(ctx, domainID, smtpUserID)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -3378,13 +3382,14 @@ func main() {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
+	domainID := "domain-id"
+
 	options := &mailersend.CreateSmtpUserOptions{
-		DomainID: "domain-id",
-		Name:     "SMTP User Name",
-		Enabled:  mailersend.Bool(true),
+		Name:    "SMTP User Name",
+		Enabled: mailersend.Bool(true),
 	}
 
-	_, _, err := ms.SmtpUser.Create(ctx, options)
+	_, _, err := ms.SmtpUser.Create(ctx, domainID, options)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -3413,12 +3418,15 @@ func main() {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
+	domainID := "domain-id"
+	smtpUserID := "smtp-user-id"
+
 	options := &mailersend.UpdateSmtpUserOptions{
 		Name:    "Updated SMTP User Name",
 		Enabled: mailersend.Bool(false),
 	}
 
-	_, _, err := ms.SmtpUser.Update(ctx, "smtp-user-id", options)
+	_, _, err := ms.SmtpUser.Update(ctx, domainID, smtpUserID, options)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -3447,7 +3455,10 @@ func main() {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	_, err := ms.SmtpUser.Delete(ctx, "smtp-user-id")
+	domainID := "domain-id"
+	smtpUserID := "smtp-user-id"
+
+	_, err := ms.SmtpUser.Delete(ctx, domainID, smtpUserID)
 	if err != nil {
 		log.Fatal(err)
 	}
