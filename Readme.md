@@ -113,6 +113,18 @@ MailerSend Golang SDK
       - [Update a Sender Identity By Email](#update-a-sender-identity-by-email)
       - [Delete a Sender Identity](#delete-a-sender-identity)
       - [Delete a Sender Identity By Email](#delete-a-sender-identity-by-email)
+   - [SMTP Users](#smtp-users)
+      - [Get a list of SMTP users](#get-a-list-of-smtp-users)
+      - [Get a single SMTP user](#get-a-single-smtp-user)
+      - [Create an SMTP user](#create-an-smtp-user)
+      - [Update an SMTP user](#update-an-smtp-user)
+      - [Delete an SMTP user](#delete-an-smtp-user)
+   - [Users](#users)
+      - [Get a list of users](#get-a-list-of-users)
+      - [Get a single user](#get-a-single-user)
+      - [Invite a user](#invite-a-user)
+      - [Update a user](#update-a-user)
+      - [Delete a user](#delete-a-user)
 	- [Other Endpoints](#other-endpoints)
 	  - [Get an API Quota](#get-an-api-quota)
 - [Types](#types)
@@ -3272,6 +3284,331 @@ func main() {
 	defer cancel()
 
 	_, err := ms.Identity.DeleteByEmail(ctx, "identity-email")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+## SMTP Users
+
+### Get a list of SMTP users
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.ListSmtpUserOptions{
+		DomainID: "domain-id",
+		Page:     1,
+		Limit:    25,
+	}
+
+	_, _, err := ms.SmtpUser.List(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get a single SMTP user
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.SmtpUser.Get(ctx, "smtp-user-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Create an SMTP user
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.CreateSmtpUserOptions{
+		DomainID: "domain-id",
+		Name:     "SMTP User Name",
+		Enabled:  mailersend.Bool(true),
+	}
+
+	_, _, err := ms.SmtpUser.Create(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Update an SMTP user
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.UpdateSmtpUserOptions{
+		Name:    "Updated SMTP User Name",
+		Enabled: mailersend.Bool(false),
+	}
+
+	_, _, err := ms.SmtpUser.Update(ctx, "smtp-user-id", options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Delete an SMTP user
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, err := ms.SmtpUser.Delete(ctx, "smtp-user-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+## Users
+
+### Get a list of users
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.ListUserOptions{
+		Page:  1,
+		Limit: 25,
+	}
+
+	_, _, err := ms.User.List(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get a single user
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.User.Get(ctx, "user-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Invite a user
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.InviteUserOptions{
+		Email: "newuser@example.com",
+		Role:  "member", // Options: "admin", "member"
+	}
+
+	_, _, err := ms.User.Invite(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Update a user
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.UpdateUserOptions{
+		Role: "admin",
+	}
+
+	_, _, err := ms.User.Update(ctx, "user-id", options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Delete a user
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, err := ms.User.Delete(ctx, "user-id")
 	if err != nil {
 		log.Fatal(err)
 	}

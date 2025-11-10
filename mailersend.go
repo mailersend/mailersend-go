@@ -47,6 +47,8 @@ type Mailersend struct {
 	EmailVerification EmailVerificationService
 	Identity          IdentityService
 	ApiQuota          ApiQuotaService
+	SmtpUser          SmtpUserService
+	User              UserService
 }
 
 type service struct {
@@ -132,6 +134,8 @@ func NewMailersend(apiKey string) *Mailersend {
 	ms.EmailVerification = &emailVerificationService{&ms.common}
 	ms.Identity = &identityService{&ms.common}
 	ms.ApiQuota = &apiQuotaService{&ms.common}
+	ms.SmtpUser = &smtpUserService{&ms.common}
+	ms.User = &userService{&ms.common}
 
 	return ms
 }
