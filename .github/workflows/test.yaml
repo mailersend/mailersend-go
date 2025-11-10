@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-24.04]
-        go: ["1.17", "1.18", "1.19"]
+        go: ["1.25", "1.24"]
     name: Test on go ${{ matrix.go }} and ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
