@@ -104,6 +104,9 @@ func (s *webhookService) Get(ctx context.Context, webhookID string) (*SingleWebh
 }
 
 func (s *webhookService) Create(ctx context.Context, options *CreateWebhookOptions) (*SingleWebhookRoot, *Response, error) {
+	if options.Version == nil {
+		options.Version = Int(1)
+	}
 	req, err := s.client.newRequest(http.MethodPost, webhookBasePath, options)
 	if err != nil {
 		return nil, nil, err
