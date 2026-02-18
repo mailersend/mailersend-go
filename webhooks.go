@@ -58,6 +58,7 @@ type CreateWebhookOptions struct {
 	URL      string   `json:"url"`
 	Enabled  *bool    `json:"enabled,omitempty"`
 	Events   []string `json:"events"`
+	Version  *int     `json:"version,omitempty"`
 }
 
 // UpdateWebhookOptions - modifies the behavior of *WebhookService.Update Method
@@ -67,6 +68,7 @@ type UpdateWebhookOptions struct {
 	URL       string   `json:"url,omitempty"`
 	Enabled   *bool    `json:"enabled,omitempty"`
 	Events    []string `json:"events,omitempty"`
+	Version   *int     `json:"version,omitempty"`
 }
 
 func (s *webhookService) List(ctx context.Context, options *ListWebhookOptions) (*WebhookRoot, *Response, error) {
