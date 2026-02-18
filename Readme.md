@@ -1919,6 +1919,7 @@ func main() {
 		URL:      "https://test.com",
 		Enabled:  mailersend.Bool(false),
 		Events:   events,
+		Version:  mailersend.Int(2),
 	}
 	
 	_, _, err := ms.Webhook.Create(ctx, createOptions)
@@ -1957,6 +1958,7 @@ func main() {
 		WebhookID: webhookID,
 		Enabled:   mailersend.Bool(true),
 		Events:    events,
+		Version:   mailersend.Int(2),
 	}
 	
 	_, _, err := ms.Webhook.Update(ctx, updateOptions)
