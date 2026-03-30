@@ -49,6 +49,7 @@ type Mailersend struct {
 	ApiQuota          ApiQuotaService
 	SmtpUser          SmtpUserService
 	User              UserService
+	DmarcMonitoring   DmarcMonitoringService
 }
 
 type service struct {
@@ -136,6 +137,7 @@ func NewMailersend(apiKey string) *Mailersend {
 	ms.ApiQuota = &apiQuotaService{&ms.common}
 	ms.SmtpUser = &smtpUserService{&ms.common}
 	ms.User = &userService{&ms.common}
+	ms.DmarcMonitoring = &dmarcMonitoringService{&ms.common}
 
 	return ms
 }

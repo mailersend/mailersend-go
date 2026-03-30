@@ -125,6 +125,16 @@ MailerSend Golang SDK
       - [Invite a user](#invite-a-user)
       - [Update a user](#update-a-user)
       - [Delete a user](#delete-a-user)
+   - [DMARC Monitoring](#dmarc-monitoring)
+      - [Get a list of DMARC monitors](#get-a-list-of-dmarc-monitors)
+      - [Create a DMARC monitor](#create-a-dmarc-monitor)
+      - [Update a DMARC monitor](#update-a-dmarc-monitor)
+      - [Delete a DMARC monitor](#delete-a-dmarc-monitor)
+      - [Get aggregated DMARC report](#get-aggregated-dmarc-report)
+      - [Get IP-specific DMARC report](#get-ip-specific-dmarc-report)
+      - [Get DMARC report sources](#get-dmarc-report-sources)
+      - [Mark an IP as favorite](#mark-an-ip-as-favorite)
+      - [Remove an IP from favorites](#remove-an-ip-from-favorites)
 	- [Other Endpoints](#other-endpoints)
 	  - [Get an API Quota](#get-an-api-quota)
 - [Types](#types)
@@ -3622,6 +3632,286 @@ func main() {
 	defer cancel()
 
 	_, err := ms.User.Delete(ctx, "user-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+## DMARC Monitoring
+
+### Get a list of DMARC monitors
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.ListDmarcMonitorOptions{
+		Page:  1,
+		Limit: 25,
+	}
+
+	_, _, err := ms.DmarcMonitoring.List(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Create a DMARC monitor
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.CreateDmarcMonitorOptions{
+		DomainID: "domain-id",
+	}
+
+	_, _, err := ms.DmarcMonitoring.Create(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Update a DMARC monitor
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.UpdateDmarcMonitorOptions{
+		MonitorID:         "monitor-id",
+		WantedDmarcRecord: "v=DMARC1; p=reject;",
+	}
+
+	_, _, err := ms.DmarcMonitoring.Update(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Delete a DMARC monitor
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, err := ms.DmarcMonitoring.Delete(ctx, "monitor-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get aggregated DMARC report
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.ListDmarcReportOptions{
+		MonitorID: "monitor-id",
+		Page:      1,
+		Limit:     25,
+	}
+
+	_, _, err := ms.DmarcMonitoring.GetAggregatedReport(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get IP-specific DMARC report
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.DmarcMonitoring.GetIPReport(ctx, "monitor-id", "1.2.3.4")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get DMARC report sources
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.ListDmarcReportSourcesOptions{
+		MonitorID: "monitor-id",
+		Page:      1,
+		Limit:     25,
+	}
+
+	_, _, err := ms.DmarcMonitoring.GetReportSources(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Mark an IP as favorite
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, err := ms.DmarcMonitoring.MarkIPFavorite(ctx, "monitor-id", "1.2.3.4")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Remove an IP from favorites
+
+```go
+package main
+
+import (
+	"context"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, err := ms.DmarcMonitoring.RemoveIPFavorite(ctx, "monitor-id", "1.2.3.4")
 	if err != nil {
 		log.Fatal(err)
 	}
