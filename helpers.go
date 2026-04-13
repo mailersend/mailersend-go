@@ -6,6 +6,7 @@ const (
 	EventActivityDelivered       = "activity.delivered"        // Fired when your email is successfully delivered with no errors.
 	EventActivitySoftBounced     = "activity.soft_bounced"     // Fired when your email is not delivered because it soft bounced.
 	EventActivityHardBounced     = "activity.hard_bounced"     // Fired when your email is not delivered.
+	EventActivityDeferred        = "activity.deferred"         // Fired when your email is temporarily deferred by the receiving server.
 	EventActivityOpened          = "activity.opened"           // Fired when the recipient receives your email and opens it.
 	EventActivityOpenedUnique    = "activity.opened_unique"    // Fired when the recipient receives your email and opens it only for the first time.
 	EventActivityClicked         = "activity.clicked"          // Fired when the recipient clicks a link in your email.
@@ -30,4 +31,21 @@ const (
 // Inbound forward-related event constants
 const (
 	EventInboundForwardFailed = "inbound_forward.failed" // Fired when an inbound message fails to forward.
+)
+
+// Email verification-related event constants
+const (
+	EventEmailSingleVerified = "email_single.verified" // Fired when a single email address has been successfully verified.
+	EventEmailListVerified   = "email_list.verified"   // Fired when an email list has been successfully verified.
+)
+
+// Bulk email-related event constants
+const (
+	EventBulkEmailCompleted = "bulk_email.completed" // Fired when a bulk email sending has been completed.
+)
+
+// Recipient-related event constants
+const (
+	EventRecipientOnHoldAdded   = "recipient.on_hold_added"   // Fired when a recipient is added to the on-hold list.
+	EventRecipientOnHoldRemoved = "recipient.on_hold_removed" // Fired when a recipient is removed from the on-hold list.
 )
