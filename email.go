@@ -33,6 +33,7 @@ type Message struct {
 	Text        string       `json:"text,omitempty"`
 	HTML        string       `json:"html,omitempty"`
 	TemplateID  string       `json:"template_id,omitempty"`
+	Language    string       `json:"language,omitempty"`
 	SendAt      int64        `json:"send_at,omitempty"`
 	Tags        []string     `json:"tags,omitempty"`
 	Attachments []Attachment `json:"attachments,omitempty"`
@@ -155,6 +156,12 @@ func (m *Message) SetText(text string) {
 // SetTemplateID - Set the template ID.
 func (m *Message) SetTemplateID(templateID string) {
 	m.TemplateID = templateID
+}
+
+// SetLanguage - Set the language used for the template (language code, e.g. "de", "pt-BR").
+// Only meaningful when a template is set; ignored for raw html/text sends.
+func (m *Message) SetLanguage(language string) {
+	m.Language = language
 }
 
 // Deprecated: SetSubstitutions - Set the template substitutions.
