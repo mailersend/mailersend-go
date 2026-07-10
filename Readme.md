@@ -351,7 +351,11 @@ func main() {
 	message.SetSubject(subject)
 	message.SetTemplateID("template-id")
 	message.SetSubstitutions(variables)
-	
+
+	// Optional: language code for the template (e.g. "de", "fr", "pt-BR").
+	// Supported: de, en, es, fr, it, lt, nl, pl, pt-BR. Only used with a template.
+	message.SetLanguage("pt-BR")
+
 	res, _ := ms.Email.Send(ctx, message)
 
 	fmt.Printf(res.Header.Get("X-Message-Id"))
