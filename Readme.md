@@ -679,6 +679,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"log"
 	"time"
@@ -702,11 +703,19 @@ func main() {
 		DomainID: domainID,
 		DateFrom: from, 
 		DateTo: to,
+		Event: []string{"suppressed"},
 	}
 	
-	_, _, err := ms.Activity.List(ctx, options)
+	res, _, err := ms.Activity.List(ctx, options)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	// For activities with Type "suppressed", SuppressionReason explains why the
+	// recipient was suppressed (on_hold, hard_bounced, unsubscribed,
+	// spam_complained or blocklisted). It is empty for all other types.
+	for _, activity := range res.Data {
+		fmt.Printf("%s %s\n", activity.Type, activity.SuppressionReason)
 	}
 }
 ```
