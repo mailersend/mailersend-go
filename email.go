@@ -2,14 +2,18 @@ package mailersend
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 )
 
 const emailBasePath = "/email"
+const emailsBasePath = "/emails"
 
 type EmailService interface {
 	NewMessage() *Message
 	Send(ctx context.Context, message *Message) (*Response, error)
+	List(ctx context.Context, options *ListEmailOptions) (*EmailRoot, *Response, error)
+	Get(ctx context.Context, emailID string) (*SingleEmailRoot, *Response, error)
 }
 
 type emailService struct {
@@ -237,4 +241,136 @@ func (s *emailService) Send(ctx context.Context, message *Message) (*Response, e
 	}
 
 	return s.client.do(ctx, req, nil)
+}
+
+// EmailRoot - format of the emails list response. Links.Last is always empty
+// because the API does not report a last page for this endpoint.
+type EmailRoot struct {
+	Data  []EmailData `json:"data"`
+	Links Links       `json:"links"`
+	Meta  Meta        `json:"meta"`
+}
+
+// EmailData - a single email in the emails list. Text and HTML are always nil in
+// list rows, use EmailService.Get to read the content. Tags is nil when the email
+// was sent without tags, TemplateID is nil when no template was used and
+// SuppressionReason is only set when Status is "rejected".
+//
+// Headers is a list of {name, value} objects, the same shape as Message.Headers,
+// not a flat name-to-value map.
+type EmailData struct {
+	ID                string      `json:"id"`
+	From              string      `json:"from"`
+	To                string      `json:"to"`
+	Subject           string      `json:"subject"`
+	Text              *string     `json:"text"`
+	HTML              *string     `json:"html"`
+	TemplateID        *string     `json:"template_id"`
+	DomainID          string      `json:"domain_id"`
+	MessageID         string      `json:"message_id"`
+	Status            string      `json:"status"`
+	Tags              []string    `json:"tags"`
+	Interaction       []string    `json:"interaction"`
+	SuppressionReason *string     `json:"suppression_reason"`
+	CreatedAt         string      `json:"created_at"`
+	UpdatedAt         string      `json:"updated_at"`
+	Headers           interface{} `json:"headers"`
+}
+
+// SingleEmailRoot - format of the single email response
+type SingleEmailRoot struct {
+	Data SingleEmail `json:"data"`
+}
+
+// SingleEmail - a single email with its content and its activity events.
+// Text and HTML are nil when content tracking is disabled for the domain and
+// TemplateID is nil when no template was used; Activity is returned either way.
+//
+// Headers is a list of {name, value} objects, the same shape as Message.Headers,
+// not a flat name-to-value map.
+type SingleEmail struct {
+	ID                string            `json:"id"`
+	From              string            `json:"from"`
+	To                string            `json:"to"`
+	Subject           string            `json:"subject"`
+	Text              *string           `json:"text"`
+	HTML              *string           `json:"html"`
+	TemplateID        *string           `json:"template_id"`
+	DomainID          string            `json:"domain_id"`
+	MessageID         string            `json:"message_id"`
+	Status            string            `json:"status"`
+	Tags              []string          `json:"tags"`
+	Interaction       []string          `json:"interaction"`
+	SuppressionReason *string           `json:"suppression_reason"`
+	CreatedAt         string            `json:"created_at"`
+	UpdatedAt         string            `json:"updated_at"`
+	Recipient         ActivityRecipient `json:"recipient"`
+	Headers           interface{}       `json:"headers"`
+	Activity          []EmailActivity   `json:"activity"`
+}
+
+// EmailActivity - an activity event recorded for an email, newest first and capped
+// at 200 events per email. SuppressionReason is only present on "suppressed" events
+// and is one of on_hold, hard_bounced, unsubscribed, spam_complained or blocklisted.
+type EmailActivity struct {
+	ID                string  `json:"id"`
+	Type              string  `json:"type"`
+	CreatedAt         string  `json:"created_at"`
+	SuppressionReason *string `json:"suppression_reason,omitempty"`
+}
+
+// ListEmailOptions - modifies the behavior of EmailService.List method.
+//
+// DomainID, DateFrom and DateTo are required. Status and Interaction are always
+// sent as arrays, as the API rejects scalar values for them.
+//
+// Page is 1-based and capped at 1000, Limit is between 10 and 100 and defaults
+// to 25.
+type ListEmailOptions struct {
+	DomainID       string   `url:"domain_id"`
+	DateFrom       int64    `url:"date_from"`
+	DateTo         int64    `url:"date_to"`
+	Page           int      `url:"page,omitempty"`
+	Limit          int      `url:"limit,omitempty"`
+	Status         []string `url:"status[],omitempty"`
+	Interaction    []string `url:"interaction[],omitempty"`
+	RecipientEmail string   `url:"recipient_email,omitempty"`
+	MessageID      string   `url:"message_id,omitempty"`
+	TemplateID     string   `url:"template_id,omitempty"`
+	Subject        string   `url:"subject,omitempty"`
+	Tag            string   `url:"tag,omitempty"`
+}
+
+// List - get a list of emails sent from a domain, newest first.
+func (s *emailService) List(ctx context.Context, options *ListEmailOptions) (*EmailRoot, *Response, error) {
+	req, err := s.client.newRequest(http.MethodGet, emailsBasePath, options)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	root := new(EmailRoot)
+	res, err := s.client.do(ctx, req, root)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return root, res, nil
+}
+
+// Get - get a single email together with its activity events.
+func (s *emailService) Get(ctx context.Context, emailID string) (*SingleEmailRoot, *Response, error) {
+	path := fmt.Sprintf("%s/%s", emailBasePath, emailID)
+
+	req, err := s.client.newRequest(http.MethodGet, path, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	root := new(SingleEmailRoot)
+	res, err := s.client.do(ctx, req, root)
+	if err != nil {
+		return nil, res, err
+	}
+
+	return root, res, nil
 }

@@ -15,6 +15,8 @@ MailerSend Golang SDK
        - [Personalization](#personalization)
        - [Send email with attachment](#send-email-with-attachment)
        - [Send email with inline attachment](#send-email-with-inline-attachment)
+       - [Get a list of emails](#get-a-list-of-emails)
+       - [Get a single email](#get-a-single-email)
     - [Bulk Email](#bulk-email)
        - [Send bulk email](#send-bulk-email)
        - [Get bulk email status](#get-bulk-email-status)
@@ -572,6 +574,176 @@ func main() {
 
 	fmt.Printf(res.Header.Get("X-Message-Id"))
 
+}
+```
+
+### Get a list of emails
+
+Returns one row per email sent from a domain, newest first. `DomainID`, `DateFrom` and `DateTo` are required, so every query is bounded to a single domain and a single time window.
+
+| Option           | Type       | Required | Details                                                                                     |
+| ---------------- | ---------- | -------- | ------------------------------------------------------------------------------------------- |
+| `DomainID`       | `string`   | yes      | Must be a domain that belongs to your account. An unknown ID returns `404`.                 |
+| `DateFrom`       | `int64`    | yes      | Unix timestamp, assumed `UTC`. Bounded by your plan's data retention limit (1–30 days).      |
+| `DateTo`         | `int64`    | yes      | Unix timestamp, assumed `UTC`. Must be higher than `DateFrom` and must not be in the future. |
+| `Page`           | `int`      | no       | Min `1`, max `1000`, default `1`.                                                           |
+| `Limit`          | `int`      | no       | Min `10`, max `100`, default `25`.                                                          |
+| `Status`         | `[]string` | no       | Any of `queued`, `sent`, `rejected`, `delivered`. Combined with `OR`.                        |
+| `Interaction`    | `[]string` | no       | Any of `opened`, `clicked`, `unsubscribed`, `complained`, `no_interaction`. Combined with `OR`. |
+| `RecipientEmail` | `string`   | no       | Exact, case-insensitive match on a valid email address.                                     |
+| `MessageID`      | `string`   | no       | Alphanumeric, exact match.                                                                  |
+| `TemplateID`     | `string`   | no       | Exact match.                                                                                |
+| `Subject`        | `string`   | no       | Partial, case-insensitive match. Min `3` characters.                                        |
+| `Tag`            | `string`   | no       | Exact match against a value in the email's tags.                                            |
+
+`Status` and `Interaction` are sent as `status[]` and `interaction[]`; values within a filter are combined with `OR` and the two filters are combined with `AND`. `no_interaction` matches emails with none of `opened`, `clicked`, `unsubscribed` or `complained` recorded — it is a filter value only and is never returned in a response.
+
+A filter that matches nothing, including an unknown `RecipientEmail`, returns an empty `Data` slice rather than a `404`.
+
+`Text` and `HTML` are always `nil` in list rows — use [`ms.Email.Get`](#get-a-single-email) to read the content of an email.
+
+> **Note:** This endpoint requires a token with either the `activity_read` or the `activity_full` scope.
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	from := time.Now().Add(-24 * time.Hour).Unix()
+	to := time.Now().Unix()
+
+	options := &mailersend.ListEmailOptions{
+		DomainID:    "domain-id",
+		DateFrom:    from,
+		DateTo:      to,
+		Limit:       50,
+		Status:      []string{"sent", "delivered"},
+		Interaction: []string{"opened"},
+	}
+
+	res, _, err := ms.Email.List(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Tags, TemplateID and SuppressionReason are nil when the API returns null.
+	for _, email := range res.Data {
+		fmt.Printf("%s %s %s\n", email.ID, email.Status, email.To)
+	}
+}
+```
+
+This endpoint is paginated the same way as [`ms.Activity.List`](#get-a-list-of-activities), and returns the same `Links` and `Meta` structs. To walk the whole result set, keep the required parameters and the filters unchanged and increment `Page` until a response comes back with an empty `Links.Next`. The response carries no total and `Links.Last` is always empty, so `Links.Next` is the only stop signal:
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
+
+	options := &mailersend.ListEmailOptions{
+		DomainID: "domain-id",
+		DateFrom: time.Now().Add(-24 * time.Hour).Unix(),
+		DateTo:   time.Now().Unix(),
+		Page:     1,
+		Limit:    100,
+	}
+
+	for {
+		res, _, err := ms.Email.List(ctx, options)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, email := range res.Data {
+			fmt.Println(email.ID)
+		}
+
+		// There is no total and no last page, so Links.Next is the only stop signal.
+		if res.Links.Next == "" {
+			break
+		}
+
+		options.Page++
+	}
+}
+```
+
+### Get a single email
+
+Returns a single email, its content and its activity events.
+
+| Option    | Type     | Required | Details                                                     |
+| --------- | -------- | -------- | ----------------------------------------------------------- |
+| `emailID` | `string` | yes      | The `ID` of an email, as returned by `ms.Email.List`.       |
+
+The `Activity` slice holds the events recorded for the email, newest first, capped at 200 events per email. Use `ms.Activity.List` if you need the complete event history for a domain. The `junk` event type is reported as `soft_bounced`, and `deferred` and `suppressed` events are only included if your plan has those features enabled. `Activity` is returned even when content tracking is disabled for the domain — in that case `Text` and `HTML` are `nil` but the events are still present. `TemplateID` is `nil` when the email was sent without a template.
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	"log"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	emailID := "email-id"
+
+	res, _, err := ms.Email.Get(ctx, emailID)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("%s %s\n", res.Data.Status, res.Data.Subject)
+
+	// SuppressionReason is only set on "suppressed" events.
+	for _, activity := range res.Data.Activity {
+		fmt.Printf("%s %s\n", activity.Type, activity.CreatedAt)
+	}
 }
 ```
 
