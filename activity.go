@@ -23,12 +23,16 @@ type ActivityRoot struct {
 	Meta  Meta           `json:"meta"`
 }
 
+// ActivityData - a single activity record. SuppressionReason is only returned when
+// Type is "suppressed", and is one of on_hold, hard_bounced, unsubscribed,
+// spam_complained or blocklisted. It is empty for every other activity type.
 type ActivityData struct {
-	ID        string        `json:"id"`
-	CreatedAt string        `json:"created_at"`
-	UpdatedAt string        `json:"updated_at"`
-	Type      string        `json:"type"`
-	Email     ActivityEmail `json:"email"`
+	ID                string        `json:"id"`
+	CreatedAt         string        `json:"created_at"`
+	UpdatedAt         string        `json:"updated_at"`
+	Type              string        `json:"type"`
+	SuppressionReason string        `json:"suppression_reason,omitempty"`
+	Email             ActivityEmail `json:"email"`
 }
 
 type ActivityEmail struct {

@@ -3,6 +3,7 @@ package mailersend_test
 import (
 	"bufio"
 	"encoding/base64"
+	"encoding/json"
 	"io"
 	"os"
 	"testing"
@@ -10,6 +11,8 @@ import (
 	"github.com/mailersend/mailersend-go"
 	"github.com/stretchr/testify/assert"
 )
+
+const language = "pt-BR"
 
 const (
 	fromName  = "Your Name"
@@ -148,6 +151,29 @@ func TestTemplateMessage(t *testing.T) {
 	assert.Equal(t, templateID, message.TemplateID)
 	assert.Equal(t, personalization, message.Personalization)
 	assert.Equal(t, tags, message.Tags)
+}
+
+func TestTemplateLanguageMessage(t *testing.T) {
+	message := basicEmail()
+
+	message.SetTemplateID(templateID)
+	message.SetLanguage(language)
+
+	assert.Equal(t, language, message.Language)
+
+	body, err := json.Marshal(message)
+	assert.NoError(t, err)
+	assert.Contains(t, string(body), `"language":"pt-BR"`)
+}
+
+func TestLanguageOmittedWhenEmpty(t *testing.T) {
+	message := basicEmail()
+
+	assert.Empty(t, message.Language)
+
+	body, err := json.Marshal(message)
+	assert.NoError(t, err)
+	assert.NotContains(t, string(body), `"language"`)
 }
 
 func TestFullMessage(t *testing.T) {

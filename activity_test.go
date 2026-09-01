@@ -54,3 +54,25 @@ func TestCanMockActivity(t *testing.T) {
 	assert.Equal(t, to, options.DateTo)
 
 }
+
+func TestCanMockActivityWithSuppressedEventFilter(t *testing.T) {
+	ms := mailersend.NewMailersend(testKey)
+
+	client := NewTestClient(func(req *http.Request) *http.Response {
+		// Test request parameters
+
+		assert.Equal(t, "https://api.mailersend.com/v1/activity/domain-id?event%5B%5D=suppressed", req.URL.String())
+		return &http.Response{
+			StatusCode: http.StatusAccepted,
+			Body:       io.NopCloser(bytes.NewBufferString(`OK`)),
+		}
+	})
+
+	ctx := context.TODO()
+
+	ms.SetClient(client)
+
+	options := &mailersend.ActivityOptions{DomainID: "domain-id", Event: []string{"suppressed"}}
+
+	_, _, _ = ms.Activity.List(ctx, options)
+}
