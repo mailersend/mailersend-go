@@ -75,6 +75,9 @@ MailerSend Golang SDK
        - [Create an email verification list](#create-an-email-verification-list)
        - [Verify an email list](#verify-an-email-list)
        - [Get email verification list results](#get-email-verification-list-results)
+    - [WhatsApp](#whatsapp)
+       - [Send a WhatsApp message](#send-a-whatsapp-message)
+       - [Send a WhatsApp message with personalization](#send-a-whatsapp-message-with-personalization)
     - [SMS](#sms)
        - [Send an SMS](#send-an-sms)
     - [SMS Messages](#sms-messages)
@@ -2313,6 +2316,105 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+```
+
+## WhatsApp
+
+### Send a WhatsApp message
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"os"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	message := ms.WhatsApp.NewMessage()
+	message.SetFrom("12345678901")
+	message.SetTo([]string{"19191234567"})
+	message.SetTemplateID("your-template-id")
+
+	res, err := ms.WhatsApp.Send(ctx, message)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(res.Header.Get("X-Message-Id"))
+}
+```
+
+### Send a WhatsApp message with personalization
+
+Values are positional: the first value in each array replaces `{{1}}` in that section of the template, the second replaces `{{2}}`, and so on. The number of values must match the number of variables the template has in that section, for every recipient.
+
+Only variables in URL buttons are personalized, so `Buttons` holds the URL parameters that get appended to each button's base URL, in the order the buttons appear in the template.
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"os"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	message := ms.WhatsApp.NewMessage()
+	message.SetFrom("12345678901")
+	message.SetTo([]string{"19191234567", "19199876543"})
+	message.SetTemplateID("your-template-id")
+
+	personalization := []mailersend.WhatsAppPersonalization{
+		{
+			To: "19191234567",
+			Data: mailersend.WhatsAppPersonalizationData{
+				Header:  []string{"John"},
+				Body:    []string{"order #1234", "tomorrow"},
+				Buttons: []string{"orders/1234"},
+			},
+		},
+		{
+			To: "19199876543",
+			Data: mailersend.WhatsAppPersonalizationData{
+				Header:  []string{"Jane"},
+				Body:    []string{"order #5678", "Friday"},
+				Buttons: []string{"orders/5678"},
+			},
+		},
+	}
+
+	message.SetPersonalization(personalization)
+
+	res, err := ms.WhatsApp.Send(ctx, message)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(res.Header.Get("X-Message-Id"))
 }
 ```
 

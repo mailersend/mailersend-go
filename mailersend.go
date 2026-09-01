@@ -50,6 +50,7 @@ type Mailersend struct {
 	SmtpUser          SmtpUserService
 	User              UserService
 	DmarcMonitoring   DmarcMonitoringService
+	WhatsApp          WhatsAppService
 }
 
 type service struct {
@@ -138,6 +139,7 @@ func NewMailersend(apiKey string) *Mailersend {
 	ms.SmtpUser = &smtpUserService{&ms.common}
 	ms.User = &userService{&ms.common}
 	ms.DmarcMonitoring = &dmarcMonitoringService{&ms.common}
+	ms.WhatsApp = &whatsAppService{&ms.common}
 
 	return ms
 }
