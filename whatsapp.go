@@ -21,7 +21,7 @@ type whatsAppService struct {
 type WhatsAppMessage struct {
 	From            string                    `json:"from"`
 	To              []string                  `json:"to"`
-	TemplateId      string                    `json:"template_id"`
+	TemplateID      string                    `json:"template_id"`
 	Personalization []WhatsAppPersonalization `json:"personalization,omitempty"`
 }
 
@@ -53,9 +53,9 @@ func (m *WhatsAppMessage) SetTo(to []string) {
 	m.To = to
 }
 
-// SetTemplateId - Set the approved WhatsApp template ID.
-func (m *WhatsAppMessage) SetTemplateId(templateId string) {
-	m.TemplateId = templateId
+// SetTemplateID - Set the approved WhatsApp template ID.
+func (m *WhatsAppMessage) SetTemplateID(templateID string) {
+	m.TemplateID = templateID
 }
 
 // SetPersonalization - Set per-recipient template variable personalization.

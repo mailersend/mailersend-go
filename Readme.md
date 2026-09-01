@@ -2346,7 +2346,7 @@ func main() {
 	message := ms.WhatsApp.NewMessage()
 	message.SetFrom("12345678901")
 	message.SetTo([]string{"19191234567"})
-	message.SetTemplateId("your-template-id")
+	message.SetTemplateID("your-template-id")
 
 	res, err := ms.WhatsApp.Send(ctx, message)
 	if err != nil {
@@ -2358,6 +2358,10 @@ func main() {
 ```
 
 ### Send a WhatsApp message with personalization
+
+Values are positional: the first value in each array replaces `{{1}}` in that section of the template, the second replaces `{{2}}`, and so on. The number of values must match the number of variables the template has in that section, for every recipient.
+
+Only variables in URL buttons are personalized, so `Buttons` holds the URL parameters that get appended to each button's base URL, in the order the buttons appear in the template.
 
 ```go
 package main
@@ -2382,7 +2386,7 @@ func main() {
 	message := ms.WhatsApp.NewMessage()
 	message.SetFrom("12345678901")
 	message.SetTo([]string{"19191234567", "19199876543"})
-	message.SetTemplateId("your-template-id")
+	message.SetTemplateID("your-template-id")
 
 	personalization := []mailersend.WhatsAppPersonalization{
 		{
@@ -2390,7 +2394,7 @@ func main() {
 			Data: mailersend.WhatsAppPersonalizationData{
 				Header:  []string{"John"},
 				Body:    []string{"order #1234", "tomorrow"},
-				Buttons: []string{"https://example.com/track/1234"},
+				Buttons: []string{"orders/1234"},
 			},
 		},
 		{
@@ -2398,7 +2402,7 @@ func main() {
 			Data: mailersend.WhatsAppPersonalizationData{
 				Header:  []string{"Jane"},
 				Body:    []string{"order #5678", "Friday"},
-				Buttons: []string{"https://example.com/track/5678"},
+				Buttons: []string{"orders/5678"},
 			},
 		},
 	}
