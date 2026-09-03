@@ -82,11 +82,12 @@ func (r *AuthError) Error() string { return (*ErrorResponse)(r).Error() }
 
 // Meta - used for api responses
 type Meta struct {
-	CurrentPage json.Number `json:"current_page"`
-	From        json.Number `json:"from"`
-	Path        string      `json:"path"`
-	PerPage     json.Number `json:"per_page"`
-	To          json.Number `json:"to"`
+	CurrentPage    json.Number `json:"current_page"`
+	CurrentPageURL string      `json:"current_page_url"`
+	From           json.Number `json:"from"`
+	Path           string      `json:"path"`
+	PerPage        json.Number `json:"per_page"`
+	To             json.Number `json:"to"`
 }
 
 // Links - used for api responses
