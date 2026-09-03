@@ -586,8 +586,8 @@ Returns one row per email sent from a domain, newest first. `DomainID`, `DateFro
 | `DomainID`       | `string`   | yes      | Must be a domain that belongs to your account. An unknown ID returns `404`.                 |
 | `DateFrom`       | `int64`    | yes      | Unix timestamp, assumed `UTC`. Bounded by your plan's data retention limit (1–30 days).      |
 | `DateTo`         | `int64`    | yes      | Unix timestamp, assumed `UTC`. Must be higher than `DateFrom` and must not be in the future. |
-| `Page`           | `int`      | no       | Min `1`, max `1000`, default `1`.                                                           |
-| `Limit`          | `int`      | no       | Min `10`, max `100`, default `25`.                                                          |
+| `Page`           | `int`      | no       | Min `1`, max `100`, default `1`.                                                            |
+| `Limit`          | `int`      | no       | Min `10`, max `1000`, default `25`.                                                         |
 | `Status`         | `[]string` | no       | Any of `queued`, `sent`, `rejected`, `delivered`. Combined with `OR`.                        |
 | `Interaction`    | `[]string` | no       | Any of `opened`, `clicked`, `unsubscribed`, `complained`, `no_interaction`. Combined with `OR`. |
 | `RecipientEmail` | `string`   | no       | Exact, case-insensitive match on a valid email address.                                     |

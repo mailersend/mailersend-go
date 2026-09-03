@@ -324,7 +324,7 @@ type EmailActivity struct {
 // DomainID, DateFrom and DateTo are required. Status and Interaction are always
 // sent as arrays, as the API rejects scalar values for them.
 //
-// Page is 1-based and capped at 1000, Limit is between 10 and 100 and defaults
+// Page is 1-based and capped at 100, Limit is between 10 and 1000 and defaults
 // to 25.
 type ListEmailOptions struct {
 	DomainID       string   `url:"domain_id"`
