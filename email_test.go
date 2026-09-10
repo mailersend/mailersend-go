@@ -248,6 +248,35 @@ func TestFullMessageNew(t *testing.T) {
 
 }
 
+func TestSettingsOmittedWhenNotSet(t *testing.T) {
+	message := basicEmail()
+
+	assert.Nil(t, message.Settings)
+
+	body, err := json.Marshal(message)
+	assert.NoError(t, err)
+	assert.NotContains(t, string(body), `"settings"`)
+}
+
+func TestCanSetSettings(t *testing.T) {
+	message := basicEmail()
+
+	message.SetSettings(&mailersend.Settings{
+		TrackContent: mailersend.Bool(true),
+	})
+
+	assert.NotNil(t, message.Settings)
+	assert.Equal(t, mailersend.Bool(true), message.Settings.TrackContent)
+	assert.Nil(t, message.Settings.TrackClicks)
+	assert.Nil(t, message.Settings.TrackOpens)
+
+	body, err := json.Marshal(message)
+	assert.NoError(t, err)
+	assert.Contains(t, string(body), `"settings":{"track_content":true}`)
+	assert.NotContains(t, string(body), `"track_clicks"`)
+	assert.NotContains(t, string(body), `"track_opens"`)
+}
+
 func TestCanAddAttachments(t *testing.T) {
 	message := basicEmail()
 
