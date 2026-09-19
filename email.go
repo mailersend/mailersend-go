@@ -44,7 +44,7 @@ type Message struct {
 	ListUnsubscribe   string            `json:"list_unsubscribe"`
 	PrecedenceBulk    bool              `json:"precedence_bulk,omitempty"`
 	References        []string          `json:"references,omitempty"`
-	Settings          Settings          `json:"settings,omitempty"`
+	Settings          *Settings         `json:"settings,omitempty"`
 }
 
 // From - simple struct to declare from name/ email
@@ -93,9 +93,9 @@ type Attachment struct {
 
 // Settings - you can set email Settings
 type Settings struct {
-	TrackClicks  bool `json:"track_clicks"`
-	TrackOpens   bool `json:"track_opens"`
-	TrackContent bool `json:"track_content"`
+	TrackClicks  *bool `json:"track_clicks,omitempty"`
+	TrackOpens   *bool `json:"track_opens,omitempty"`
+	TrackContent *bool `json:"track_content,omitempty"`
 }
 
 // Deprecated: NewMessage - Setup a new message ready to be sent
@@ -214,8 +214,10 @@ func (m *Message) AddReference(reference string) {
 	m.References = append(m.References, reference)
 }
 
-// SetSettings - Set settings
-func (m *Message) SetSettings(settings Settings) {
+// SetSettings - Set settings. Only the fields explicitly set on Settings (using
+// pointers, e.g. via mailersend.Bool) will be sent to the API; unset fields are
+// omitted so the domain-level defaults apply instead of being overridden with false.
+func (m *Message) SetSettings(settings *Settings) {
 	m.Settings = settings
 }
 
