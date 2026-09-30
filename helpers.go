@@ -49,3 +49,9 @@ const (
 	EventRecipientOnHoldAdded   = "recipient.on_hold_added"   // Fired when a recipient is added to the on-hold list.
 	EventRecipientOnHoldRemoved = "recipient.on_hold_removed" // Fired when a recipient is removed from the on-hold list.
 )
+
+// Reputation-related event constants
+const (
+	EventDomainReputationChanged  = "domain.reputation_changed"  // Fired when the reputation status of a domain changes.
+	EventAccountReputationChanged = "account.reputation_changed" // Fired when the reputation status of the account changes.
+)
