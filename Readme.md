@@ -78,6 +78,15 @@ MailerSend Golang SDK
     - [WhatsApp](#whatsapp)
        - [Send a WhatsApp message](#send-a-whatsapp-message)
        - [Send a WhatsApp message with personalization](#send-a-whatsapp-message-with-personalization)
+    - [WhatsApp Messages](#whatsapp-messages)
+       - [Get a list of WhatsApp messages](#get-a-list-of-whatsapp-messages)
+       - [Get a WhatsApp message](#get-a-whatsapp-message)
+    - [WhatsApp Inbound Messages](#whatsapp-inbound-messages)
+       - [Get a list of WhatsApp inbound messages](#get-a-list-of-whatsapp-inbound-messages)
+       - [Get a WhatsApp inbound message](#get-a-whatsapp-inbound-message)
+    - [WhatsApp Recipients](#whatsapp-recipients)
+       - [Get a list of WhatsApp recipients](#get-a-list-of-whatsapp-recipients)
+       - [Get a WhatsApp recipient](#get-a-whatsapp-recipient)
     - [SMS](#sms)
        - [Send an SMS](#send-an-sms)
     - [SMS Messages](#sms-messages)
@@ -2415,6 +2424,219 @@ func main() {
 	}
 
 	fmt.Println(res.Header.Get("X-Message-Id"))
+}
+```
+
+## WhatsApp Messages
+
+Requires a token with the `whatsapp_read` or `whatsapp_full` scope. Sent messages are kept for 7 days.
+
+### Get a list of WhatsApp messages
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.ListWhatsAppMessageOptions{
+		Page:  1,
+		Limit: 25,
+	}
+
+	_, _, err := ms.WhatsAppMessage.List(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get a WhatsApp message
+
+The response includes the status, error and activity of each recipient.
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.WhatsAppMessage.Get(ctx, "message-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+## WhatsApp Inbound Messages
+
+Requires a token with the `whatsapp_read` or `whatsapp_full` scope.
+
+### Get a list of WhatsApp inbound messages
+
+All filters are optional. `Type` accepts `text`, `image`, `audio`, `video`, `document`, `sticker`, `location`, `contacts`, `interactive`, `button`, `order`, `reaction`, `system`, `unknown` and `unsupported`; multiple values are combined with OR. `DateFrom` and `DateTo` are exclusive Unix timestamps, and `DateTo` must be after `DateFrom`.
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	from := time.Now().Add(-24 * time.Hour).Unix()
+	to := time.Now().Unix()
+
+	options := &mailersend.ListWhatsAppInboundMessageOptions{
+		WhatsAppAccountID: "whatsapp-account-id",
+		Type:              []string{"text", "image"},
+		DateFrom:          from,
+		DateTo:            to,
+		Page:              1,
+		Limit:             25,
+	}
+
+	_, _, err := ms.WhatsAppInboundMessage.List(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get a WhatsApp inbound message
+
+Each inbound message has one content field set, determined by its `Type`: `Text`, `Attachment` (for `image`, `audio`, `video`, `document` and `sticker`), `Location`, `Contacts`, `Reaction`, `Button`, `ListReply` or `Interactive`, or the raw payload in `Order`, `System`, `Unknown` or `Unsupported`. `Context` is set when the message is a reply.
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.WhatsAppInboundMessage.Get(ctx, "inbound-message-id")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+## WhatsApp Recipients
+
+Requires a token with the `whatsapp_read` or `whatsapp_full` scope.
+
+### Get a list of WhatsApp recipients
+
+`Status` accepts `active`, `invalid`, `suppressed` or `blocked`. The list uses simple pagination: keep requesting the next page until `Links.Next` is empty.
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	options := &mailersend.ListWhatsAppRecipientOptions{
+		Status: "active",
+		Page:   1,
+		Limit:  25,
+	}
+
+	_, _, err := ms.WhatsAppRecipient.List(ctx, options)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+### Get a WhatsApp recipient
+
+The response includes the recipient's latest 25 messages.
+
+```go
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	ms := mailersend.NewMailersend(os.Getenv("API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	_, _, err := ms.WhatsAppRecipient.Get(ctx, "recipient-id")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 ```
 
