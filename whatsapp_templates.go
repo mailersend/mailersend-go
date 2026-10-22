@@ -46,12 +46,18 @@ type WhatsAppTemplateData struct {
 
 // WhatsAppTemplateComponents - the content of a template. Header and Body are nil when the template has none
 type WhatsAppTemplateComponents struct {
-	Header  *WhatsAppTemplateTextComponent `json:"header"`
+	Header  *WhatsAppTemplateHeader        `json:"header"`
 	Body    *WhatsAppTemplateTextComponent `json:"body"`
 	Buttons []WhatsAppTemplateButton       `json:"buttons"`
 }
 
-// WhatsAppTemplateTextComponent - Text includes any variable placeholders, and is nil for a component without text such as a media header
+// WhatsAppTemplateHeader - Format is TEXT, IMAGE, VIDEO, DOCUMENT or LOCATION, and Text is nil for a media header
+type WhatsAppTemplateHeader struct {
+	Format string  `json:"format"`
+	Text   *string `json:"text"`
+}
+
+// WhatsAppTemplateTextComponent - Text includes any variable placeholders, and is nil when the body has no text
 type WhatsAppTemplateTextComponent struct {
 	Text *string `json:"text"`
 }

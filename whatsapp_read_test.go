@@ -635,7 +635,7 @@ func TestWhatsAppTemplateService_ListWithFilters(t *testing.T) {
 					"language": "en_US",
 					"status": "approved",
 					"components": {
-						"header": {"text": "{{1}}"},
+						"header": {"format": "TEXT", "text": "{{1}}"},
 						"body": {"text": "Hi {{1}}, your order is confirmed and will arrive on {{2}}."},
 						"buttons": [
 							{"type": "URL", "text": "View order", "url": "https://shop.example.com/{{1}}"}
@@ -653,7 +653,7 @@ func TestWhatsAppTemplateService_ListWithFilters(t *testing.T) {
 					"language": "en_US",
 					"status": "approved",
 					"components": {
-						"header": {"text": null},
+						"header": {"format": "IMAGE", "text": null},
 						"body": null,
 						"buttons": [
 							{"type": "QUICK_REPLY", "text": "Change delivery time", "url": null}
@@ -686,6 +686,7 @@ func TestWhatsAppTemplateService_ListWithFilters(t *testing.T) {
 	assert.Equal(t, "UTILITY", template.Category)
 	assert.Equal(t, "en_US", template.Language)
 	assert.Equal(t, "approved", template.Status)
+	assert.Equal(t, "TEXT", template.Components.Header.Format)
 	assert.Equal(t, "{{1}}", *template.Components.Header.Text)
 	assert.Equal(t, "Hi {{1}}, your order is confirmed and will arrive on {{2}}.", *template.Components.Body.Text)
 	assert.Len(t, template.Components.Buttons, 1)
@@ -697,6 +698,7 @@ func TestWhatsAppTemplateService_ListWithFilters(t *testing.T) {
 
 	mediaHeader := root.Data[1].Components
 	assert.NotNil(t, mediaHeader.Header)
+	assert.Equal(t, "IMAGE", mediaHeader.Header.Format)
 	assert.Nil(t, mediaHeader.Header.Text)
 	assert.Nil(t, mediaHeader.Body)
 	assert.Equal(t, "QUICK_REPLY", mediaHeader.Buttons[0].Type)

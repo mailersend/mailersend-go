@@ -2997,7 +2997,7 @@ func main() {
 
 ### Get a WhatsApp template
 
-The template's `ID` is the `TemplateID` to send it with. `Components.Header` and `Components.Body` are nil when the template has none.
+The template's `ID` is the `TemplateID` to send it with. `Components.Header` and `Components.Body` are nil when the template has none. `Components.Header.Format` is `TEXT`, `IMAGE`, `VIDEO`, `DOCUMENT` or `LOCATION`.
 
 ```go
 package main
