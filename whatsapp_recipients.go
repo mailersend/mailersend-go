@@ -31,33 +31,22 @@ type WhatsAppSingleRecipientRoot struct {
 	Data WhatsAppRecipientData `json:"data"`
 }
 
-// WhatsAppRecipientData - a WhatsApp recipient. Messages is only returned by WhatsAppRecipientService.Get
+// WhatsAppRecipientData - a WhatsApp recipient. Items is only returned by WhatsAppRecipientService.Get
 type WhatsAppRecipientData struct {
-	ID          string                     `json:"id"`
-	PhoneNumber *string                    `json:"phone_number"`
-	Username    *string                    `json:"username"`
-	BSUID       *string                    `json:"bsuid"`
-	Status      string                     `json:"status"`
-	CreatedAt   time.Time                  `json:"created_at"`
-	Messages    []WhatsAppRecipientMessage `json:"messages,omitempty"`
-}
-
-// WhatsAppRecipientMessage - one of the recipient's latest messages
-type WhatsAppRecipientMessage struct {
-	ID                string    `json:"id"`
-	WhatsAppMessageID string    `json:"whatsapp_message_id"`
-	Status            string    `json:"status"`
-	TemplateName      string    `json:"template_name"`
-	ErrorCode         *int      `json:"error_code"`
-	ErrorMessage      *string   `json:"error_message"`
-	CreatedAt         time.Time `json:"created_at"`
+	ID          string             `json:"id"`
+	PhoneNumber *string            `json:"phone_number"`
+	Username    *string            `json:"username"`
+	Status      string             `json:"status"`
+	CreatedAt   time.Time          `json:"created_at"`
+	Items       []WhatsAppItemData `json:"items,omitempty"`
 }
 
 // ListWhatsAppRecipientOptions - modifies the behavior of WhatsAppRecipientService.List method
 type ListWhatsAppRecipientOptions struct {
-	Status string `url:"status,omitempty"`
-	Page   int    `url:"page,omitempty"`
-	Limit  int    `url:"limit,omitempty"`
+	Status      string `url:"status,omitempty"`
+	PhoneNumber string `url:"phone_number,omitempty"`
+	Page        int    `url:"page,omitempty"`
+	Limit       int    `url:"limit,omitempty"`
 }
 
 func (s *whatsAppRecipientService) List(ctx context.Context, options *ListWhatsAppRecipientOptions) (*WhatsAppListRecipientsRoot, *Response, error) {

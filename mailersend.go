@@ -52,8 +52,11 @@ type Mailersend struct {
 	DmarcMonitoring        DmarcMonitoringService
 	WhatsApp               WhatsAppService
 	WhatsAppMessage        WhatsAppMessageService
+	WhatsAppItem           WhatsAppItemService
+	WhatsAppActivity       WhatsAppActivityService
 	WhatsAppInboundMessage WhatsAppInboundMessageService
 	WhatsAppRecipient      WhatsAppRecipientService
+	WhatsAppTemplate       WhatsAppTemplateService
 }
 
 type service struct {
@@ -145,8 +148,11 @@ func NewMailersend(apiKey string) *Mailersend {
 	ms.DmarcMonitoring = &dmarcMonitoringService{&ms.common}
 	ms.WhatsApp = &whatsAppService{&ms.common}
 	ms.WhatsAppMessage = &whatsAppMessageService{&ms.common}
+	ms.WhatsAppItem = &whatsAppItemService{&ms.common}
+	ms.WhatsAppActivity = &whatsAppActivityService{&ms.common}
 	ms.WhatsAppInboundMessage = &whatsAppInboundMessageService{&ms.common}
 	ms.WhatsAppRecipient = &whatsAppRecipientService{&ms.common}
+	ms.WhatsAppTemplate = &whatsAppTemplateService{&ms.common}
 
 	return ms
 }
