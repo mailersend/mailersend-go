@@ -31,67 +31,18 @@ type WhatsAppSingleInboundMessageRoot struct {
 }
 
 // WhatsAppInboundMessageData - a WhatsApp message received by one of your phone numbers.
-// Exactly one content field is set, determined by Type.
+// Meta holds the content of the message and its shape depends on Type, for example
+// "body" for text, or "url", "status", "mime_type", "size" and "caption" for media. Meta is nil when there is no content.
+// Context is set only when the message is a reply.
 type WhatsAppInboundMessageData struct {
-	ID                string    `json:"id"`
-	WhatsAppAccountID string    `json:"whatsapp_account_id"`
-	From              string    `json:"from"`
-	To                string    `json:"to"`
-	Type              string    `json:"type"`
-	ReceivedAt        time.Time `json:"received_at"`
-
-	Text        *WhatsAppInboundText       `json:"text,omitempty"`
-	Attachment  *WhatsAppInboundAttachment `json:"attachment,omitempty"`
-	Location    *WhatsAppInboundLocation   `json:"location,omitempty"`
-	Contacts    []map[string]interface{}   `json:"contacts,omitempty"`
-	Reaction    *WhatsAppInboundReaction   `json:"reaction,omitempty"`
-	Button      *WhatsAppInboundButton     `json:"button,omitempty"`
-	ListReply   *WhatsAppInboundListReply  `json:"list_reply,omitempty"`
-	Interactive map[string]interface{}     `json:"interactive,omitempty"`
-	Order       map[string]interface{}     `json:"order,omitempty"`
-	System      map[string]interface{}     `json:"system,omitempty"`
-	Unknown     map[string]interface{}     `json:"unknown,omitempty"`
-	Unsupported map[string]interface{}     `json:"unsupported,omitempty"`
-
-	Context *WhatsAppInboundContext `json:"context,omitempty"`
-}
-
-type WhatsAppInboundText struct {
-	Body string `json:"body"`
-}
-
-// WhatsAppInboundAttachment - media file of an image, audio, video, document or sticker message
-type WhatsAppInboundAttachment struct {
-	URL      *string `json:"url"`
-	Status   string  `json:"status"`
-	MimeType string  `json:"mime_type,omitempty"`
-	Size     int64   `json:"size,omitempty"`
-	Caption  string  `json:"caption,omitempty"`
-	Filename string  `json:"filename,omitempty"`
-	Animated *bool   `json:"animated,omitempty"`
-}
-
-type WhatsAppInboundLocation struct {
-	Latitude  float64 `json:"latitude"`
-	Longitude float64 `json:"longitude"`
-	Name      string  `json:"name,omitempty"`
-	Address   string  `json:"address,omitempty"`
-}
-
-type WhatsAppInboundReaction struct {
-	MessageID string `json:"message_id"`
-	Emoji     string `json:"emoji"`
-}
-
-type WhatsAppInboundButton struct {
-	Text    string `json:"text"`
-	Payload string `json:"payload"`
-}
-
-type WhatsAppInboundListReply struct {
-	ID          string `json:"id"`
-	Title       string `json:"title"`
-	Description string `json:"description,omitempty"`
+	ID                string                  `json:"id"`
+	WhatsAppAccountID string                  `json:"whatsapp_account_id"`
+	From              string                  `json:"from"`
+	To                string                  `json:"to"`
+	Type              string                  `json:"type"`
+	ReceivedAt        time.Time               `json:"received_at"`
+	Meta              map[string]interface{}  `json:"meta"`
+	Context           *WhatsAppInboundContext `json:"context,omitempty"`
 }
 
 // WhatsAppInboundContext - present when the inbound message is a reply
@@ -102,6 +53,7 @@ type WhatsAppInboundContext struct {
 // ListWhatsAppInboundMessageOptions - modifies the behavior of WhatsAppInboundMessageService.List method
 type ListWhatsAppInboundMessageOptions struct {
 	WhatsAppAccountID string   `url:"whatsapp_account_id,omitempty"`
+	From              string   `url:"from,omitempty"`
 	Type              []string `url:"type[],omitempty"`
 	DateFrom          int64    `url:"date_from,omitempty"`
 	DateTo            int64    `url:"date_to,omitempty"`

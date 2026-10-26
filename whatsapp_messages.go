@@ -30,37 +30,26 @@ type WhatsAppSingleMessageRoot struct {
 	Data WhatsAppMessageData `json:"data"`
 }
 
-// WhatsAppMessageData - a sent WhatsApp message. Recipients is only returned by WhatsAppMessageService.Get
+// WhatsAppMessageData - a sent WhatsApp message. Items is only returned by WhatsAppMessageService.Get
 type WhatsAppMessageData struct {
-	ID                string                     `json:"id"`
-	From              *string                    `json:"from"`
-	To                []string                   `json:"to"`
-	WhatsAppAccountID *string                    `json:"whatsapp_account_id"`
-	TemplateID        *string                    `json:"template_id"`
-	CreatedAt         time.Time                  `json:"created_at"`
-	Recipients        []WhatsAppMessageRecipient `json:"recipients,omitempty"`
-}
-
-// WhatsAppMessageRecipient - delivery of a WhatsApp message to a single recipient
-type WhatsAppMessageRecipient struct {
-	ID           string                    `json:"id"`
-	To           string                    `json:"to"`
-	Status       string                    `json:"status"`
-	ErrorCode    *int                      `json:"error_code"`
-	ErrorMessage *string                   `json:"error_message"`
-	Activity     []WhatsAppMessageActivity `json:"activity"`
-}
-
-// WhatsAppMessageActivity - a status a recipient's message moved through
-type WhatsAppMessageActivity struct {
-	Status    string    `json:"status"`
-	CreatedAt time.Time `json:"created_at"`
+	ID                string             `json:"id"`
+	From              *string            `json:"from"`
+	To                []string           `json:"to"`
+	WhatsAppAccountID *string            `json:"whatsapp_account_id"`
+	TemplateID        *string            `json:"template_id"`
+	CreatedAt         time.Time          `json:"created_at"`
+	Items             []WhatsAppItemData `json:"items,omitempty"`
 }
 
 // ListWhatsAppMessageOptions - modifies the behavior of WhatsAppMessageService.List method
 type ListWhatsAppMessageOptions struct {
-	Page  int `url:"page,omitempty"`
-	Limit int `url:"limit,omitempty"`
+	WhatsAppAccountID string `url:"whatsapp_account_id,omitempty"`
+	From              string `url:"from,omitempty"`
+	TemplateID        string `url:"template_id,omitempty"`
+	DateFrom          int64  `url:"date_from,omitempty"`
+	DateTo            int64  `url:"date_to,omitempty"`
+	Page              int    `url:"page,omitempty"`
+	Limit             int    `url:"limit,omitempty"`
 }
 
 func (s *whatsAppMessageService) List(ctx context.Context, options *ListWhatsAppMessageOptions) (*WhatsAppListMessagesRoot, *Response, error) {
