@@ -8,6 +8,7 @@ MailerSend Golang SDK
 # Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
+    - [API version](#api-version)
     - [Email](#email)
        - [Send an email](#send-an-email)
        - [Add CC, BCC recipients](#add-cc-bcc-recipients)
@@ -175,6 +176,20 @@ $ go get github.com/mailersend/mailersend-go
 ```
 
 # Usage
+
+## API version
+
+The client sends requests to API version `2026-10` by default, which returns the same responses as `v1`. To pin a version, call `SetAPIVersion` with `v1` or a dated version:
+
+```go
+ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+if err := ms.SetAPIVersion("2026-10"); err != nil {
+	log.Fatal(err)
+}
+```
+
+To stay on `v1`, call `ms.SetAPIVersion("v1")`. See the [API changelog](https://developers.mailersend.com/api/changelog) for what each version changes.
 
 ## Email 
 
