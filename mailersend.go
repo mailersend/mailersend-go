@@ -9,17 +9,29 @@ import (
 	"net/http"
 	"net/url"
 	"reflect"
+	"regexp"
 
 	"github.com/google/go-querystring/query"
 )
 
+// APIBase is the v1 base URL.
+//
+// Deprecated: use APIHost and DefaultAPIVersion, and Mailersend.SetAPIVersion to choose a version.
 const APIBase string = "https://api.mailersend.com/v1"
+
+const (
+	APIHost           string = "https://api.mailersend.com"
+	DefaultAPIVersion string = "2026-10"
+)
+
+var apiVersionPattern = regexp.MustCompile(`^(v1|\d{4}-(0[1-9]|1[0-2]))$`)
 
 // Mailersend - base mailersend api client
 type Mailersend struct {
-	apiBase string
-	apiKey  string
-	client  *http.Client
+	apiBase    string
+	apiVersion string
+	apiKey     string
+	client     *http.Client
 
 	common service // Reuse a single struct.
 
@@ -114,9 +126,10 @@ type Filter struct {
 // NewMailersend - creates a new client instance.
 func NewMailersend(apiKey string) *Mailersend {
 	ms := &Mailersend{
-		apiBase: APIBase,
-		apiKey:  apiKey,
-		client:  http.DefaultClient,
+		apiBase:    APIHost + "/" + DefaultAPIVersion,
+		apiVersion: DefaultAPIVersion,
+		apiKey:     apiKey,
+		client:     http.DefaultClient,
 	}
 
 	ms.common.client = ms
@@ -175,6 +188,23 @@ func (ms *Mailersend) SetClient(c *http.Client) {
 // SetAPIKey - Set the client api key
 func (ms *Mailersend) SetAPIKey(apikey string) {
 	ms.apiKey = apikey
+}
+
+// APIVersion - Get the API version requests are sent to
+func (ms *Mailersend) APIVersion() string {
+	return ms.apiVersion
+}
+
+// SetAPIVersion - Set the API version requests are sent to: "v1" or a dated version such as "2026-10"
+func (ms *Mailersend) SetAPIVersion(version string) error {
+	if !apiVersionPattern.MatchString(version) {
+		return fmt.Errorf("invalid API version %q: use \"v1\" or a dated version such as %q", version, DefaultAPIVersion)
+	}
+
+	ms.apiVersion = version
+	ms.apiBase = APIHost + "/" + version
+
+	return nil
 }
 
 func (ms *Mailersend) newRequest(method, path string, body interface{}) (*http.Request, error) {

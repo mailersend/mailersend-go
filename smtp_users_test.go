@@ -45,7 +45,7 @@ func TestSmtpUserService_List(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/domains/domain-id/smtp-users?limit=25&page=1", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/domains/domain-id/smtp-users?limit=25&page=1", req.URL.String())
 
 		return &http.Response{
 			StatusCode: http.StatusOK,
@@ -83,7 +83,7 @@ func TestSmtpUserService_Get(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/domains/domain-id/smtp-users/smtp-user-id", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/domains/domain-id/smtp-users/smtp-user-id", req.URL.String())
 
 		return &http.Response{
 			StatusCode: http.StatusOK,
@@ -113,7 +113,7 @@ func TestSmtpUserService_Create(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/domains/domain-id/smtp-users", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/domains/domain-id/smtp-users", req.URL.String())
 		assert.Equal(t, http.MethodPost, req.Method)
 
 		return &http.Response{
@@ -149,7 +149,7 @@ func TestSmtpUserService_Update(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/domains/domain-id/smtp-users/smtp-user-id", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/domains/domain-id/smtp-users/smtp-user-id", req.URL.String())
 		assert.Equal(t, http.MethodPut, req.Method)
 
 		return &http.Response{
@@ -186,7 +186,7 @@ func TestSmtpUserService_Delete(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/domains/domain-id/smtp-users/smtp-user-id", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/domains/domain-id/smtp-users/smtp-user-id", req.URL.String())
 		assert.Equal(t, http.MethodDelete, req.Method)
 
 		return &http.Response{
