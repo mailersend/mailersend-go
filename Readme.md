@@ -191,6 +191,8 @@ if err := ms.SetAPIVersion("2026-10"); err != nil {
 
 To stay on `v1`, call `ms.SetAPIVersion("v1")`. See the [API changelog](https://developers.mailersend.com/api/changelog) for what each version changes.
 
+Later releases of the SDK only change this default in a major version. Call `SetAPIVersion` to choose when you move.
+
 ## Email 
 
 ### Send an email
