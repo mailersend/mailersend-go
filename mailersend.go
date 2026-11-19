@@ -47,6 +47,7 @@ type Mailersend struct {
 	EmailVerification      EmailVerificationService
 	Identity               IdentityService
 	ApiQuota               ApiQuotaService
+	Account                AccountService
 	SmtpUser               SmtpUserService
 	User                   UserService
 	DmarcMonitoring        DmarcMonitoringService
@@ -143,6 +144,7 @@ func NewMailersend(apiKey string) *Mailersend {
 	ms.EmailVerification = &emailVerificationService{&ms.common}
 	ms.Identity = &identityService{&ms.common}
 	ms.ApiQuota = &apiQuotaService{&ms.common}
+	ms.Account = &accountService{&ms.common}
 	ms.SmtpUser = &smtpUserService{&ms.common}
 	ms.User = &userService{&ms.common}
 	ms.DmarcMonitoring = &dmarcMonitoringService{&ms.common}

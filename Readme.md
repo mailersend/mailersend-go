@@ -159,6 +159,7 @@ MailerSend Golang SDK
       - [Remove an IP from favorites](#remove-an-ip-from-favorites)
 	- [Other Endpoints](#other-endpoints)
 	  - [Get an API Quota](#get-an-api-quota)
+	  - [Get account](#get-account)
 - [Types](#types)
 - [Helpers](#helpers)   
 - [Testing](#testing)
@@ -4668,6 +4669,43 @@ func main() {
 	_, _, err := ms.ApiQuota.Get(ctx)
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+```
+
+### Get account
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"os"
+	"time"
+
+	"github.com/mailersend/mailersend-go"
+)
+
+func main() {
+	// Create an instance of the mailersend client
+	ms := mailersend.NewMailersend(os.Getenv("MAILERSEND_API_KEY"))
+
+	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	account, _, err := ms.Account.Get(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(account.Data.PlanType, account.Data.Emails.Sent, account.Data.Emails.Limit)
+
+	// WhatsApp is nil when the account has no WhatsApp add-on
+	if account.Data.Addons.WhatsApp != nil {
+		fmt.Println(account.Data.Addons.WhatsApp.Sent)
 	}
 }
 ```
