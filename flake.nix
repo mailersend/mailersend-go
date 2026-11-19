@@ -3,9 +3,13 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    vesnik = {
+      url = "github:nklmilojevic/vesnik/v0.2.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs }:
+  outputs = { self, nixpkgs, vesnik }:
     let
       systems = [ "aarch64-darwin" "x86_64-darwin" "aarch64-linux" "x86_64-linux" ];
       forEachSystem = f:
@@ -18,6 +22,8 @@
             lefthook
             gitleaks
             git-secrets
+            just
+            vesnik.packages.${system}.default
           ];
         };
       });
