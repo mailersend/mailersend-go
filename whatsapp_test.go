@@ -99,7 +99,7 @@ func TestWhatsAppService_Send(t *testing.T) {
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
 		assert.Equal(t, http.MethodPost, req.Method)
-		assert.Equal(t, "https://api.mailersend.com/v1/whatsapp/send", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/whatsapp/send", req.URL.String())
 
 		return &http.Response{
 			StatusCode: http.StatusAccepted,

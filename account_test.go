@@ -16,7 +16,7 @@ func TestAccountService_Get(t *testing.T) {
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
 		assert.Equal(t, http.MethodGet, req.Method)
-		assert.Equal(t, "https://api.mailersend.com/v1/account", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/account", req.URL.String())
 
 		return &http.Response{
 			StatusCode: http.StatusOK,

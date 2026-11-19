@@ -43,7 +43,7 @@ func TestUserService_List(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/users?limit=25&page=1", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/users?limit=25&page=1", req.URL.String())
 
 		return &http.Response{
 			StatusCode: http.StatusOK,
@@ -82,7 +82,7 @@ func TestUserService_Get(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/users/user-id", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/users/user-id", req.URL.String())
 
 		return &http.Response{
 			StatusCode: http.StatusOK,
@@ -113,7 +113,7 @@ func TestUserService_Invite(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/users", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/users", req.URL.String())
 		assert.Equal(t, http.MethodPost, req.Method)
 
 		return &http.Response{
@@ -149,7 +149,7 @@ func TestUserService_Update(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/users/user-id", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/users/user-id", req.URL.String())
 		assert.Equal(t, http.MethodPut, req.Method)
 
 		return &http.Response{
@@ -186,7 +186,7 @@ func TestUserService_Delete(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	client := NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/users/user-id", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/users/user-id", req.URL.String())
 		assert.Equal(t, http.MethodDelete, req.Method)
 
 		return &http.Response{

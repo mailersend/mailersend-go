@@ -399,7 +399,7 @@ func TestCanMockEmailList(t *testing.T) {
 
 		assert.Equal(t, http.MethodGet, req.Method)
 		assert.Equal(t, fmt.Sprintf(
-			"https://api.mailersend.com/v1/emails?date_from=%v&date_to=%v&domain_id=%v&limit=50&page=2",
+			"https://api.mailersend.com/2026-10/emails?date_from=%v&date_to=%v&domain_id=%v&limit=50&page=2",
 			listEmailsDateFrom, listEmailsDateTo, listEmailsDomainID,
 		), req.URL.String())
 
@@ -668,7 +668,7 @@ func TestCanMockEmailGet(t *testing.T) {
 		assert.Equal(t, http.MethodGet, req.Method)
 		// The single email endpoint is singular, v1/email/{email_id}, unlike the
 		// plural v1/emails list endpoint.
-		assert.Equal(t, fmt.Sprintf("https://api.mailersend.com/v1/email/%v", emailID), req.URL.String())
+		assert.Equal(t, fmt.Sprintf("https://api.mailersend.com/2026-10/email/%v", emailID), req.URL.String())
 		assert.Equal(t, "", req.URL.RawQuery)
 
 		return jsonResponse(singleEmailResponse)

@@ -34,7 +34,7 @@ func TestWhatsAppMessageService_ListWithFilters(t *testing.T) {
 	ms.SetClient(NewTestClient(func(req *http.Request) *http.Response {
 		assert.Equal(t, http.MethodGet, req.Method)
 		assert.Equal(t,
-			"https://api.mailersend.com/v1/whatsapp/messages?date_from=1791936000&date_to=1792022400&from=15550001234&limit=25&page=2&template_id=23zxk54v6gjy6v7m&whatsapp_account_id=3enl6x27wmrxrl2v",
+			"https://api.mailersend.com/2026-10/whatsapp/messages?date_from=1791936000&date_to=1792022400&from=15550001234&limit=25&page=2&template_id=23zxk54v6gjy6v7m&whatsapp_account_id=3enl6x27wmrxrl2v",
 			req.URL.String(),
 		)
 
@@ -99,7 +99,7 @@ func TestWhatsAppMessageService_ListWithoutOptions(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	ms.SetClient(NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/whatsapp/messages", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/whatsapp/messages", req.URL.String())
 
 		return jsonResponse(`{"data": [], "links": {"first": null, "last": null, "prev": null, "next": null}, "meta": {"from": null, "to": null}}`)
 	}))
@@ -115,7 +115,7 @@ func TestWhatsAppMessageService_Get(t *testing.T) {
 
 	ms.SetClient(NewTestClient(func(req *http.Request) *http.Response {
 		assert.Equal(t, http.MethodGet, req.Method)
-		assert.Equal(t, "https://api.mailersend.com/v1/whatsapp/messages/67f91abd69f79df391e9d78d", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/whatsapp/messages/67f91abd69f79df391e9d78d", req.URL.String())
 
 		return jsonResponse(`{
 			"data": {
@@ -185,7 +185,7 @@ func TestWhatsAppItemService_ListWithFilters(t *testing.T) {
 
 	ms.SetClient(NewTestClient(func(req *http.Request) *http.Response {
 		assert.Equal(t, http.MethodGet, req.Method)
-		assert.Equal(t, "/v1/whatsapp/items", req.URL.Path)
+		assert.Equal(t, "/2026-10/whatsapp/items", req.URL.Path)
 		assert.Equal(t,
 			"date_from=1791936000&date_to=1792022400&from=15550001234&limit=50&page=1&recipient=48600000002&status%5B%5D=failed&status%5B%5D=read&template_id=23zxk54v6gjy6v7m&whatsapp_account_id=3enl6x27wmrxrl2v&whatsapp_message_id=67f91abd69f79df391e9d78d",
 			req.URL.RawQuery,
@@ -268,7 +268,7 @@ func TestWhatsAppItemService_Get(t *testing.T) {
 
 	ms.SetClient(NewTestClient(func(req *http.Request) *http.Response {
 		assert.Equal(t, http.MethodGet, req.Method)
-		assert.Equal(t, "https://api.mailersend.com/v1/whatsapp/items/67f91abe2202f3705540234a", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/whatsapp/items/67f91abe2202f3705540234a", req.URL.String())
 
 		return jsonResponse(`{
 			"data": {
@@ -347,7 +347,7 @@ func TestWhatsAppActivityService_ListWithFilters(t *testing.T) {
 
 	ms.SetClient(NewTestClient(func(req *http.Request) *http.Response {
 		assert.Equal(t, http.MethodGet, req.Method)
-		assert.Equal(t, "/v1/whatsapp/activities", req.URL.Path)
+		assert.Equal(t, "/2026-10/whatsapp/activities", req.URL.Path)
 		assert.Equal(t,
 			"date_from=1791936000&date_to=1792022400&limit=10&page=1&recipient=48600000001&type%5B%5D=delivered&type%5B%5D=read&whatsapp_item_id=67f91abe2202f3705540234a&whatsapp_message_id=67f91abd69f79df391e9d78d",
 			req.URL.RawQuery,
@@ -412,7 +412,7 @@ func TestWhatsAppActivityService_ListWithoutOptions(t *testing.T) {
 	ms := mailersend.NewMailersend(testKey)
 
 	ms.SetClient(NewTestClient(func(req *http.Request) *http.Response {
-		assert.Equal(t, "https://api.mailersend.com/v1/whatsapp/activities", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/whatsapp/activities", req.URL.String())
 
 		return jsonResponse(`{"data": [], "links": {}, "meta": {}}`)
 	}))
@@ -428,7 +428,7 @@ func TestWhatsAppInboundMessageService_ListWithFilters(t *testing.T) {
 	ms.SetClient(NewTestClient(func(req *http.Request) *http.Response {
 		assert.Equal(t, http.MethodGet, req.Method)
 		assert.Equal(t,
-			"https://api.mailersend.com/v1/whatsapp/inbound-messages?date_from=1791936000&date_to=1792022400&from=US.13491208655302741918&limit=10&page=1&type%5B%5D=text&type%5B%5D=image&whatsapp_account_id=3enl6x27wmrxrl2v",
+			"https://api.mailersend.com/2026-10/whatsapp/inbound-messages?date_from=1791936000&date_to=1792022400&from=US.13491208655302741918&limit=10&page=1&type%5B%5D=text&type%5B%5D=image&whatsapp_account_id=3enl6x27wmrxrl2v",
 			req.URL.String(),
 		)
 
@@ -499,7 +499,7 @@ func TestWhatsAppInboundMessageService_Get(t *testing.T) {
 
 	ms.SetClient(NewTestClient(func(req *http.Request) *http.Response {
 		assert.Equal(t, http.MethodGet, req.Method)
-		assert.Equal(t, "https://api.mailersend.com/v1/whatsapp/inbound-messages/62f114c1165fe0d8db0288f0", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/whatsapp/inbound-messages/62f114c1165fe0d8db0288f0", req.URL.String())
 
 		return jsonResponse(`{
 			"data": {
@@ -527,7 +527,7 @@ func TestWhatsAppRecipientService_ListWithFilters(t *testing.T) {
 
 	ms.SetClient(NewTestClient(func(req *http.Request) *http.Response {
 		assert.Equal(t, http.MethodGet, req.Method)
-		assert.Equal(t, "https://api.mailersend.com/v1/whatsapp/recipients?limit=10&page=1&phone_number=48600000001&status=active", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/whatsapp/recipients?limit=10&page=1&phone_number=48600000001&status=active", req.URL.String())
 
 		return jsonResponse(`{
 			"data": [
@@ -572,7 +572,7 @@ func TestWhatsAppRecipientService_Get(t *testing.T) {
 
 	ms.SetClient(NewTestClient(func(req *http.Request) *http.Response {
 		assert.Equal(t, http.MethodGet, req.Method)
-		assert.Equal(t, "https://api.mailersend.com/v1/whatsapp/recipients/67f91abe2202f37055402301", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/whatsapp/recipients/67f91abe2202f37055402301", req.URL.String())
 
 		return jsonResponse(`{
 			"data": {
@@ -620,7 +620,7 @@ func TestWhatsAppTemplateService_ListWithFilters(t *testing.T) {
 	ms.SetClient(NewTestClient(func(req *http.Request) *http.Response {
 		assert.Equal(t, http.MethodGet, req.Method)
 		assert.Equal(t,
-			"https://api.mailersend.com/v1/whatsapp/templates?category=UTILITY&language=en_US&limit=25&page=1&status=approved&whatsapp_account_id=3enl6x27wmrxrl2v",
+			"https://api.mailersend.com/2026-10/whatsapp/templates?category=UTILITY&language=en_US&limit=25&page=1&status=approved&whatsapp_account_id=3enl6x27wmrxrl2v",
 			req.URL.String(),
 		)
 
@@ -710,7 +710,7 @@ func TestWhatsAppTemplateService_Get(t *testing.T) {
 
 	ms.SetClient(NewTestClient(func(req *http.Request) *http.Response {
 		assert.Equal(t, http.MethodGet, req.Method)
-		assert.Equal(t, "https://api.mailersend.com/v1/whatsapp/templates/23zxk54v6gjy6v7m", req.URL.String())
+		assert.Equal(t, "https://api.mailersend.com/2026-10/whatsapp/templates/23zxk54v6gjy6v7m", req.URL.String())
 
 		return jsonResponse(`{
 			"data": {
