@@ -95,6 +95,12 @@ type CustomTracking struct {
 	Value    string `json:"value"`
 }
 
+type Ownership struct {
+	Hostname string `json:"hostname"`
+	Type     string `json:"type"`
+	Value    string `json:"value"`
+}
+
 type InboundRouting struct {
 	Hostname string `json:"hostname"`
 	Type     string `json:"type"`
@@ -109,6 +115,7 @@ type Dns struct {
 	ReturnPath     ReturnPath     `json:"return_path"`
 	CustomTracking CustomTracking `json:"custom_tracking"`
 	InboundRouting InboundRouting `json:"inbound_routing"`
+	Ownership      Ownership      `json:"ownership"`
 }
 
 type VerifyRoot struct {
@@ -116,12 +123,13 @@ type VerifyRoot struct {
 	Data    Verify `json:"data"`
 }
 type Verify struct {
-	Dkim     bool `json:"dkim"`
-	Spf      bool `json:"spf"`
-	Mx       bool `json:"mx"`
-	Tracking bool `json:"tracking"`
-	Cname    bool `json:"cname"`
-	RpCname  bool `json:"rp_cname"`
+	Dkim      bool `json:"dkim"`
+	Spf       bool `json:"spf"`
+	Mx        bool `json:"mx"`
+	Tracking  bool `json:"tracking"`
+	Cname     bool `json:"cname"`
+	RpCname   bool `json:"rp_cname"`
+	Ownership bool `json:"ownership"`
 }
 
 // DomainRecipientRoot format of domain response
